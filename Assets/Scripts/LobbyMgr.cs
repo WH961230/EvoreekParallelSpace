@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LobbyMgr : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Button StartGameBtn;
+    public string MainSceneName;
+
+    private void Start()
     {
-        
+        StartGameBtn.onClick.AddListener(OnStartGame);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnStartGame()
     {
-        
+        Debug.Log("开始游戏");
+        SceneManager.LoadScene(MainSceneName);
+        Debug.Log($"加载场景 {MainSceneName}");
     }
 }

@@ -245,6 +245,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a6fb588ac56742b260073a5bf8914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnvironmentScene: Environment
+  BackgroundClip: {fileID: 8300000, guid: e9f35dd46538c2d449de3c52b387fe5e, type: 3}
+  AudioMainName: AudioMain
 --- !u!4 &774438672
 Transform:
   m_ObjectHideFlags: 0

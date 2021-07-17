@@ -3,3 +3,6 @@ ParallelSpace.sln
 Temp
 Logs
 Library
+.idea
+UserSettings
+Assembly-CSharp.csproj
