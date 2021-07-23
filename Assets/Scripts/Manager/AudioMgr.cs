@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioMgr : MonoBehaviour
+public class AudioMgr : Singleton<AudioMgr>
 {
-    public AudioSource source;
+    private SOAudio config;
 
-    public void Play(AudioClip clip)
+    public void Play(AudioSource source, AudioClip clip)
     {
         if (null == source)
         {

@@ -27,10 +27,8 @@ public static class AssetLoader
         {
             case AssetType.Prefab:
                 return PrefabsPath;
-                break;
             case AssetType.Scriptable:
                 return ScriptablePath;
-                break;
         }
 
         return "";
