@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: SOPlayer
   m_EditorClassIdentifier: 
   playerSign: Player
-  playerBornTran: {fileID: 3826259203148283230, guid: 4c9a2e4bd59e3d940af884b46eb1c661, type: 3}
+  playerBornInfo:
+    playerBornVec: {x: -5.209861, y: 5, z: 9.516317}
+    playerBornQua: {x: 0, y: 0, z: 0, w: 0}

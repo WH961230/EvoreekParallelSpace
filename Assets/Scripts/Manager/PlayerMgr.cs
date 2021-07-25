@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMgr : Singleton<PlayerMgr> {
@@ -11,9 +8,11 @@ public class PlayerMgr : Singleton<PlayerMgr> {
         // config = (SOPlayer)System.Activator.CreateInstance(type);
 
         config = (SOPlayer) AssetLoader.LoadAsset(AssetType.Scriptable, "SOPlayer");
-        var player = GameObject.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, config.PlayerSign), config.PlayerBornTran);
+        var player = GameObject.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, config.PlayerSign)) as GameObject;
+        player.transform.position = config.PlayerInfo.playerBornVec;
+        player.transform.localRotation = config.PlayerInfo.playerBornQua;
         controller = player.GetComponent<PlayerController>();
-
+        
         Debug.Log(config.PlayerSign);
     }
 }
