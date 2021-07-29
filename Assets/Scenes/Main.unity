@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: RoleCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,3 +455,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 895a0fc13ce1efa49978ab32c78b0f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offsetTarget: {x: 0, y: 0, z: 0}
+  offsetQuaTarget: {x: 0, y: 0, z: 0, w: 0}

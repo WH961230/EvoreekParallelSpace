@@ -68,4 +68,8 @@ public class PlayerController : MonoBehaviour
 
         moveDirectVec = new Vector3(x, y, z);
     }
+
+    void Jump()
+    {
+    }
 }
