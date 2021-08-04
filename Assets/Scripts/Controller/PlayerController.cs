@@ -1,26 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.UIElements;
+using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("==== 控制器 ====")]
     [SerializeField] private CharacterController controller;
+    [SerializeField] private Animator animator;
 
     [Header("==== 移动参数 ====")] [InspectorLabel("移动向量")]
     [SerializeField] private float gravity;
     [SerializeField] private float forwardSpeed;
-    [SerializeField] private float leftSpeed;
+    [SerializeField] private float ySpeed;
+    [SerializeField] private float xSpeed;
     [SerializeField] private float jumpSpeed;
+    [SerializeField] private bool isJump;
 
     [Header("==== 预制 ====")] [InspectorLabel("a")]
     [SerializeField] private Transform roleCameraTarget;
+    
+    
+    private Vector3 moveDirection = Vector3.zero;
 
-
-    private Vector3 moveDirectVec;
     void Start() {
         Init();
     }
@@ -32,7 +33,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         SetCameraTarget();
-        CharactorMoveEvent();
+        MoveEvent();
+        EyeEvent();
     }
 
     private void SetCameraTarget()
@@ -48,28 +50,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void CharactorMoveEvent()
-    {   
-        var x = Input.GetAxis("Horizontal") * forwardSpeed * Time.deltaTime;
-        var z = Input.GetAxis("Vertical") * leftSpeed * Time.deltaTime;
-        var jump = Input.GetKeyDown(KeyCode.Space);
-        float y = 0;
-        controller.Move(moveDirectVec);
-        if(jump)
-        {
-            y = jumpSpeed * Time.deltaTime;
-        }
-        // 在空中
-        if (!controller.isGrounded
-        )
-        {
-            y = gravity * Time.deltaTime;
-        }
-
-        moveDirectVec = new Vector3(x, y, z);
+    void EyeEvent() {
+        var y = Input.GetAxis("Mouse Y");
+        var x = Input.GetAxis("Mouse X");
+        controller.transform.Rotate(Vector3.up * x * xSpeed);
+        roleCameraTarget.transform.Rotate(Vector3.left * y * ySpeed);
     }
 
-    void Jump()
+    void MoveEvent()
     {
+        if (!controller) {
+            return;
+        }
+
+        if (controller.isGrounded) {
+            var hor = Input.GetAxis("Horizontal");
+            var ver = Input.GetAxis("Vertical");
+            moveDirection = new Vector3(hor, 0, ver);
+            moveDirection = controller.transform.TransformDirection(moveDirection);
+            moveDirection *= forwardSpeed;
+            animator.SetFloat("Horizontal", hor);
+            animator.SetFloat("Vertical", ver);
+            if (Input.GetButton("Jump")) {
+                moveDirection.y = jumpSpeed;
+            }
+        }
+
+        moveDirection.y -= gravity * Time.deltaTime;
+        controller.Move(moveDirection * Time.deltaTime);
     }
 }

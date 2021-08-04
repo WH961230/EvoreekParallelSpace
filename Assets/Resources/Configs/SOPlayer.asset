@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79e8ee8d59044934db66965bac224d5f, type: 3}
   m_Name: SOPlayer
   m_EditorClassIdentifier: 
-  playerSign: Player
+  playerSign: Player1
   playerBornInfo:
     playerBornVec: {x: -5.209861, y: 5, z: 9.516317}
     playerBornQua: {x: 0, y: 0, z: 0, w: 0}
