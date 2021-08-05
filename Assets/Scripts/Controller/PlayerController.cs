@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("==== 移动参数 ====")] [InspectorLabel("移动向量")]
     [SerializeField] private float gravity;
-    [SerializeField] private float forwardSpeed;
+    [SerializeField] private float forwardMoveSpeed;
+    [SerializeField] private float leftMoveSpeed;
     [SerializeField] private float ySpeed;
     [SerializeField] private float xSpeed;
     [SerializeField] private float jumpSpeed;
@@ -64,14 +65,16 @@ public class PlayerController : MonoBehaviour
         }
 
         if (controller.isGrounded) {
-            var hor = Input.GetAxis("Horizontal");
-            var ver = Input.GetAxis("Vertical");
+            animator.SetBool("Jump", false);
+            var hor = Input.GetAxis("Horizontal") * leftMoveSpeed;
+            var ver = Input.GetAxis("Vertical") * leftMoveSpeed;
             moveDirection = new Vector3(hor, 0, ver);
             moveDirection = controller.transform.TransformDirection(moveDirection);
-            moveDirection *= forwardSpeed;
+            moveDirection *= forwardMoveSpeed;
             animator.SetFloat("Horizontal", hor);
             animator.SetFloat("Vertical", ver);
             if (Input.GetButton("Jump")) {
+                animator.SetBool("Jump", true);
                 moveDirection.y = jumpSpeed;
             }
         }

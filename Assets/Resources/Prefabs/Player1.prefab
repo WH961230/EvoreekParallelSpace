@@ -6410,13 +6410,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6754603575093799331}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.788, z: 0.131}
+  m_LocalRotation: {x: 0.17080565, y: -0, z: -0, w: 0.9853048}
+  m_LocalPosition: {x: 0, y: 1.242, z: -0.708}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8780411185654843319}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 19.669, y: 0, z: 0}
 --- !u!1 &7093588200979160073
 GameObject:
   m_ObjectHideFlags: 0
@@ -6464,7 +6464,8 @@ MonoBehaviour:
   controller: {fileID: 5655626605569123774}
   animator: {fileID: 5641115861668139771}
   gravity: 12
-  forwardSpeed: 5
+  forwardMoveSpeed: 2
+  leftMoveSpeed: 1
   ySpeed: 1
   xSpeed: 1
   jumpSpeed: 3
@@ -6514,10 +6515,10 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
+  m_Height: 1.9
   m_Radius: 0.3
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.16, z: 0}
