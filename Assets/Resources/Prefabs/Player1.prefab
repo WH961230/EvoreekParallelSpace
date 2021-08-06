@@ -6468,8 +6468,7 @@ MonoBehaviour:
   leftMoveSpeed: 1
   ySpeed: 1
   xSpeed: 1
-  jumpSpeed: 3
-  isJump: 0
+  jumpSpeed: 5
   roleCameraTarget: {fileID: 4665074915443017747}
 --- !u!1 &9173425053506572095
 GameObject:

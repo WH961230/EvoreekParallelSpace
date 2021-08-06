@@ -1,24 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [Header("==== 相机参数 ====")] 
-    [SerializeField] private Vector3 offsetTarget;
-    [SerializeField] private Quaternion offsetQuaTarget;
+    private Transform Target { set; get; }
 
-
-    [SerializeField] public Transform Target { set; get; }
-
-    private void Start() {
-        GlobalData.globalCamera = this;
+    private void Start() 
+    {
+        GameData.GameCamera = this;
     }
 
     private void Update()
     {
         TargetMoveEvent();
+    }
+
+    public void SetTarget(Transform target) {
+        Target = target;
+    }
+
+    public Transform GetTarget() {
+        return Target;
     }
 
     private void TargetMoveEvent()
@@ -28,7 +29,8 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        transform.position = Target.position;
-        transform.rotation = Target.rotation;
+        var myTransform = transform;
+        myTransform.position = Target.position;
+        myTransform.rotation = Target.rotation;
     }
 }

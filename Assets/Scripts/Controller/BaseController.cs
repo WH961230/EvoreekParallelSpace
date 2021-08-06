@@ -7,7 +7,7 @@ public class BaseController : MonoBehaviour {
     }
 
     void FaceTargetEvent() {
-        var target = GlobalData.globalCamera;
+        var target = GameData.GameCamera;
         if (null == target) {
             return;
         }
