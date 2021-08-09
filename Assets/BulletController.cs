@@ -7,16 +7,19 @@ using Vector3 = UnityEngine.Vector3;
 public class BulletController : MonoBehaviour
 {
     [SerializeField] private float speed;
-    private Transform tran;
+    public Vector3 targetTran;
     void Start()
     {
-        tran = transform;
-        Invoke("OnDestroy", 2);
+        Invoke("OnDestroy", 1);
     }
 
     void Update()
     {
-        transform.position = Vector3.Lerp(tran.position, tran.position + tran.forward * 100f, Time.deltaTime * speed);
+        if (null != targetTran) {
+            Debug.DrawLine(transform.position, targetTran, Color.magenta);
+            transform.LookAt(targetTran);
+            transform.position = Vector3.Lerp(transform.position, targetTran, Time.deltaTime * speed); 
+        }
     }
 
     void OnDestroy()

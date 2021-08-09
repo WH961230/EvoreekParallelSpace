@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -11,6 +12,9 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+    }
+
+    private void LateUpdate() {
         TargetMoveEvent();
     }
 

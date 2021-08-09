@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("==== 预制 ====")] [InspectorLabel("a")]
     [SerializeField] Transform roleCameraTarget;
+    [SerializeField] Transform roleFrontCameraTarget;
     [SerializeField] Transform roleCameraRotObj;
     [SerializeField] Transform bulletPrefab;
     [SerializeField] Transform bulletShotTran;
@@ -34,25 +36,55 @@ public class PlayerController : MonoBehaviour
 
     void Update() {
         SetCameraTarget();
+        SetFrontCameraTarget();
         MoveEvent();
         EyeEvent();
         ShotEvent();
+        
+        
+        // 当按下 A 键时，鼠标锁定并消失
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+ 
+        // 当按下 S 键时，鼠标解锁并显示
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     private bool isShot;
-    void ShotEvent()
-    {
-        if (Input.GetMouseButton(0))
-        {
+
+    void ShotEvent() {
+        if (Input.GetMouseButton(0)) {
             isShot = true;
         }
-        if (isShot)
-        {
-            var bullet = Instantiate(bulletPrefab.gameObject);
-            bullet.transform.position = bulletShotTran.position;
-            bullet.transform.rotation = Quaternion.identity;
+
+        if (isShot) {
+            var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+            RaycastHit hit;
+            if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
+                var bullet = Instantiate(bulletPrefab.gameObject);
+                Debug.Log("hitName : " + hit.collider.name);
+                bullet.transform.position = bulletShotTran.position;
+                bullet.transform.GetComponent<BulletController>().targetTran = hit.point; 
+            }
             isShot = false;
         }
+    }
+
+    private void OnDrawGizmos() {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        if (Physics.Raycast(ray, out hit, 200,~(1 << 25))) {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(bulletShotTran.position, hit.point);
+        }
+
+        var rect = new Rect(new Vector2(Screen.width / 2, Screen.height / 2), Vector2.one);
+        Gizmos.DrawGUITexture(rect, Texture2D.whiteTexture);
     }
 
     private void SetCameraTarget() { 
@@ -66,6 +98,20 @@ public class PlayerController : MonoBehaviour
         if (!target)
         {
             globalCamera.SetTarget(roleCameraTarget);
+        }
+    }
+    
+    private void SetFrontCameraTarget() { 
+        var globalFrontCamera = GameData.GameFrontCamera;
+        if (!globalFrontCamera) 
+        {
+            return;
+        }
+
+        var target = globalFrontCamera.GetTarget();
+        if (!target)
+        {
+            globalFrontCamera.SetTarget(roleFrontCameraTarget);
         }
     }
 
