@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [Header("==== 控制器 ====")]
     [SerializeField] CharacterController controller;
     [SerializeField] Animator animator;
+    [SerializeField] AudioSource audioSource;
 
     [Header("==== 移动参数 ====")] [InspectorLabel("移动向量")]
     [SerializeField] float gravity;
@@ -142,6 +143,10 @@ public class PlayerController : MonoBehaviour
             //前后移动
             var hor = Input.GetAxis("Horizontal");
             var ver = Input.GetAxis("Vertical");
+
+            if (!audioSource.isPlaying) {
+                audioSource.Play();
+            }
 
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
