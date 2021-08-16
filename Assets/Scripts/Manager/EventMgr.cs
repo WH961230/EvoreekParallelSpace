@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
 // 事件接口
 public interface IEvent{
-
 }
 
 class EventInfo : IEvent
@@ -20,6 +18,22 @@ class EventInfo : IEvent
 public class EventMgr : Singleton<EventMgr>
 {
     private Dictionary<string, IEvent> eventDic = new Dictionary<string, IEvent>();
+
+    #region MGR_REGISTER 管理类注册标识
+    public string MGR_UPDATE = "MGR_UPDATE";
+    public string MGR_FIXEDUPDATE = "MGR_FIXEDUPDATE";
+    public string MGR_LATEUPDATE = "MGR_LATEUPDATE";
+    #endregion
+    
+    #region CONTROLLER_REGISTER 控制类注册标识
+    public string CONTROLLER_UPDATE = "CONTROLLER_UPDATE";
+    public string CONTROLLER_FIXEDUPDATE = "CONTROLLER_FIXEDUPDATE";
+    public string CONTROLLER_LATEUPDATE = "CONTROLLER_LATEUPDATE";
+    #endregion
+    
+    
+
+    #region EVENTDIC 事件
 
     public void AddEventListener(string methodName, UnityAction action)
     {
@@ -49,4 +63,6 @@ public class EventMgr : Singleton<EventMgr>
             (eventDic[methodName] as EventInfo).actions -= action;
         }
     }
+
+    #endregion
 }

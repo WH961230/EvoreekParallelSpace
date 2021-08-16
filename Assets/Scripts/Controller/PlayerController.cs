@@ -1,10 +1,25 @@
 using System;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, BaseController
 {
+    [Header("==== 角色ID ====")]
+    [SerializeField] private int playerId = -1;
+    public int PlayerId
+    {
+        get
+        {
+            if (playerId == -1)
+            {
+                playerId = GetInstanceID();
+            }
+            return playerId;
+        }
+    }
+
     [Header("==== 控制器 ====")]
     [SerializeField] CharacterController controller;
     [SerializeField] Animator animator;
@@ -28,42 +43,34 @@ public class PlayerController : MonoBehaviour
     [Header("==== 角色状态 ====")] [InspectorLabel("")]
     [SerializeField] bool isJump;
     [SerializeField] bool isRun;
+    [SerializeField] bool isShot;
+    
+    [Header("==== 角色消息 ====")] [InspectorLabel("")]
+    public bool JumpTrigger;
+    public bool ShotTrigger;
+    public bool RunTrigger;
 
     private Vector3 moveDirection = Vector3.zero;
-
-    void Start() {
+    
+    public void OnInit()
+    {
         GameData.player = this;
     }
 
-    void Update() {
+    public void OnUpdate() {
         SetCameraTarget();
         SetFrontCameraTarget();
         MoveEvent();
         EyeEvent();
         ShotEvent();
-        
-        
-        // 当按下 A 键时，鼠标锁定并消失
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
- 
-        // 当按下 S 键时，鼠标解锁并显示
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
     }
 
-    private bool isShot;
-
+    public void OnFixedUpdate() { }
+    public void OnLateUpdate() { }
+    
     void ShotEvent() {
-        if (Input.GetMouseButton(0)) {
-            isShot = true;
-        }
-
-        if (isShot) {
+        if (ShotTrigger)
+        {
             var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
             RaycastHit hit;
             if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
@@ -72,7 +79,7 @@ public class PlayerController : MonoBehaviour
                 bullet.transform.position = bulletShotTran.position;
                 bullet.transform.GetComponent<BulletController>().targetTran = hit.point; 
             }
-            isShot = false;
+            ShotTrigger = false;        
         }
     }
 
@@ -144,31 +151,24 @@ public class PlayerController : MonoBehaviour
             var hor = Input.GetAxis("Horizontal");
             var ver = Input.GetAxis("Vertical");
 
-            if (!audioSource.isPlaying) {
-                audioSource.Play();
-            }
-
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            if (RunTrigger)
             {
                 ver *= runSpeed;
-                isRun = true;
             }
 
-            if (Input.GetKeyDown(KeyCode.R))
+            if (hor == 0 && ver == 0)
             {
-                animator.SetLayerWeight(1,Mathf.Abs(animator.GetLayerWeight(1) - 1));
-                animator.SetBool("Wep", !animator.GetBool("Wep"));
+                isRun = false;
             }
-            
-            if (Input.GetKeyDown(KeyCode.F))
+            else
             {
-                animator.SetBool("Wep", !animator.GetBool("Wep"));
+                isRun = true;
+                Debug.Log("跑步");
             }
-            
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                animator.SetLayerWeight(1,Mathf.Abs(animator.GetLayerWeight(1) - 1));
-                animator.SetBool("Aim", !animator.GetBool("Aim"));
+
+            if (!audioSource.isPlaying && isRun) {
+                audioSource.Play();
+                Debug.Log("跑步音效");
             }
 
             moveDirection = new Vector3(hor, 0, ver);
@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour
                 if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
                 {
                     //角色输入跳跃
-                    if (Input.GetButton("Jump"))
+                    if (JumpTrigger)
                     {
                         isJump = true;
                         //动画 - 跳跃

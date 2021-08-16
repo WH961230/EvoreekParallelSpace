@@ -1,29 +1,82 @@
 using UnityEngine;
 
-public class InputMgr : Singleton<InputMgr>
+/// <summary>
+/// 输入类 - 注册到 EventMgr 供 GameMgr 全局调用
+/// </summary>
+public class InputMgr : MonoBehaviour
 {
-    private bool IsOpenInput = false;
+    //输入开关 - 默认开启
+    private bool IsOpenInput = true;
+    //当前输入键值
+    private KeyCode currentKey;
+
     public void OnInit()
     {
-        IsOpenInput = true;
-        MonoMgr.GetInstance().AddUpdateEventListener(OnUpdate);
+        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_UPDATE, OnUpdate);
+        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
+        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_LATEUPDATE, OnLateUpdate);
     }
 
-    private void OnUpdate()
+    public void OnUpdate()
     {
-        CheckInput();
+        //每帧
     }
 
-    private void CheckInput()
+    public void OnFixedUpdate()
     {
-        if (IsOpenInput == false)
-        {
-            return;
-        }
+        //每帧
+    }
 
+    public void OnLateUpdate()
+    {
+        //每帧
+    }
+
+    private void OnGUI()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("按下");
+            GameData.player.JumpTrigger = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            GameData.player.JumpTrigger = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Cursor.lockState = CursorLockMode.Locked; // 当按下 A 键时，鼠标锁定并消失
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Cursor.lockState = CursorLockMode.None; // 当按下 S 键时，鼠标解锁并显示
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Cursor.lockState = CursorLockMode.Locked; // 当按下 A 键时，鼠标锁定并消失
+        }
+        
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            GameData.player.ShotTrigger = true;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            GameData.player.ShotTrigger = false;
+        }
+        
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            GameData.player.RunTrigger = true;
+        }
+        
+        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
+        {
+            GameData.player.RunTrigger = false;
         }
     }
 }
