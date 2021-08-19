@@ -14,8 +14,6 @@ public class LobbyMgr : MonoBehaviour
 
     public void OnStartGame()
     {
-        Debug.Log("开始游戏");
         SceneManager.LoadScene(MainSceneName);
-        Debug.Log($"加载场景 {MainSceneName}");
     }
 }

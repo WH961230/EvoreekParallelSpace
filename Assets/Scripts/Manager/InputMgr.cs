@@ -12,9 +12,9 @@ public class InputMgr : MonoBehaviour
 
     public void OnInit()
     {
-        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_UPDATE, OnUpdate);
-        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
-        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_LATEUPDATE, OnLateUpdate);
+        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_UPDATE, OnUpdate);
+        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
+        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_LATEUPDATE, OnLateUpdate);
     }
 
     public void OnUpdate()

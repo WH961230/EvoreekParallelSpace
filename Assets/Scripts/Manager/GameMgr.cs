@@ -35,54 +35,21 @@ public class GameMgr : MonoBehaviour {
         }
     }
 
-    /*#region Action
-
-    public void AddActionEvent(Action action)
-    {
-        if (actions.Count == 0 || action == null) return;
-        if (!actions.Contains(action))
-        {
-            actions.Add(action);
-        }
-    }
-
-    public void RemoveActionEvent(Action action)
-    {
-        if (actions.Count == 0 || action == null) return;
-        if (actions.Contains(action))
-        {
-            actions.Remove(action);
-        }
-    }
-
-    public bool HasAction(Action action)
-    {
-        if (actions.Count == 0 || action == null) return false;
-        if (actions.Contains(action))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    #endregion*/
-
-
     void Update()
     {
-        EventMgr.Instance.EventTrigger(EventMgr.Instance.MGR_UPDATE);//输入
-        EventMgr.Instance.EventTrigger(EventMgr.Instance.CONTROLLER_UPDATE);
+        MessageCenter.Instance.EventTrigger(MessageCenter.Instance.MGR_UPDATE);//输入
+        MessageCenter.Instance.EventTrigger(MessageCenter.Instance.CONTROLLER_UPDATE);
     }
 
     private void FixedUpdate()
     {
-        EventMgr.Instance.EventTrigger(EventMgr.Instance.MGR_FIXEDUPDATE);//输入
-        EventMgr.Instance.EventTrigger(EventMgr.Instance.CONTROLLER_FIXEDUPDATE);//输入
+        MessageCenter.Instance.EventTrigger(MessageCenter.Instance.MGR_FIXEDUPDATE);//输入
+        MessageCenter.Instance.EventTrigger(MessageCenter.Instance.CONTROLLER_FIXEDUPDATE);//输入
     }
 
     private void LateUpdate()
     {
-        EventMgr.Instance.EventTrigger(EventMgr.Instance.MGR_LATEUPDATE);//输入
-        EventMgr.Instance.EventTrigger(EventMgr.Instance.CONTROLLER_LATEUPDATE);//输入
+        MessageCenter.Instance.EventTrigger(MessageCenter.Instance.MGR_LATEUPDATE);//输入
+        MessageCenter.Instance.EventTrigger(MessageCenter.Instance.CONTROLLER_LATEUPDATE);//输入
     }
 }

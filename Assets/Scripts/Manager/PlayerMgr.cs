@@ -8,12 +8,9 @@ public class PlayerMgr : Singleton<PlayerMgr> {
     private PlayerController controller;
     
     public void OnInit() {
-        // var type = System.Reflection.Assembly.Load("Assembly-CSharp").GetType("SOPlayer");
-        // config = (SOPlayer)System.Activator.CreateInstance(type);
-
-        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_UPDATE, OnUpdate);
-        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
-        EventMgr.Instance.AddEventListener(EventMgr.Instance.MGR_LATEUPDATE, OnLateUpdate);
+        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_UPDATE, OnUpdate);
+        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
+        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_LATEUPDATE, OnLateUpdate);
 
         config = (SOPlayer) AssetLoader.LoadAsset(AssetType.Scriptable, "SOPlayer");
         var player = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, config.PlayerSign)) as GameObject;
@@ -28,9 +25,9 @@ public class PlayerMgr : Singleton<PlayerMgr> {
             //获取 playerId 信息
             var pid = controller.PlayerId;
 
-            EventMgr.Instance.AddEventListener(EventMgr.Instance.CONTROLLER_UPDATE, controller.OnUpdate);
-            EventMgr.Instance.AddEventListener(EventMgr.Instance.CONTROLLER_FIXEDUPDATE, controller.OnFixedUpdate);
-            EventMgr.Instance.AddEventListener(EventMgr.Instance.CONTROLLER_LATEUPDATE, controller.OnLateUpdate);
+            MessageCenter.Instance.AddEventListener(MessageCenter.Instance.CONTROLLER_UPDATE, controller.OnUpdate);
+            MessageCenter.Instance.AddEventListener(MessageCenter.Instance.CONTROLLER_FIXEDUPDATE, controller.OnFixedUpdate);
+            MessageCenter.Instance.AddEventListener(MessageCenter.Instance.CONTROLLER_LATEUPDATE, controller.OnLateUpdate);
         }
     }
 
