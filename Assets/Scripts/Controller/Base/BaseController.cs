@@ -7,4 +7,5 @@ public interface BaseController
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
+    void OnClear();
 }

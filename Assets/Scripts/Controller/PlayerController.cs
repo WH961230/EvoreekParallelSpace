@@ -1,7 +1,5 @@
-using System;
-using System.ComponentModel;
+using Data;
 using Unity.VisualScripting;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, BaseController
@@ -43,46 +41,36 @@ public class PlayerController : MonoBehaviour, BaseController
     [Header("==== 角色状态 ====")] [InspectorLabel("")]
     [SerializeField] bool isJump;
     [SerializeField] bool isRun;
-    [SerializeField] bool isShot;
     
     [Header("==== 角色消息 ====")] [InspectorLabel("")]
-    public bool JumpTrigger;
-    public bool ShotTrigger;
     public bool RunTrigger;
 
     private Vector3 moveDirection = Vector3.zero;
     
     public void OnInit()
     {
-        GameData.player = this;
+        //注册事件
+        MessageCenter.Instance.Register(MessageCode.Play_Shot, ShotEvent);
+        MessageCenter.Instance.Register(MessageCode.Play_Jump, JumpEvent);
     }
-
     public void OnUpdate() {
         SetCameraTarget();
         SetFrontCameraTarget();
         MoveEvent();
         EyeEvent();
-        ShotEvent();
     }
-
     public void OnFixedUpdate() { }
     public void OnLateUpdate() { }
-    
     void ShotEvent() {
-        if (ShotTrigger)
-        {
-            var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-            RaycastHit hit;
-            if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
-                var bullet = Instantiate(bulletPrefab.gameObject);
-                Debug.Log("hitName : " + hit.collider.name);
-                bullet.transform.position = bulletShotTran.position;
-                bullet.transform.GetComponent<BulletController>().targetTran = hit.point; 
-            }
-            ShotTrigger = false;        
+        var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        RaycastHit hit;
+        if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
+            var bullet = Instantiate(bulletPrefab.gameObject);
+            Debug.Log("hitName : " + hit.collider.name);
+            bullet.transform.position = bulletShotTran.position;
+            bullet.transform.GetComponent<BulletController>().targetTran = hit.point; 
         }
     }
-
     private void OnDrawGizmos() {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
@@ -94,7 +82,6 @@ public class PlayerController : MonoBehaviour, BaseController
         var rect = new Rect(new Vector2(Screen.width / 2, Screen.height / 2), Vector2.one);
         Gizmos.DrawGUITexture(rect, Texture2D.whiteTexture);
     }
-
     private void SetCameraTarget() { 
         var globalCamera = GameData.GameCamera;
         if (!globalCamera) 
@@ -108,7 +95,6 @@ public class PlayerController : MonoBehaviour, BaseController
             globalCamera.SetTarget(roleCameraTarget);
         }
     }
-    
     private void SetFrontCameraTarget() { 
         var globalFrontCamera = GameData.GameFrontCamera;
         if (!globalFrontCamera) 
@@ -123,7 +109,7 @@ public class PlayerController : MonoBehaviour, BaseController
         }
     }
 
-    void EyeEvent() 
+    private void EyeEvent() 
     {
         if (!roleCameraRotObj || !controller) 
         {
@@ -137,17 +123,15 @@ public class PlayerController : MonoBehaviour, BaseController
         roleCameraRotObj.transform.Rotate(Vector3.left * y * ySpeed);
     }
 
-    void MoveEvent()
+    private void MoveEvent()
     {
         if (!controller || !animator) {
             return;
         }
 
-        //角色在地面
         if (controller.isGrounded) {
             isRun = false;
 
-            //前后移动
             var hor = Input.GetAxis("Horizontal");
             var ver = Input.GetAxis("Vertical");
 
@@ -171,38 +155,36 @@ public class PlayerController : MonoBehaviour, BaseController
                 Debug.Log("跑步音效");
             }
 
+            JumpEvent();
+
             moveDirection = new Vector3(hor, 0, ver);
             moveDirection = controller.transform.TransformDirection(moveDirection);
             moveDirection *= forwardMoveSpeed;
 
-            //动画 - 水平 垂直 - 参数
             animator.SetFloat("Horizontal", hor);
             animator.SetFloat("Vertical", ver);
             
-            //角色非跳跃状态
-            if (!isJump)
-            {
-                if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
-                {
-                    //角色输入跳跃
-                    if (JumpTrigger)
-                    {
-                        isJump = true;
-                        //动画 - 跳跃
-                        animator.SetBool("Jump", true);
-                        moveDirection.y = jumpSpeed;
-                    }
-                }
-            }
-            else
-            {
-                //重置 跳跃状态
-                isJump = false;
-                animator.SetBool("Jump", false);
-            }
+
         }
 
         moveDirection.y -= gravity * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    private void JumpEvent() {
+        if (!isJump) {
+            if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
+                isJump = true;
+                animator.SetBool("Jump", true);
+                moveDirection.y = jumpSpeed;
+            }
+        } else {
+            isJump = false;
+            animator.SetBool("Jump", false);
+        }
+
+    }
+    public void OnClear() {
+        Destroy(this.gameObject);
     }
 }

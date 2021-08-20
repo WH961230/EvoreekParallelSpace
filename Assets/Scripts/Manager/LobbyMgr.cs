@@ -12,7 +12,7 @@ public class LobbyMgr : MonoBehaviour
         StartGameBtn.onClick.AddListener(OnStartGame);
     }
 
-    public void OnStartGame()
+    private void OnStartGame()
     {
         SceneManager.LoadScene(MainSceneName);
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 // 事件接口
@@ -20,103 +21,126 @@ class EventInfo : IEvent
 public class MessageCenter : Singleton<MessageCenter>
 {
     private Dictionary<string, IEvent> eventDic = new Dictionary<string, IEvent>();
-    private Dictionary<int, List<Wrapper>> msg = new Dictionary<int, List<Wrapper>>();
-
-    #region MGR_REGISTER 管理类注册标识
-    public string MGR_UPDATE = "MGR_UPDATE";
-    public string MGR_FIXEDUPDATE = "MGR_FIXEDUPDATE";
-    public string MGR_LATEUPDATE = "MGR_LATEUPDATE";
-    #endregion
-    
-    #region CONTROLLER_REGISTER 控制类注册标识
-    public string CONTROLLER_UPDATE = "CONTROLLER_UPDATE";
-    public string CONTROLLER_FIXEDUPDATE = "CONTROLLER_FIXEDUPDATE";
-    public string CONTROLLER_LATEUPDATE = "CONTROLLER_LATEUPDATE";
-    #endregion
+    private Dictionary<int, List<Wrapper>> handlers;
 
     #region EVENTDIC 事件
 
-    public void AddEventListener(string methodName, UnityAction action)
-    {
-        if (eventDic.ContainsKey(methodName))
-        {
-            (eventDic[methodName] as EventInfo).actions += action;
-        }
-        else
-        {
-            eventDic.Add(methodName, new EventInfo(action));
-        }
-        Debug.Log($"注册成功事件： {methodName} 方法：{action.Method.Name}");
-    }
-
-    public void EventTrigger(string methodName)
-    {
-        if (eventDic.ContainsKey(methodName))
-        {
-            (eventDic[methodName] as EventInfo).actions?.Invoke();
-        }
-    }
-
-    public void RemoveEventListener(string methodName, UnityAction action)
-    {
-        if (eventDic.ContainsKey(methodName))
-        {
-            (eventDic[methodName] as EventInfo).actions -= action;
-        }
-    }
-
-    public void Register(int code, Action action)
-    {
-        RegisterMessage(code, action);
+    public MessageCenter() {
+        handlers = new Dictionary<int, List<Wrapper>>();
     }
     
-    public void Register<T>(int code, Action action, T data)
-    {
-    }
-
-    public void Register<T1, T2>(int code, Action action, T1 data1, T2 data2)
-    {
-    }
-
-    public void Register<T1, T2, T3>(int code, Action action, T1 data1, T2 data2, T3 data3)
-    {
-    }
-
-    public void RegisterMessage(int code, Delegate handle)
-    {
-        List<Wrapper> wrappers;
-    }
-
-    public void Dispatcher(int code)
-    {
+    public void Register(int id, Action handler) {
+        RegisterDelegate(id, handler);
     }
     
-    public void Dispatcher<T>(int code, T data)
-    {
+    public void Register<T>(int id, Action<T> handler) {
+        RegisterDelegate(id, handler);
     }
 
-    public void Dispatcher<T1, T2>(int data, T1 data1, T2 data2)
-    {
-    }
-    
-    public void Dispatcher<T1, T2, T3>(int data, T1 data1, T2 data2, T3 data3)
-    {
+    public void Register<T1, T2>(int id, Action<T1, T2> handler) {
+        RegisterDelegate(id, handler);
     }
 
-    class Wrapper
+    public void Register<T1, T2, T3>(int id, Action<T1, T2, T3> handler)
     {
-        private int code;
-        private Delegate handle;
+        RegisterDelegate(id, handler);
+    }
 
-        public Wrapper(int code, Delegate handle)
-        {
-            this.code = code;
-            this.handle = handle;
+    private void RegisterDelegate(int id, Delegate handler) {
+        if (null == handler) return;
+        //不存在封装体
+        if (!handlers.TryGetValue(id, out var wps)) {
+            //新建封装体
+            wps = new List<Wrapper>();
+            //添加封装体
+            handlers.Add(id, wps);
         }
 
+        //不存在委托
+        if (SearchWrapperIndex(wps, handler) == -1) {
+            //添加委托
+            wps.Add(new Wrapper(id, handler));
+        }
+    }
+
+    private int SearchWrapperIndex(List<Wrapper> list, Delegate handler) {
+        int index = -1;
+        int length = list.Count;
+        for (var i = 0 ; i < length ; ++i) {
+            if (list[i].handler == handler) {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    public void Dispatcher(int id)
+    {
+        if (handlers.TryGetValue(id, out var wps)) {
+            var length = wps.Count;
+            for (var i = 0 ; i < length ; ++i) {
+                wps[i].Invoke();
+            }
+        }
+    }
+
+    public void Dispatcher<T>(int id, T data)
+    {
+        if (handlers.TryGetValue(id, out var wps)) {
+            var length = wps.Count;
+            for (var i = 0 ; i < length ; ++i) {
+                wps[i].Invoke(data);
+            }
+        }
+    }
+
+    public void Dispatcher<T1, T2>(int id, T1 data1, T2 data2)
+    {
+        if (handlers.TryGetValue(id, out var wps)) {
+            var length = wps.Count;
+            for (var i = 0 ; i < length ; ++i) {
+                wps[i].Invoke(data1, data2);
+            }
+        }
+    }
+
+    public void Dispatcher<T1, T2, T3>(int id, T1 data1, T2 data2, T3 data3)
+    {
+        if (handlers.TryGetValue(id, out var wps)) {
+            var length = wps.Count;
+            for (var i = 0 ; i < length ; ++i) {
+                wps[i].Invoke(data1, data2, data3);
+            }
+        }
+    }
+
+    struct Wrapper
+    {
+        public int id;
+        public Delegate handler;
+
+        public Wrapper(int id, Delegate handler)
+        {
+            this.id = id;
+            this.handler = handler;
+        }
         public void Invoke()
         {
-            ((Action)handle).Invoke();
+            ((Action)handler).Invoke();
+        }        
+        public void Invoke<T>(T data)
+        {
+            ((Action<T>)handler).Invoke(data);
+        }        
+        public void Invoke<T1, T2>(T1 data1, T2 data2)
+        {
+            ((Action<T1, T2>)handler).Invoke(data1, data2);
+        }
+        public void Invoke<T1, T2, T3>(T1 data1, T2 data2, T3 data3)
+        {
+            ((Action<T1, T2, T3>)handler).Invoke(data1, data2, data3);
         }
     }
 

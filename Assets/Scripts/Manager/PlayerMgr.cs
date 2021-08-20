@@ -1,47 +1,62 @@
+using System.Collections.Generic;
+using Data;
 using UnityEngine;
 
 /// <summary>
 /// 玩家管理 - 全局玩家信息管理
 /// </summary>
-public class PlayerMgr : Singleton<PlayerMgr> {
-    private SOPlayer config;
-    private PlayerController controller;
+public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
+    private List<BaseController> controllers;
     
-    public void OnInit() {
-        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_UPDATE, OnUpdate);
-        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
-        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_LATEUPDATE, OnLateUpdate);
+    //初始化 - 获取配置
+    public void OnInit(GameEngine engine) {
+        engine.managers.Add(this);
+        MessageCenter.Instance.Register(MessageCode.Game_GameStart, CreatePlayer);
+        MessageCenter.Instance.Register(MessageCode.Game_GameOver, OnClear);
+        MessageCenter.Instance.Register<int>(MessageCode.Play_Dead, RemovePlayerById);
+        controllers = new List<BaseController>();
+    }
 
-        config = (SOPlayer) AssetLoader.LoadAsset(AssetType.Scriptable, "SOPlayer");
-        var player = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, config.PlayerSign)) as GameObject;
-        if (null != player)
-        {
-            player.transform.position = config.PlayerInfo.playerBornVec;
-            player.transform.localRotation = config.PlayerInfo.playerBornQua;
-            
-            controller = player.GetComponent<PlayerController>();
-            controller.OnInit();
+    //创建
+    private void CreatePlayer() {
+        var player = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.playerConfig.PlayerSign)) as GameObject;
+        if (null == player) {
+            return;
+        }
+        player.transform.position = ConfigMgr.Instance.playerConfig.PlayerInfo.playerBornVec;
+        player.transform.localRotation = ConfigMgr.Instance.playerConfig.PlayerInfo.playerBornQua;
 
-            //获取 playerId 信息
-            var pid = controller.PlayerId;
+        var controller = player.GetComponent<PlayerController>();
+        controller.OnInit();
+        
+        controllers.Add(controller);
+    }
 
-            MessageCenter.Instance.AddEventListener(MessageCenter.Instance.CONTROLLER_UPDATE, controller.OnUpdate);
-            MessageCenter.Instance.AddEventListener(MessageCenter.Instance.CONTROLLER_FIXEDUPDATE, controller.OnFixedUpdate);
-            MessageCenter.Instance.AddEventListener(MessageCenter.Instance.CONTROLLER_LATEUPDATE, controller.OnLateUpdate);
+    private void RemovePlayerById(int id) {
+        for (var i = 0 ; i < controllers.Count ; ++i) {
+            var crl = (PlayerController)controllers[i];
+            if (crl.PlayerId == id) {
+                controllers[i].OnClear();
+                controllers.Remove(crl);
+                break;
+            }
         }
     }
 
-    private void OnUpdate()
-    {
-        //每帧
-    }
-    public void OnFixedUpdate()
-    {
-        //每帧
+    //刷新
+    public void OnUpdate() {
+        if (null != controllers && controllers.Count > 0) {
+            for (var i = 0 ; i < controllers.Count ; ++i) {
+                controllers[i].OnUpdate();
+            }
+        }
     }
 
-    public void OnLateUpdate()
-    {
-        //每帧
+    public void OnClear() {
+        if (null != controllers && controllers.Count > 0) {
+            for (var i = 0 ; i < controllers.Count ; ++i) {
+                controllers[i].OnClear();
+            }
+        }
     }
 }

@@ -1,47 +1,25 @@
+using Data;
 using UnityEngine;
 
 /// <summary>
 /// 输入类 - 注册到 EventMgr 供 GameMgr 全局调用
 /// </summary>
-public class InputMgr : MonoBehaviour
+public class InputMgr : Singleton<InputMgr> , IBaseMgr
 {
     //输入开关 - 默认开启
     private bool IsOpenInput = true;
     //当前输入键值
     private KeyCode currentKey;
 
-    public void OnInit()
+    public void OnInit(GameEngine engine)
     {
-        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_UPDATE, OnUpdate);
-        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_FIXEDUPDATE, OnFixedUpdate);
-        MessageCenter.Instance.AddEventListener(MessageCenter.Instance.MGR_LATEUPDATE, OnLateUpdate);
+        engine.managers.Add(this);
     }
 
-    public void OnUpdate()
-    {
-        //每帧
-    }
-
-    public void OnFixedUpdate()
-    {
-        //每帧
-    }
-
-    public void OnLateUpdate()
-    {
-        //每帧
-    }
-
-    private void OnGUI()
-    {
+    public void OnUpdate() {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameData.player.JumpTrigger = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            GameData.player.JumpTrigger = false;
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_Jump);
         }
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -59,24 +37,32 @@ public class InputMgr : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked; // 当按下 A 键时，鼠标锁定并消失
         }
         
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            GameData.player.ShotTrigger = true;
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            GameData.player.ShotTrigger = false;
+            MessageCenter.Instance.Dispatcher<int>(MessageCode.Play_Dead, GameData.GetLocalPlayer.id);
         }
         
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            MessageCenter.Instance.Dispatcher(MessageCode.Game_GameOver);
+        }
+        
+        if (Input.GetMouseButtonDown(0)) 
+        {
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_Shot);
+        }
+
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
-            GameData.player.RunTrigger = true;
+            GameData.GetLocalPlayer.controller.RunTrigger = true;
         }
         
         if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
         {
-            GameData.player.RunTrigger = false;
+            GameData.GetLocalPlayer.controller.RunTrigger = false;
         }
+    }
+
+    public void OnClear() {
     }
 }

@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
 
 public class BulletController : MonoBehaviour
 {
@@ -13,13 +9,10 @@ public class BulletController : MonoBehaviour
         Invoke("OnDestroy", 1);
     }
 
-    void Update()
-    {
-        if (null != targetTran) {
-            Debug.DrawLine(transform.position, targetTran, Color.magenta);
-            transform.LookAt(targetTran);
-            transform.position = Vector3.Lerp(transform.position, targetTran, Time.deltaTime * speed); 
-        }
+    void Update() {
+        Debug.DrawLine(transform.position, targetTran, Color.magenta);
+        transform.LookAt(targetTran);
+        transform.position = Vector3.Lerp(transform.position, targetTran, Time.deltaTime * speed);
     }
 
     void OnDestroy()

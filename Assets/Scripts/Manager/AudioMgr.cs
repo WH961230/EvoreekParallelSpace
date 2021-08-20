@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class AudioMgr : Singleton<AudioMgr>
+public class AudioMgr : Singleton<AudioMgr> , IBaseMgr
 {
     private SOAudio config;
+    private bool isOpenBackgroundMusic = false;
+    private AudioClip BackgroundClip;
+    private AudioSource source;
 
-    public void Play(AudioSource source, AudioClip clip)
+    private void Play(AudioSource source, AudioClip clip)
     {
         if (null == source)
         {
@@ -13,5 +16,21 @@ public class AudioMgr : Singleton<AudioMgr>
         }
 
         source.PlayOneShot(clip);
+    }
+
+    public void OnInit(GameEngine engine) {
+        engine.managers.Add(this);
+        if (isOpenBackgroundMusic == false) return;
+        source = new AudioSource();
+        Play(source, BackgroundClip);
+        if (null == source) {
+            Debug.LogError("audioManager or source not find");
+        }
+    }
+
+    public void OnUpdate() {
+    }
+
+    public void OnClear() {
     }
 }
