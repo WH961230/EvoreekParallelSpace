@@ -2,54 +2,46 @@ using System.Collections.Generic;
 using Data;
 using UnityEngine;
 
-public class PlayerData {
-    public int id;
-    public string name;
-    public bool isLocalPlayer;
-    public PlayerController controller;
-}
 
 /// <summary>
-/// 玩家管理 - 全局玩家信息管理
+/// 玩家管理 - 玩家数据管理
 /// </summary>
 public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
-    private static List<PlayerData> allPlayers;
-
-    public static List<PlayerData> AllPlayers {
-        get => allPlayers;
-        set => allPlayers = value;
-    }
+    public List<Player> Players = new List<Player>();
     
-    public static PlayerData GetLocalPlayer {
+    /// <summary>
+    /// 获取本地角色
+    /// </summary>
+    public Player GetLocalPlayer {
         get {
-            PlayerData data = null;
-            if (null == AllPlayers || AllPlayers.Count <= 0) {
-                return data;
+            Player player = null;
+            if (null == Players || Players.Count <= 0) {
+                return player;
             }
 
-            foreach (var p in AllPlayers) {
-                if (p.isLocalPlayer) {
-                    data = p;
+            foreach (var p in Players) {
+                if (p.BaseData.Type == PlayerType.LocalPlayer) {
+                    player = p;
                     break;
                 }
             }
 
-            return data;
+            return player;
         }
     }
 
-    public static int GetLocalPlayerId
+    public int GetLocalPlayerId
     {
         get
         {
             int id = -1;
-            if (null == AllPlayers || AllPlayers.Count <= 0) {
+            if (null == Players || Players.Count <= 0) {
                 return id;
             }
 
-            foreach (var p in AllPlayers) {
-                if (p.isLocalPlayer) {
-                    id = p.id;
+            foreach (var p in Players) {
+                if (p.BaseData.Type == PlayerType.LocalPlayer) {
+                    id = p.BaseData.Id;
                     break;
                 }
             }
@@ -58,48 +50,48 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         }
     }
     
-    //初始化 - 获取配置
+    /// <summary>
+    /// 初始化 - 获取配置
+    /// </summary>
+    /// <returns></returns>
     public void OnInit(GameEngine engine) {
         engine.managers.Add(this);
         
-        MessageCenter.Instance.Register(MessageCode.Game_GameStart, CreatePlayer);
+        //消息注册
+        MessageCenter.Instance.Register(MessageCode.Game_GameStart, InitPlayer);
         MessageCenter.Instance.Register(MessageCode.Game_GameOver, OnClear);
         MessageCenter.Instance.Register<int>(MessageCode.Play_Dead, RemoveControllerById);
-        
-        AllPlayers = new List<PlayerData>();
     }
 
-    private void CreatePlayer() {
-        var player = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.playerConfig.PlayerSign)) as GameObject;
-        if (null == player) {
+    /// <summary>
+    /// 创建玩家
+    /// </summary>
+    private void InitPlayer() {
+        //获取预制体
+        var playerObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.playerConfig.PlayerSign)) as GameObject;
+        if (null == playerObj) {
             return;
         }
-        player.transform.position = ConfigMgr.Instance.playerConfig.PlayerInfo.playerBornVec;
-        player.transform.localRotation = ConfigMgr.Instance.playerConfig.PlayerInfo.playerBornQua;
 
-        var controller = player.GetComponent<PlayerController>();
-        controller.OnInit();
+        playerObj.transform.position = ConfigMgr.Instance.playerConfig.PlayerInfo.playerBornVec;
+        playerObj.transform.localRotation = ConfigMgr.Instance.playerConfig.PlayerInfo.playerBornQua;
+
+        var pc = playerObj.GetComponent<PlayerController>();
+        pc.OnInit();
         
-        var playerData = new PlayerData()
-        {
-            id = controller.PlayerId,
-            name = controller.name,
-            controller = controller,
-            isLocalPlayer = true,
-        };
-        
-        allPlayers.Add(playerData);
+        var player = new Player(1,"测试", PlayerType.LocalPlayer, pc);
+        Players.Add(player);
     }
 
     public PlayerController GetControllerById(int id)
     {
-        if (null == allPlayers || allPlayers.Count <= 0) return null;
+        if (null == Players || Players.Count <= 0) return null;
         PlayerController controller = null;
-        foreach (var c in allPlayers)
+        foreach (var c in Players)
         {
-            if (c.id == id)
+            if (c.BaseData.Id == id)
             {
-                controller = c.controller;
+                controller = c.BaseData.PlayerController;
                 break;
             }
         }
@@ -107,14 +99,18 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         return controller;
     }
 
+    /// <summary>
+    /// 移除指定的玩家
+    /// </summary>
+    /// <param name="id"></param>
     private void RemoveControllerById(int id) {
-        for (var i = 0 ; i < allPlayers.Count ; ++i) {
-            if (allPlayers[i] != null)
+        for (var i = 0 ; i < Players.Count ; ++i) {
+            if (Players[i] != null)
             {
-                var crl = allPlayers[i];
-                if (crl.id == id) {
-                    crl.controller.OnClear();
-                    allPlayers.Remove(crl);
+                var p = Players[i];
+                if (p.BaseData.Id == id) {
+                    p.BaseData.PlayerController.OnClear();
+                    Players.Remove(p);
                     break;
                 }
             }
@@ -122,33 +118,33 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     }
 
     public void OnUpdate() {
-        if (null != allPlayers && allPlayers.Count > 0) {
-            for (var i = 0 ; i < allPlayers.Count ; ++i)
+        if (null != Players && Players.Count > 0) {
+            for (var i = 0 ; i < Players.Count ; ++i)
             {
-                var data = allPlayers[i];
-                if (data != null)
+                var p = Players[i];
+                if (p != null)
                 {
-                    var controller = data.controller;
-                    if (controller != null)
+                    var c = p.BaseData.PlayerController;
+                    if (c != null)
                     {
-                        controller.OnUpdate();
+                        c.OnUpdate();
                     }
-                };
+                }
             }
         }
     }
 
     public void OnClear() {
-        if (null != allPlayers && allPlayers.Count > 0) {
-            for (var i = 0 ; i < allPlayers.Count ; ++i)
+        if (null != Players && Players.Count > 0) {
+            for (var i = 0 ; i < Players.Count ; ++i)
             {
-                var data = allPlayers[i];
-                if (data != null)
+                var p = Players[i];
+                if (p != null)
                 {
-                    var controller = data.controller;
-                    if (controller != null)
+                    var c = p.BaseData.PlayerController;
+                    if (c != null)
                     {
-                        controller.OnClear();
+                        c.OnClear();
                     }
                 };
             }

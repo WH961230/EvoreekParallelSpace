@@ -18,9 +18,12 @@ public class GameEngine : MonoBehaviour {
 
     void Start() {
         MgrInit();
-        GameModeStart();
+        GameModeInit();
     }
 
+    /// <summary>
+    /// 管理器初始化
+    /// </summary>
     private void MgrInit() {
         ConfigMgr.Instance.OnInit(this);
         SceneMgr.Instance.OnInit(this);
@@ -29,7 +32,10 @@ public class GameEngine : MonoBehaviour {
         AudioMgr.Instance.OnInit(this);
     }
 
-    private void GameModeStart() {
+    /// <summary>
+    /// 游戏模式初始化
+    /// </summary>
+    private void GameModeInit() {
         MessageCenter.Instance.Dispatcher(MessageCode.Game_GameStart);
     }
 
@@ -46,13 +52,28 @@ public class GameEngine : MonoBehaviour {
     }
 
     #endregion
-
+    
     #region GameOver
 
+    /// <summary>
+    /// 游戏结束
+    /// </summary>
     public void GameOver() {
         MessageCenter.Instance.Dispatcher(MessageCode.Game_GameOver);
+        Clear();
     }
 
     #endregion
+    
+    #region Clear
 
+    void Clear()
+    {
+        foreach (var m in managers)
+        {
+            m.OnClear();
+        }
+    }
+
+    #endregion
 }

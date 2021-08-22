@@ -23,46 +23,64 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var data = PlayerMgr.GetLocalPlayer;
-            if (data != null)
+            var p = PlayerMgr.Instance.GetLocalPlayer;
+            if (p != null)
             {
-                var controller = data.controller;
-                if (controller != null)
+                var c = p.BaseData.PlayerController;
+                if (c != null)
                 {
-                    MessageCenter.Instance.Dispatcher(MessageCode.Play_Jump);
+                    c.JumpInput = true;
+                }
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            var p = PlayerMgr.Instance.GetLocalPlayer;
+            if (p != null)
+            {
+                var c = p.BaseData.PlayerController;
+                if (c != null)
+                {
+                    c.JumpInput = false;
                 }
             }
         }
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            var data = PlayerMgr.GetLocalPlayer;
-            if (data != null)
+            var p = PlayerMgr.Instance.GetLocalPlayer;
+            if (p != null)
             {
-                var controller = data.controller;
-                if (controller != null)
+                var c = p.BaseData.PlayerController;
+                if (c != null)
                 {
-                    controller.isRun = true;
+                    c.RunInput = true;
                 }
             }
         }
         
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            var data = PlayerMgr.GetLocalPlayer;
-            if (data != null)
+            var p = PlayerMgr.Instance.GetLocalPlayer;
+            if (p != null)
             {
-                var controller = data.controller;
-                if (controller != null)
+                var c = p.BaseData.PlayerController;
+                if (c != null)
                 {
-                    controller.isRun = false;
+                    c.RunInput = false;
                 }
             }
         }
 
         if (Input.GetMouseButtonDown(0)) 
         {
-            MessageCenter.Instance.Dispatcher(MessageCode.Play_Shot);
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_Attack);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R)) 
+        {
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_Reload);
         }
     }
 
