@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4562167241893192}
   - component: {fileID: 33579338205746914}
   - component: {fileID: 23388009012862250}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01_Sight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4035726210733530}
   - component: {fileID: 33849774754450010}
   - component: {fileID: 23267216474747724}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01_Charge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 4567113214387454}
   - component: {fileID: 33153305189578606}
   - component: {fileID: 23900664595467266}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01_Slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 4109271723540088}
   - component: {fileID: 33495983434747188}
   - component: {fileID: 23494832213626292}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01_Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,9 @@ GameObject:
   - component: {fileID: 33974472452233308}
   - component: {fileID: 23534246219926244}
   - component: {fileID: 64087498231671328}
-  m_Layer: 0
+  - component: {fileID: 4989395105671683153}
+  - component: {fileID: 836865494167895037}
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -432,6 +434,39 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43531877904820074, guid: d70ea84b37167204484057e531733574, type: 2}
+--- !u!54 &4989395105671683153
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464271373217014}
+  serializedVersion: 2
+  m_Mass: 50
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &836865494167895037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464271373217014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a12cef4e22c5a149a4f3102e21f0a00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponId: 0
+  weaponName: M4
+  bulletPrefab: {fileID: 0}
+  bulletShotTran: {fileID: 0}
+  weaponType: 0
 --- !u!1 &1655006058520924
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,7 +478,7 @@ GameObject:
   - component: {fileID: 4460682071226900}
   - component: {fileID: 33571047977460106}
   - component: {fileID: 23253394540551250}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01_Mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -525,7 +560,7 @@ GameObject:
   - component: {fileID: 4997879805799044}
   - component: {fileID: 33490973275899310}
   - component: {fileID: 23077681540007778}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: SM_Wep_Preset_A_Rifle_01_Sight_Glass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -605,7 +640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1015643916948242826}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: ShotBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

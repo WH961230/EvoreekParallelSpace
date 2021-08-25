@@ -9,6 +9,8 @@ using UnityEngine;
 public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     public List<Player> Players = new List<Player>();
     
+    private int id = -1;
+    
     /// <summary>
     /// 获取本地角色
     /// </summary>
@@ -30,6 +32,23 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         }
     }
 
+    public Player GetPlayerById(int id)
+    {
+        Player player = null;
+        if (null != Players && Players.Count > 0)
+        {
+            foreach (var p in Players)
+            {
+                if (p.BaseData.Id == id)
+                {
+                    player = p;
+                }
+            }
+        }
+
+        return player;
+    }
+
     public int GetLocalPlayerId
     {
         get
@@ -48,6 +67,12 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
 
             return id;
         }
+    }
+
+    public void GetWeapon(int playerId, int weaponId)
+    {
+        var player = GetPlayerById(playerId);
+        
     }
     
     /// <summary>
@@ -78,27 +103,20 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
 
         var pc = playerObj.GetComponent<PlayerController>();
         pc.OnInit();
+
+        pc.playerId = ++id;
         
-        var player = new Player(1,"测试", PlayerType.LocalPlayer, pc);
+        //创建玩家
+        var player = new Player(
+            pc.playerId,
+            pc.playerName, 
+            pc.playerType, 
+            pc
+            );
+        
         Players.Add(player);
     }
-
-    public PlayerController GetControllerById(int id)
-    {
-        if (null == Players || Players.Count <= 0) return null;
-        PlayerController controller = null;
-        foreach (var c in Players)
-        {
-            if (c.BaseData.Id == id)
-            {
-                controller = c.BaseData.PlayerController;
-                break;
-            }
-        }
-
-        return controller;
-    }
-
+    
     /// <summary>
     /// 移除指定的玩家
     /// </summary>

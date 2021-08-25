@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using UnityEngine;
+
+/// <summary>
 /// 玩家类型
 /// </summary>
 public enum PlayerType
@@ -27,11 +29,12 @@ public class Player : IBaseEntites
     public PlayerBaseData BaseData;
 
     public Player(int id, string name, PlayerType type, PlayerController pc)
-    {
+    { 
         this.BaseData.Id = id;
         this.BaseData.Name = name;
         this.BaseData.Type = type;
         this.BaseData.PlayerController = pc;
+        Debug.LogFormat("创建角色 ：name {0} id {1}", name, id);
     }
 
     public void OnInit()

@@ -9,19 +9,9 @@ public class PlayerController : MonoBehaviour, IBaseController
 {
     [Header("==== 角色ID ====")] 
     [Tooltip("是否是机器人")][SerializeField] private bool isAI;
-    [SerializeField] private int playerId = -1;
-    public int PlayerId
-    {
-        get
-        {
-            if (playerId == -1)
-            {
-                playerId = GetInstanceID();
-            }
-
-            return playerId;
-        }
-    }
+    [SerializeField] public int playerId = -1;
+    [SerializeField] public string playerName;
+    [SerializeField] public PlayerType playerType;
 
     public bool IsAI
     {
@@ -157,7 +147,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
     }
 
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         RaycastHit hit;
         var ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
@@ -169,7 +159,7 @@ public class PlayerController : MonoBehaviour, IBaseController
 
         var rect = new Rect(new Vector2(Screen.width / 2, Screen.height / 2), Vector2.one);
         Gizmos.DrawGUITexture(rect, Texture2D.whiteTexture);
-    }
+    }*/
 
     /// <summary>
     /// 设置相机目标

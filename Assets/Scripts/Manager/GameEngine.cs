@@ -30,6 +30,7 @@ public class GameEngine : MonoBehaviour {
         InputMgr.Instance.OnInit(this);
         PlayerMgr.Instance.OnInit(this);
         AudioMgr.Instance.OnInit(this);
+        WeaponMgr.Instance.OnInit(this);
     }
 
     /// <summary>

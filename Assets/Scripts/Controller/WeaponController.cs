@@ -5,10 +5,12 @@ using UnityEngine;
 /// </summary>
 public class WeaponController : MonoBehaviour, IBaseController
 {
+	public int weaponId;
+	[SerializeField] public string weaponName;
 	[Tooltip("子弹预制体")][SerializeField] Transform bulletPrefab;
 	[Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
 
-	[Tooltip("武器类型")][SerializeField] WeaponType weaponType;
+	[Tooltip("武器类型")][SerializeField] public WeaponType weaponType;
 
 	public void OnInit()
 	{
