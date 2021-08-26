@@ -6559,6 +6559,7 @@ MonoBehaviour:
   isWalk: 0
   isRun: 0
   isJump: 0
+  weaponHandleTran: {fileID: 4871254955431279842}
 --- !u!1 &7660846421604055383
 GameObject:
   m_ObjectHideFlags: 0

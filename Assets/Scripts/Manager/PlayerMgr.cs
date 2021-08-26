@@ -69,12 +69,6 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         }
     }
 
-    public void GetWeapon(int playerId, int weaponId)
-    {
-        var player = GetPlayerById(playerId);
-        
-    }
-    
     /// <summary>
     /// 初始化 - 获取配置
     /// </summary>
@@ -85,7 +79,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         //消息注册
         MessageCenter.Instance.Register(MessageCode.Game_GameStart, InitPlayer);
         MessageCenter.Instance.Register(MessageCode.Game_GameOver, OnClear);
-        MessageCenter.Instance.Register<int>(MessageCode.Play_Dead, RemoveControllerById);
+        MessageCenter.Instance.Register<int>(MessageCode.Play_Dead, RemovePlayerById);
     }
 
     /// <summary>
@@ -121,13 +115,13 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     /// 移除指定的玩家
     /// </summary>
     /// <param name="id"></param>
-    private void RemoveControllerById(int id) {
+    private void RemovePlayerById(int id) {
         for (var i = 0 ; i < Players.Count ; ++i) {
             if (Players[i] != null)
             {
                 var p = Players[i];
                 if (p.BaseData.Id == id) {
-                    p.BaseData.PlayerController.OnClear();
+                    p.OnClear();
                     Players.Remove(p);
                     break;
                 }

@@ -44,5 +44,10 @@ public class Player : IBaseEntites
 
     public void OnClear()
     {
+        var controller = BaseData.PlayerController;
+        if (null != controller)
+        {
+            controller.OnClear();
+        }
     }
 }

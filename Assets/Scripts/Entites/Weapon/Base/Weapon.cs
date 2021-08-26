@@ -52,5 +52,10 @@ public class Weapon : IBaseEntites
 
     public void OnClear()
     {
+        var controller = BaseData.weaponController;
+        if (controller != null)
+        {
+            controller.OnClear();
+        }
     }
 }

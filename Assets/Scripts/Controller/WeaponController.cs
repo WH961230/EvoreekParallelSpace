@@ -14,8 +14,6 @@ public class WeaponController : MonoBehaviour, IBaseController
 
 	public void OnInit()
 	{
-		//初始武器注册
-		RegisterWeapon(null);
 	}
 
 	public void OnUpdate()
@@ -33,11 +31,6 @@ public class WeaponController : MonoBehaviour, IBaseController
 	public void OnClear()
 	{
 		Destroy(this.gameObject);
-	}
-
-	private void RegisterWeapon(PlayerController oc)
-	{
-		WeaponMgr.Instance.RegisterWeapon(weaponType,this);
 	}
 
 	/// <summary>

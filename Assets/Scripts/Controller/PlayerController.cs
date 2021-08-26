@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using Data;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// 角色控制 - 行为
@@ -54,6 +57,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     private float ver;//垂直输入
     
     AnimatorController ac;
+    public Transform weaponHandleTran;//武器挂载点
+    public Transform weaponTran;
 
     public void OnInit()
     {
@@ -85,6 +90,11 @@ public class PlayerController : MonoBehaviour, IBaseController
         SetFrontCameraTarget();
         MoveEvent();
         EyeEvent();
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            DropWeapon(weaponTran);
+        }
     }
 
     public void OnFixedUpdate()
@@ -93,6 +103,32 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     public void OnLateUpdate()
     {
+    }
+
+    /// <summary>
+    /// 挂载武器 - 表现
+    /// </summary>
+    /// <param name="weaponTran"></param>
+    public void HandleWeapon(Transform weaponTran)
+    {
+        Destroy(weaponTran.GetComponent<Rigidbody>());
+        weaponTran.parent = weaponHandleTran;
+        weaponTran.localPosition = Vector3.zero;
+        weaponTran.localRotation = Quaternion.identity;
+    }
+    
+    /// <summary>
+    /// 丢弃武器 - 表现
+    /// </summary>
+    /// <param name="weaponTran"></param>
+    void DropWeapon(Transform weaponTran)
+    {
+        var rb = weaponTran.AddComponent<Rigidbody>();
+        weaponTran.parent = null;//父物体最高级
+        
+        weaponTran.localPosition = transform.position;
+        weaponTran.localRotation = transform.rotation;
+        rb.AddForce(weaponTran.forward * 20, ForceMode.Impulse);
     }
 
     /// <summary>

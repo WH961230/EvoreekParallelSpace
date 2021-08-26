@@ -20,7 +20,7 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
     {
     }
 
-    public void InitWeapon()
+    private void InitWeapon()
     {
         //获取预制体
         var weaponObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.weaponConfig.WeaponSign)) as GameObject;
@@ -42,19 +42,6 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
             wc
         );
         
-        Weapons.Add(weapon);
-    }
-
-    /// <summary>
-    /// 注册武器
-    /// </summary>
-    public void RegisterWeapon(WeaponType type, WeaponController wc)
-    {
-        //武器Id
-        id++;
-        //创建武器
-        var weapon = new Weapon(id, type, wc);
-        //保存武器信息
         Weapons.Add(weapon);
     }
 
@@ -97,8 +84,6 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
     /// <param name="ownerController"></param>
     public void PickedWeapon(PlayerController oc, WeaponController wc)
     {
-        //控制器表现
-        //数据修改
     }
     
     public void OnClear()
