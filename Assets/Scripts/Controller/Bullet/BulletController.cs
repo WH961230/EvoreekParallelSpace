@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+public class BulletController : MonoBehaviour,IBaseController
 {
     [SerializeField] private float speed;
     public Vector3 targetTran;
@@ -18,5 +18,21 @@ public class BulletController : MonoBehaviour
     void OnDestroy()
     {
         Destroy(gameObject);
+    }
+
+    public void OnInit() {
+    }
+
+    public void OnUpdate() {
+    }
+
+    public void OnFixedUpdate() {
+    }
+
+    public void OnLateUpdate() {
+    }
+
+    public void OnClear() {
+        Destroy(this.gameObject);
     }
 }

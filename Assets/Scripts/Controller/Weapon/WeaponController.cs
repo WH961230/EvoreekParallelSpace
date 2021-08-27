@@ -9,8 +9,8 @@ public class WeaponController : MonoBehaviour, IBaseController
 	[SerializeField] public string weaponName;
 	[Tooltip("子弹预制体")][SerializeField] Transform bulletPrefab;
 	[Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
-
 	[Tooltip("武器类型")][SerializeField] public WeaponType weaponType;
+	[Tooltip("子弹类型")][SerializeField] public BulletType bulletType;
 
 	public void OnInit()
 	{
@@ -31,6 +31,13 @@ public class WeaponController : MonoBehaviour, IBaseController
 	public void OnClear()
 	{
 		Destroy(this.gameObject);
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public void AimEvent() {
+		
 	}
 
 	/// <summary>

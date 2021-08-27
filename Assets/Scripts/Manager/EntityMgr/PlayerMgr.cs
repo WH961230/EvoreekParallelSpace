@@ -8,7 +8,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     public List<Player> Players = new List<Player>();
-    
     private int id = -1;
     
     /// <summary>
@@ -39,7 +38,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         {
             foreach (var p in Players)
             {
-                if (p.BaseData.Id == id)
+                if (p.BaseData.id == id)
                 {
                     player = p;
                 }
@@ -47,26 +46,6 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         }
 
         return player;
-    }
-
-    public int GetLocalPlayerId
-    {
-        get
-        {
-            int id = -1;
-            if (null == Players || Players.Count <= 0) {
-                return id;
-            }
-
-            foreach (var p in Players) {
-                if (p.BaseData.Type == PlayerType.LocalPlayer) {
-                    id = p.BaseData.Id;
-                    break;
-                }
-            }
-
-            return id;
-        }
     }
 
     /// <summary>
@@ -104,7 +83,6 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         var player = new Player(
             pc.playerId,
             pc.playerName, 
-            pc.playerType, 
             pc
             );
         
@@ -120,7 +98,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
             if (Players[i] != null)
             {
                 var p = Players[i];
-                if (p.BaseData.Id == id) {
+                if (p.BaseData.id == id) {
                     p.OnClear();
                     Players.Remove(p);
                     break;
@@ -136,7 +114,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
                 var p = Players[i];
                 if (p != null)
                 {
-                    var c = p.BaseData.PlayerController;
+                    var c = p.BaseData.playerController;
                     if (c != null)
                     {
                         c.OnUpdate();
@@ -153,7 +131,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
                 var p = Players[i];
                 if (p != null)
                 {
-                    var c = p.BaseData.PlayerController;
+                    var c = p.BaseData.playerController;
                     if (c != null)
                     {
                         c.OnClear();

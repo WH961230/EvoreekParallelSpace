@@ -3,7 +3,7 @@
 /// </summary>
 public class Throw : Weapon
 {
-    public Throw(int id, WeaponType type, WeaponController wc) : base(id, type, wc)
+    public Throw(int id, WeaponType wt, WeaponController wc) : base(id, wt, wc)
     {
     }
 }

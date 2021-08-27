@@ -11,15 +11,8 @@ using UnityEngine.UIElements;
 public class PlayerController : MonoBehaviour, IBaseController
 {
     [Header("==== 角色ID ====")] 
-    [Tooltip("是否是机器人")][SerializeField] private bool isAI;
     [SerializeField] public int playerId = -1;
     [SerializeField] public string playerName;
-    [SerializeField] public PlayerType playerType;
-
-    public bool IsAI
-    {
-        get { return isAI; }
-    }
 
     [Header("==== 控制器 ====")] 
     [Tooltip("角色控制器")][SerializeField] CharacterController controller;
@@ -151,7 +144,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <param name="baseData"></param>
     void ReloadByType(WeaponBaseData baseData)
     {
-        switch (baseData.Type)
+        switch (baseData.weaponType)
         {
             case WeaponType.近战:
                 Debug.Log("近战暂未开发");
@@ -170,7 +163,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <param name="baseData"></param>
     void AttackByType(WeaponBaseData baseData)
     {
-        switch (baseData.Type)
+        switch (baseData.weaponType)
         {
             case WeaponType.近战:
                 Debug.Log("近战暂未开发");
@@ -182,20 +175,6 @@ public class PlayerController : MonoBehaviour, IBaseController
                 break;
         }
     }
-
-    /*private void OnDrawGizmos()
-    {
-        RaycastHit hit;
-        var ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-        if (Physics.Raycast(ray, out hit, 200, ~(1 << 25)))
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(bulletShotTran.position, hit.point);
-        }
-
-        var rect = new Rect(new Vector2(Screen.width / 2, Screen.height / 2), Vector2.one);
-        Gizmos.DrawGUITexture(rect, Texture2D.whiteTexture);
-    }*/
 
     /// <summary>
     /// 设置相机目标

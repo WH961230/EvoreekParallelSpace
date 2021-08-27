@@ -26,7 +26,7 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
             var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
-                var c = p.BaseData.PlayerController;
+                var c = p.BaseData.playerController;
                 if (c != null)
                 {
                     c.JumpInput = true;
@@ -39,7 +39,7 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
             var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
-                var c = p.BaseData.PlayerController;
+                var c = p.BaseData.playerController;
                 if (c != null)
                 {
                     c.JumpInput = false;
@@ -52,7 +52,7 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
             var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
-                var c = p.BaseData.PlayerController;
+                var c = p.BaseData.playerController;
                 if (c != null)
                 {
                     c.RunInput = true;
@@ -65,7 +65,7 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
             var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
-                var c = p.BaseData.PlayerController;
+                var c = p.BaseData.playerController;
                 if (c != null)
                 {
                     c.RunInput = false;

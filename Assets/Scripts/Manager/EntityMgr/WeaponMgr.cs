@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
 {
-    public List<Weapon> Weapons = new List<Weapon>();
+    private readonly List<Weapon> Weapons = new List<Weapon>();
     private int id = -1;
     
     public void OnInit(GameEngine gameEngine)
@@ -39,8 +39,9 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
         var weapon = new Weapon(
             wc.weaponId,
             wc.weaponType,
-            wc
-        );
+            wc,
+            wc.bulletType
+            );
         
         Weapons.Add(weapon);
     }
@@ -52,7 +53,7 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
         {
             foreach (var w in Weapons)
             {
-                if (w.BaseData.Id == id)
+                if (w.BaseData.id == id)
                 {
                     weapon = w;
                 }
@@ -69,7 +70,7 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
     {
         foreach (var w in Weapons)
         {
-            if (w.BaseData.Id == id)
+            if (w.BaseData.id == id)
             {
                 w.OnClear();
                 Weapons.Remove(w);

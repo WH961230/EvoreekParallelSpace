@@ -3,7 +3,6 @@
 /// </summary>
 public class Melee : Weapon
 {
-    public Melee(int id, WeaponType type, WeaponController wc) : base(id, type, wc)
-    {
+    public Melee(int id, WeaponType wt, WeaponController wc) : base(id, wt, wc) {
     }
 }

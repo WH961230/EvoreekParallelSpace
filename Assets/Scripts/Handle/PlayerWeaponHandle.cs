@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
+/// <summary>
+/// 
+/// </summary>
 public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
 {
     private Dictionary<int,List<int>> PlayerWeaponDic = new Dictionary<int, List<int>>();
@@ -35,7 +36,7 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             var weaponIds = new List<int>();
             weaponIds.Add(weaponId);
             PlayerWeaponDic.Add(playerId, weaponIds);
-            player.BaseData.PlayerController.HandleWeapon(weapon.BaseData.weaponController.transform);
+            player.BaseData.playerController.HandleWeapon(weapon.BaseData.weaponController.transform);
             return;
         }
         
@@ -47,7 +48,7 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             weaponIds.Add(weaponId);
             //字典增加
             PlayerWeaponDic[playerId] = weaponIds;
-            player.BaseData.PlayerController.HandleWeapon(weapon.BaseData.weaponController.transform);
+            player.BaseData.playerController.HandleWeapon(weapon.BaseData.weaponController.transform);
         }
     }
 

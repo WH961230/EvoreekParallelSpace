@@ -11,7 +11,7 @@ public enum BulletType
 /// </summary>
 public class BulletBaseData
 {
-    public int Id;
+    public int id;
     public BulletType type;
     public BulletController bulletController;
 }
@@ -19,14 +19,20 @@ public class BulletBaseData
 /// <summary>
 /// 弹药
 /// </summary>
-public class Bullet
+public class Bullet : IBaseEntites
 {
-    public BulletBaseData BaseData;
+    private BulletBaseData BaseData;
 
     public Bullet(int id, BulletType type, BulletController bc)
     {
-        this.BaseData.Id = id;
+        this.BaseData.id = id;
         this.BaseData.type = type;
         this.BaseData.bulletController = bc;
+    }
+
+    public void OnInit() {
+    }
+
+    public void OnClear() {
     }
 }

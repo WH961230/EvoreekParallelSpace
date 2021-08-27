@@ -1,24 +1,13 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// 玩家类型
-/// </summary>
-public enum PlayerType
-{
-    AI,
-    LocalPlayer,
-    OtherPlayer
-}
-
-/// <summary>
 /// 玩家基础数据
 /// </summary>
 public struct PlayerBaseData
 {
-    public int Id;
-    public string Name;
-    public PlayerType Type;
-    public PlayerController PlayerController;
+    public int id;
+    public string name;
+    public PlayerController playerController;
 }
 
 /// <summary>
@@ -28,12 +17,11 @@ public class Player : IBaseEntites
 {
     public PlayerBaseData BaseData;
 
-    public Player(int id, string name, PlayerType type, PlayerController pc)
+    public Player(int id, string name, PlayerController pc)
     { 
-        this.BaseData.Id = id;
-        this.BaseData.Name = name;
-        this.BaseData.Type = type;
-        this.BaseData.PlayerController = pc;
+        this.BaseData.id = id;
+        this.BaseData.name = name;
+        this.BaseData.playerController = pc;
         Debug.LogFormat("创建角色 ：name {0} id {1}", name, id);
     }
 
@@ -44,7 +32,7 @@ public class Player : IBaseEntites
 
     public void OnClear()
     {
-        var controller = BaseData.PlayerController;
+        var controller = BaseData.playerController;
         if (null != controller)
         {
             controller.OnClear();
