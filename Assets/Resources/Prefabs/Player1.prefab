@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2456567487759050508}
   m_Layer: 25
-  m_Name: GameObject
+  m_Name: RoleCameraTargetRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6536,11 +6536,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e10182e374806647b83f70ac6f8f31c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAI: 0
   playerId: -1
   playerName: "\u73A9\u5BB61\u53F7"
-  playerType: 1
-  controller: {fileID: 5655626605569123774}
+  characterController: {fileID: 5655626605569123774}
   body: {fileID: 5697697514685218001}
   audioSource: {fileID: 7627632061083728421}
   gravity: 12
@@ -6559,7 +6557,10 @@ MonoBehaviour:
   isWalk: 0
   isRun: 0
   isJump: 0
+  dropForce: 5
   weaponHandleTran: {fileID: 4871254955431279842}
+  weaponTran: {fileID: 0}
+  pow: {fileID: 0}
 --- !u!1 &7660846421604055383
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,24 +1,117 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 
 /// </summary>
 public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
 {
+    //玩家所有武器字典
     private Dictionary<int,List<int>> PlayerWeaponDic = new Dictionary<int, List<int>>();
+    //当前武器字典
+    private Dictionary<int,int> PlayerWeaponCurDic = new Dictionary<int, int>();
 
-    public void PlayerDropWeapon(int playerId, int weaponId)
+    /// <summary>
+    /// 设置玩家当前武器
+    /// </summary>
+    /// <param name="playerId"></param>
+    /// <param name="weaponId"></param>
+    public void PlayerSetCurWeapon(int playerId, int weaponId)
     {
-        var player = PlayerMgr.Instance.GetPlayerById(playerId);
-        var weapon = WeaponMgr.Instance.GetWeaponById(weaponId);
-        if (null == player || null == weapon)
+        //是否有武器
+        var hasWeapon = PlayerHasWeapon(playerId, weaponId);
+        if (hasWeapon)
         {
-            return;
+            //是否存在玩家键值对
+            if (PlayerWeaponCurDic.ContainsKey(playerId))
+            {
+                //设置玩家当前武器键值对
+                PlayerWeaponCurDic[playerId] = weaponId;
+            }
+            else
+            {
+                //创建玩家键值对
+                PlayerWeaponCurDic.Add(playerId, weaponId);
+            }
+
+            Debug.LogFormat("设置当前武器：玩家 {0} 武器 {1}", playerId, weaponId);
         }
     }
     
     /// <summary>
-    /// 拾起武器
+    /// 获取玩家当前武器
+    /// </summary>
+    /// <param name="playerId"></param>
+    /// <param name="weaponId"></param>
+    private int PlayerGetCurWeapon(int playerId)
+    {
+        var weaponId = -1;
+        //是否存在玩家键值对
+        if (PlayerWeaponCurDic.ContainsKey(playerId))
+        {
+            //设置玩家当前武器键值对
+            weaponId = PlayerWeaponCurDic[playerId];
+        }
+        Debug.LogFormat("获取当前武器：玩家 {0} 武器 {1}", playerId, weaponId);
+        return weaponId;
+    }
+    
+    /// <summary>
+    /// 删除玩家当前武器
+    /// </summary>
+    /// <param name="playerId"></param>
+    /// <param name="weaponId"></param>
+    private void PlayerRemoveCurWeapon(int playerId)
+    {
+        //是否存在玩家键值对
+        if (PlayerWeaponCurDic.ContainsKey(playerId))
+        {
+            Debug.LogFormat("删除当前武器：玩家 {0} 武器 {1}", playerId, PlayerWeaponCurDic[playerId]);
+            //设置玩家当前武器键值对
+            PlayerWeaponCurDic[playerId] = -1;
+        }
+    }
+    
+    /// <summary>
+    /// 丢弃武器
+    /// </summary>
+    /// <param name="playerId"></param>
+    /// <param name="weaponId"></param>
+    public void PlayerDropWeapon(int playerId)
+    {
+        var player = PlayerMgr.Instance.GetPlayerById(playerId);
+        if (null == player)//玩家没找到
+        {
+            return;
+        }
+
+        var weaponId = PlayerGetCurWeapon(playerId);
+        if (weaponId == -1)//当前武器为空
+        {
+            return;
+        }
+        //移除当前武器
+        PlayerRemoveCurWeapon(playerId);
+        
+        var alreadyHave = PlayerHasWeapon(playerId, weaponId);
+        if (!alreadyHave)//玩家不存在当前武器
+        {
+            return;
+        }
+        var weaponIds = PlayerWeaponDic[playerId];
+        //武器集合中移除该武器
+        weaponIds.Remove(weaponId);
+        //字典增加
+        PlayerWeaponDic[playerId] = weaponIds;
+        //表现 丢弃武器
+        var weaponTran = WeaponMgr.Instance.GetWeaponById(weaponId).BaseData.weaponController.transform;
+        player.BaseData.playerController.DropWeapon(weaponTran);
+        Debug.LogFormat("丢弃当前武器：玩家 {0} 武器 {1}", playerId, weaponId);
+
+    }
+    
+    /// <summary>
+    /// 拾起武器 - 如果是第一把 赋值当前武器
     /// </summary>
     /// <param name="playerId"></param>
     /// <param name="weaponId"></param>
@@ -36,11 +129,15 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             var weaponIds = new List<int>();
             weaponIds.Add(weaponId);
             PlayerWeaponDic.Add(playerId, weaponIds);
+            //装备武器表现
             player.BaseData.playerController.HandleWeapon(weapon.BaseData.weaponController.transform);
+            //第一把 设置为当前武器
+            PlayerSetCurWeapon(playerId, weaponId);
+            Debug.LogFormat("拾起武器：玩家 {0} 武器 {1}", playerId, weaponId);
             return;
         }
         
-        //玩家已有武器
+        //玩家是否已有武器
         var alreadyHave = PlayerHasWeapon(playerId, weaponId);
         if (!alreadyHave)
         {
@@ -48,7 +145,10 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             weaponIds.Add(weaponId);
             //字典增加
             PlayerWeaponDic[playerId] = weaponIds;
+            //表现 - 持有武器
             player.BaseData.playerController.HandleWeapon(weapon.BaseData.weaponController.transform);
+            PlayerSetCurWeapon(playerId, weaponId);
+            Debug.LogFormat("拾起武器：玩家 {0} 武器 {1}", playerId, weaponId);
         }
     }
 
@@ -63,27 +163,34 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
         //没有玩家 false
         //有玩家没有武器 false
         //有玩家有武器 true
-        List<int> weaponIds = null;
+        // List<int> weaponIds = null;
         //遍历字典
-        foreach (var p in PlayerWeaponDic){
-            if (p.Key == playerId)
-            {
-                weaponIds = p.Value;
-                break;
-            }
-        }
-        //遍历武器 id 集合
-        if (null != weaponIds)
+        var hasWeapon = false;
+        if (PlayerWeaponDic.ContainsKey(playerId))
         {
-            foreach (var w in weaponIds)
-            {
-                if (w == weaponId)
-                {
-                    return true;
-                }
-            }
+            var values = PlayerWeaponDic[playerId];
+            hasWeapon = values.Contains(weaponId);
         }
-
-        return false;
+        return hasWeapon;
+        // foreach (var p in PlayerWeaponDic){
+        //     if (p.Key == playerId)
+        //     {
+        //         weaponIds = p.Value;
+        //         break;
+        //     }
+        // }
+        // //遍历武器 id 集合
+        // if (null != weaponIds)
+        // {
+        //     foreach (var w in weaponIds)
+        //     {
+        //         if (w == weaponId)
+        //         {
+        //             return true;
+        //         }
+        //     }
+        // }
+        //
+        // return false;
     }
 }

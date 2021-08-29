@@ -28,7 +28,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - InteractItem
   - Item
   - Player
   - Enemy

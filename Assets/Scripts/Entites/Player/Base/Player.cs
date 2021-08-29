@@ -16,7 +16,6 @@ public struct PlayerBaseData
 public class Player : IBaseEntites
 {
     public PlayerBaseData BaseData;
-
     public Player(int id, string name, PlayerController pc)
     { 
         this.BaseData.id = id;
@@ -24,12 +23,9 @@ public class Player : IBaseEntites
         this.BaseData.playerController = pc;
         Debug.LogFormat("创建角色 ：name {0} id {1}", name, id);
     }
-
     public void OnInit()
     {
-        
     }
-
     public void OnClear()
     {
         var controller = BaseData.playerController;

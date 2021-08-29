@@ -8,5 +8,7 @@
         public const int Play_Dead = 3;
         public const int Play_Jump = 4;
         public const int Play_Reload = 5;
+        public const int Play_PickWeapon = 6;
+        public const int Play_DropWeapon = 7;
     }
 }

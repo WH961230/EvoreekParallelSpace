@@ -1,10 +1,11 @@
 using Data;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 /// <summary>
 /// 输入类 - 注册到 EventMgr 供 GameMgr 全局调用
 /// </summary>
-public class InputMgr : Singleton<InputMgr> , IBaseMgr
+public class InputMgr : Singleton<InputMgr>, IBaseMgr
 {
     private bool IsOpenInput = true;
 
@@ -13,17 +14,18 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
         engine.managers.Add(this);
     }
 
-    public void OnUpdate() {
+    public void OnUpdate()
+    {
+        var p = GameData.LockPlayer;
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Cursor.lockState = (Cursor.lockState == CursorLockMode.Locked)
                 ? CursorLockMode.None
                 : CursorLockMode.Locked;
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
                 var c = p.BaseData.playerController;
@@ -34,9 +36,18 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_PickWeapon);
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_DropWeapon);
+        }
+
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
                 var c = p.BaseData.playerController;
@@ -49,7 +60,6 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
                 var c = p.BaseData.playerController;
@@ -59,10 +69,9 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
                 }
             }
         }
-        
+
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            var p = PlayerMgr.Instance.GetLocalPlayer;
             if (p != null)
             {
                 var c = p.BaseData.playerController;
@@ -73,17 +82,18 @@ public class InputMgr : Singleton<InputMgr> , IBaseMgr
             }
         }
 
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         {
             MessageCenter.Instance.Dispatcher(MessageCode.Play_Attack);
         }
-        
-        if (Input.GetKeyDown(KeyCode.R)) 
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
             MessageCenter.Instance.Dispatcher(MessageCode.Play_Reload);
         }
     }
 
-    public void OnClear() {
+    public void OnClear()
+    {
     }
 }

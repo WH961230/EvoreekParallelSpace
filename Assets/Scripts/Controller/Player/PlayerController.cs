@@ -1,9 +1,8 @@
-using System.Collections.Generic;
+using System;
 using Data;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// 角色控制 - 行为
@@ -14,8 +13,9 @@ public class PlayerController : MonoBehaviour, IBaseController
     [SerializeField] public int playerId = -1;
     [SerializeField] public string playerName;
 
+    [FormerlySerializedAs("controller")]
     [Header("==== 控制器 ====")] 
-    [Tooltip("角色控制器")][SerializeField] CharacterController controller;
+    [Tooltip("角色控制器")][SerializeField] CharacterController characterController;
     [Tooltip("角色")][SerializeField] Transform body;
 
     [Tooltip("音频")][SerializeField] AudioSource audioSource;
@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     [SerializeField] private bool isWalk;
     [SerializeField] private bool isRun;
     [SerializeField] private bool isJump;
+    public float dropForce;
     
     private Vector3 moveDirection = Vector3.zero;//移动方向
     private float hor;//水平输入
@@ -52,12 +53,17 @@ public class PlayerController : MonoBehaviour, IBaseController
     AnimatorController ac;
     public Transform weaponHandleTran;//武器挂载点
     public Transform weaponTran;
+    private RaycastHit hit;
 
+    public PlayerOperateWin pow;
     public void OnInit()
     {
         InitController();
         MessageCenter.Instance.Register(MessageCode.Play_Attack, AttackEvent);
         MessageCenter.Instance.Register(MessageCode.Play_Reload, ReloadEvent);
+        MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
+        MessageCenter.Instance.Register(MessageCode.Play_DropWeapon, PlayerDropWeapon);
+        pow = FindObjectOfType<PlayerOperateWin>();
     }
 
     /// <summary>
@@ -83,19 +89,19 @@ public class PlayerController : MonoBehaviour, IBaseController
         SetFrontCameraTarget();
         MoveEvent();
         EyeEvent();
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            DropWeapon(weaponTran);
-        }
     }
-
+    
     public void OnFixedUpdate()
     {
     }
 
     public void OnLateUpdate()
     {
+    }
+
+    private void PlayerDropWeapon()
+    {
+        PlayerWeaponHandle.Instance.PlayerDropWeapon(playerId);
     }
 
     /// <summary>
@@ -114,14 +120,14 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// 丢弃武器 - 表现
     /// </summary>
     /// <param name="weaponTran"></param>
-    void DropWeapon(Transform weaponTran)
+    public void DropWeapon(Transform weaponTran)
     {
         var rb = weaponTran.AddComponent<Rigidbody>();
+        var controllerTran = characterController.transform;
         weaponTran.parent = null;//父物体最高级
-        
-        weaponTran.localPosition = transform.position;
-        weaponTran.localRotation = transform.rotation;
-        rb.AddForce(weaponTran.forward * 20, ForceMode.Impulse);
+        weaponTran.position = controllerTran.position + controllerTran.forward * 0.5f;
+        weaponTran.rotation = controllerTran.rotation;
+        rb.AddForce(controllerTran.forward * dropForce, ForceMode.Impulse);
     }
 
     /// <summary>
@@ -217,14 +223,71 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// </summary>
     private void EyeEvent()
     {
-        if (!roleCameraRotObj || !controller)
+        //视角相关事件
+        EyeRotEvent();
+        EyeRaycaseEvent();
+    }
+
+    private void EyeRotEvent()
+    {
+        if (!roleCameraRotObj || !characterController)
         {
             return;
         }
+
         var y = Input.GetAxis("Mouse Y");
         var x = Input.GetAxis("Mouse X");
-        controller.transform.Rotate(Vector3.up * x * xSpeed);
+        characterController.transform.Rotate(Vector3.up * x * xSpeed);
         roleCameraRotObj.transform.Rotate(Vector3.left * y * ySpeed);
+    }
+
+    private void EyeRaycaseEvent()
+    {
+        // var playerOperateWin = PlayerOperateController.Instance.PlayerOperateWin;
+        var ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Item")))
+        {
+            var wc = hit.collider.GetComponent<WeaponController>();
+            if (null != wc)
+            {
+                pow.Tip.text = wc.weaponName;
+            }
+
+            var bsb = hit.collider.GetComponent<BulletSupplyBox>();
+            if (null != bsb)
+            {
+                pow.Tip.text = bsb.AMMO_TIP;
+            }
+        }
+        else
+        {
+            pow.Tip.text = "";
+        }
+    }
+
+    /// <summary>
+    /// 拾起武器
+    /// </summary>
+    private void PlayerPickWepaon()
+    {
+        if (null == hit.collider)
+        {
+            return;
+        }
+
+        var wc = hit.collider.GetComponent<WeaponController>();
+        if (null == wc)
+        {
+            return;
+        }
+        var wid = wc.weaponId;
+        var w = WeaponMgr.Instance.GetWeaponById(wid);
+        if (null != w)
+        {
+            PlayerWeaponHandle.Instance.PlayerPickWeapon(playerId, wid);
+            var p = PlayerMgr.Instance.GetPlayerById(playerId);
+            p.BaseData.playerController.weaponTran = hit.collider.transform;
+        }
     }
 
     /// <summary>
@@ -232,7 +295,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// </summary>
     private void MoveEvent()
     {
-        if (!controller || !ac.animator)
+        if (!characterController || !ac.animator)
         {
             return;
         }
@@ -241,7 +304,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         JumpEvent();
         GroundEvent();
         GravityEvent();
-        controller.Move(moveDirection * Time.deltaTime);
+        characterController.Move(moveDirection * Time.deltaTime);
     }
 
     private void JumpEvent()
@@ -281,7 +344,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// </summary>
     private void GravityEvent()
     {
-        if (controller.isGrounded)
+        if (characterController.isGrounded)
         {
             return;
         }
@@ -294,7 +357,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     private void GroundEvent()
     {
         //不在地面返回
-        if (!controller.isGrounded)
+        if (!characterController.isGrounded)
         {
             return;
         }
@@ -332,7 +395,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         
         //角色移动向量
         moveDirection = new Vector3(hor, 0, ver);
-        moveDirection = controller.transform.TransformDirection(moveDirection);
+        moveDirection = characterController.transform.TransformDirection(moveDirection);
         moveDirection *= walkSpeed;
         isWalk = true;
 

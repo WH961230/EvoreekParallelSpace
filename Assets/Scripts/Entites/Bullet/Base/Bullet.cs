@@ -1,9 +1,9 @@
 ﻿
 public enum BulletType
 {
-    小,
-    中,
-    大,
+    mini,//gun ump
+    middle,//m4 scar
+    large,//ak
 }
 
 /// <summary>

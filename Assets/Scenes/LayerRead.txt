@@ -1,0 +1,2 @@
+Item : 可拾取物体
+InteractItem : 可交互物体

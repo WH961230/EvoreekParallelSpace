@@ -34,7 +34,7 @@ public class WeaponController : MonoBehaviour, IBaseController
 	}
 
 	/// <summary>
-	/// 
+	/// 瞄准事件
 	/// </summary>
 	public void AimEvent() {
 		
