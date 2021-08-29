@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using Unity.VisualScripting;
+
+/// <summary>
 /// 武器类型
 /// </summary>
 public enum WeaponType
@@ -13,16 +15,18 @@ public enum WeaponType
 /// </summary>
 public struct WeaponBaseData{
     public int id;
+    public string weaponName;
     public WeaponType weaponType;
     public WeaponController weaponController;
     public BulletType bulletType;
 
-    public WeaponBaseData(int Id, WeaponType weaponType, WeaponController controller, BulletType bulletType)
+    public WeaponBaseData(int Id, string wn, WeaponType wt, WeaponController wc, BulletType bt)
     {
         this.id = Id;
-        this.weaponType = weaponType;
-        this.weaponController = controller;
-        this.bulletType = bulletType;
+        this.weaponName = wn;
+        this.weaponType = wt;
+        this.weaponController = wc;
+        this.bulletType = bt;
     }
 }
 
@@ -38,9 +42,10 @@ public class Weapon : IBaseEntites
     /// </summary>
     /// <param name="id"></param>
     /// <param name="oc"></param>
-    public Weapon(int id, WeaponType wt, WeaponController wc, BulletType bt)
+    public Weapon(int id, string wn, WeaponType wt, WeaponController wc, BulletType bt)
     {
         this.BaseData.id = id;
+        this.BaseData.weaponName = wn;
         this.BaseData.weaponController = wc;
         this.BaseData.weaponType = wt;
         this.BaseData.bulletType = bt;
@@ -51,9 +56,10 @@ public class Weapon : IBaseEntites
     /// </summary>
     /// <param name="id"></param>
     /// <param name="oc"></param>
-    public Weapon(int id, WeaponType wt, WeaponController wc)
+    public Weapon(int id, string wn, WeaponType wt, WeaponController wc)
     {
         this.BaseData.id = id;
+        this.BaseData.weaponName = wn;
         this.BaseData.weaponController = wc;
         this.BaseData.weaponType = wt;
     }

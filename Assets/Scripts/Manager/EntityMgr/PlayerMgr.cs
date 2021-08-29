@@ -25,7 +25,16 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
 
         return player;
     }
-
+    /// <summary>
+    /// 获取玩家名字
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public string GetPlayerNameById(int id)
+    {
+        return GetPlayerById(id).BaseData.name + " ["+ id + "]";
+    }
+    
     /// <summary>
     /// 初始化 - 获取配置
     /// </summary>

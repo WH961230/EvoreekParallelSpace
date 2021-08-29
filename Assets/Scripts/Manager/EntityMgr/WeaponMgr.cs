@@ -34,16 +34,20 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
         var wc = weaponObj.GetComponent<WeaponController>();
         wc.OnInit();
         wc.weaponId = ++id;
-        
+
         //创建武器
         var weapon = new Weapon(
             wc.weaponId,
+            wc.weaponName,
             wc.weaponType,
             wc,
             wc.bulletType
             );
-        
+
         Weapons.Add(weapon);
+        
+        //提供基础弹药 30 发
+        WeaponBulletHandle.Instance.WeaponAddBullet(wc.weaponId, 30);
     }
 
     public Weapon GetWeaponById(int id)
@@ -61,6 +65,12 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
         }
 
         return weapon;
+    }
+    public string GetWeaponInfoById(int id)
+    {
+        var weaponName = GetWeaponById(id).BaseData.weaponName;
+        var bulletNum = WeaponBulletHandle.Instance.GetWeaponBulletNum(id);
+        return weaponName + " [id:"+ id + " bNm:" + bulletNum +"]";
     }
 
     /// <summary>
