@@ -46,7 +46,7 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
     /// </summary>
     /// <param name="playerId"></param>
     /// <param name="weaponId"></param>
-    private int PlayerGetCurWeapon(int playerId)
+    public int PlayerGetCurWeapon(int playerId)
     {
         var weaponId = -1;
         //是否存在玩家键值对
@@ -55,10 +55,6 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             //设置玩家当前武器键值对
             weaponId = PlayerWeaponCurDic[playerId];
         }
-        Debug.LogFormat("获取当前武器：玩家 {0} 武器 {1}", 
-            PlayerMgr.Instance.GetPlayerNameById(playerId), 
-            WeaponMgr.Instance.GetWeaponInfoById(weaponId)
-        );
         return weaponId;
     }
     

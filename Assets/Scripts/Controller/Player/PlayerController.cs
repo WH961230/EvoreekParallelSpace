@@ -35,8 +35,6 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     [Tooltip("角色面相机移动向导")][SerializeField] Transform roleFrontCameraTarget;
     [Tooltip("角色相机旋转物体")][SerializeField] Transform roleCameraRotObj;
-    [Tooltip("子弹预制体")][SerializeField] Transform bulletPrefab;
-    [Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
 
     [Tooltip("跑步控制器")][SerializeField] public bool RunInput;//跑步控制器
     [Tooltip("跳跃控制器")][SerializeField] public bool JumpInput;//跑步控制器
@@ -135,8 +133,10 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// </summary>
     void AttackEvent()
     {
+        var wid = PlayerWeaponHandle.Instance.PlayerGetCurWeapon(playerId);
+        var weapon = WeaponMgr.Instance.GetWeaponById(wid);
         //根据攻击类型执行攻击
-        AttackByType(new WeaponBaseData());
+        AttackByType(weapon.BaseData);
     }
 
     void ReloadEvent()
@@ -175,6 +175,7 @@ public class PlayerController : MonoBehaviour, IBaseController
                 Debug.Log("近战暂未开发");
                 break;
             case WeaponType.枪械:
+                baseData.weaponController.ShotEvent();
                 break;
             case WeaponType.投掷:
                 Debug.Log("投掷暂未开发");

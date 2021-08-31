@@ -465,8 +465,9 @@ MonoBehaviour:
   weaponId: 0
   weaponName: M4
   bulletPrefab: {fileID: 0}
-  bulletShotTran: {fileID: 0}
+  bulletShotTran: {fileID: 1015643916948242826}
   weaponType: 0
+  bulletType: 0
 --- !u!1 &1655006058520924
 GameObject:
   m_ObjectHideFlags: 0

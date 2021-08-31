@@ -46,8 +46,8 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
 
         Weapons.Add(weapon);
         
-        //提供基础弹药 30 发
-        WeaponBulletHandle.Instance.WeaponAddBullet(wc.weaponId, 30);
+        //提供基础弹药 30 发  生成 30 发弹药
+        WeaponBulletHandle.Instance.WeaponAddBullet(wc.weaponId, BulletMgr.Instance.InitBulletByNum(30));
     }
 
     public Weapon GetWeaponById(int id)

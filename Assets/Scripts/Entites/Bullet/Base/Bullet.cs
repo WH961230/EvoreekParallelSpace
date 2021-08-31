@@ -9,7 +9,7 @@ public enum BulletType
 /// <summary>
 /// 弹药基础数据
 /// </summary>
-public class BulletBaseData
+public struct BulletBaseData
 {
     public int id;
     public BulletType type;

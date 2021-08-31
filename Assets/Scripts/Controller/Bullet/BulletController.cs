@@ -3,6 +3,7 @@ using UnityEngine;
 public class BulletController : MonoBehaviour,IBaseController
 {
     [SerializeField] private float speed;
+    [Tooltip("弹药类型")][SerializeField] public BulletType bulletType;
     public Vector3 targetTran;
     void Start()
     {

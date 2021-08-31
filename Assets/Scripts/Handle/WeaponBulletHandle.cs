@@ -27,8 +27,7 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle>{
         }
         Debug.LogFormat("补充武器 {0} 总弹药数 {1} 补充弹药数 {2}", 
             WeaponMgr.Instance.GetWeaponInfoById(weaponId), 
-            WeaponBulletDic[weaponId],
-            addBulletNum);
+            WeaponBulletDic[weaponId], addBulletNum);
     }
 
     /// <summary>

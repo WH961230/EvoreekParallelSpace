@@ -49,9 +49,9 @@ public class WeaponController : MonoBehaviour, IBaseController
 		RaycastHit hit;
 		if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25)))
 		{
-			var bullet = Instantiate(bulletPrefab.gameObject);
-			bullet.transform.position = bulletShotTran.position;
-			bullet.transform.GetComponent<BulletController>().targetTran = hit.point;
+			var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+			b.transform.position = bulletShotTran.position;
+			b.transform.GetComponent<BulletController>().targetTran = hit.point;
 		}
 	}
 
