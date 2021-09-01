@@ -7,7 +7,7 @@ public class BulletController : MonoBehaviour,IBaseController
     public Vector3 targetTran;
     void Start()
     {
-        Invoke("OnDestroy", 1);
+        Invoke("OnDestroy", 0.5f);
     }
 
     void Update() {

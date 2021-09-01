@@ -48,15 +48,18 @@ public class PlayerController : MonoBehaviour, IBaseController
     private float hor;//水平输入
     private float ver;//垂直输入
     
-    AnimatorController ac;
+    public AnimatorController ac;
     public Transform weaponHandleTran;//武器挂载点
     public Transform weaponTran;
     private RaycastHit hit;
 
     public PlayerOperateWin pow;
+    public AnimatorControl acl;
+
     public void OnInit()
     {
         InitController();
+        acl.OnInit();
         MessageCenter.Instance.Register(MessageCode.Play_Attack, AttackEvent);
         MessageCenter.Instance.Register(MessageCode.Play_Reload, ReloadEvent);
         MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
@@ -135,8 +138,11 @@ public class PlayerController : MonoBehaviour, IBaseController
     {
         var wid = PlayerWeaponHandle.Instance.PlayerGetCurWeapon(playerId);
         var weapon = WeaponMgr.Instance.GetWeaponById(wid);
-        //根据攻击类型执行攻击
-        AttackByType(weapon.BaseData);
+        if (null != weapon)
+        {
+            //根据攻击类型执行攻击
+            AttackByType(weapon.BaseData);   
+        }
     }
 
     void ReloadEvent()

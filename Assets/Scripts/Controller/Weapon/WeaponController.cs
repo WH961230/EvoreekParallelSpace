@@ -11,6 +11,7 @@ public class WeaponController : MonoBehaviour, IBaseController
 	[Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
 	[Tooltip("武器类型")][SerializeField] public WeaponType weaponType;
 	[Tooltip("子弹类型")][SerializeField] public BulletType bulletType;
+	[Tooltip("音频")][SerializeField] public AudioSource audioSource;
 
 	public void OnInit()
 	{
@@ -52,6 +53,10 @@ public class WeaponController : MonoBehaviour, IBaseController
 			var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
 			b.transform.position = bulletShotTran.position;
 			b.transform.GetComponent<BulletController>().targetTran = hit.point;
+			if (!audioSource.isPlaying)
+			{
+				audioSource.Play();
+			}
 		}
 	}
 
