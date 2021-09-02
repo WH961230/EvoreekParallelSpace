@@ -18,5 +18,7 @@
         public const int Play_PickWeapon = 6;
         //丢弃武器
         public const int Play_DropWeapon = 7;
+        //武器瞄准
+        public const int Play_Aim = 8;
     }
 }

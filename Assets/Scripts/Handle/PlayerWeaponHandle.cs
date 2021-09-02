@@ -137,7 +137,7 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             weaponIds.Add(weaponId);
             PlayerWeaponDic.Add(playerId, weaponIds);
             //装备武器表现
-            player.BaseData.playerController.HandleWeapon(weapon.BaseData.weaponController.transform);
+            player.BaseData.playerController.WeaponNormalHandle(weapon.BaseData.weaponController);
             //第一把 设置为当前武器
             PlayerSetCurWeapon(playerId, weaponId);
             Debug.LogFormat("拾起武器：玩家 {0} 武器 {1}", 
@@ -156,7 +156,7 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
             //字典增加
             PlayerWeaponDic[playerId] = weaponIds;
             //表现 - 持有武器
-            player.BaseData.playerController.HandleWeapon(weapon.BaseData.weaponController.transform);
+            player.BaseData.playerController.WeaponNormalHandle(weapon.BaseData.weaponController);
             PlayerSetCurWeapon(playerId, weaponId);
             Debug.LogFormat("拾起武器：玩家 {0} 武器 {1}", 
                 PlayerMgr.Instance.GetPlayerNameById(playerId), 

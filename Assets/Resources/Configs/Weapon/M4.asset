@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8701d98e726aabb4283f174518d050ad, type: 3}
-  m_Name: SOWeapon
+  m_Name: M4
   m_EditorClassIdentifier: 
-  weaponSign: M4
+  weaponSign: 
   weaponCreateInfo:
-    weaponBornVec: {x: 5, y: 2, z: -10}
+    weaponBornVec: {x: 0, y: 0, z: 0}
     weaponBornQua: {x: 0, y: 0, z: 0, w: 0}
   weaponAttackSound: {fileID: 8300000, guid: dbbed2f14e28e4540b3a0d6cd09bde2c, type: 3}
-  weaponAttackRate: 0.05
+  weaponAttackRate: 0.1

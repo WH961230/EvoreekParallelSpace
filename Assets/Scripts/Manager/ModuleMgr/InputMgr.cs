@@ -85,10 +85,20 @@ public class InputMgr : Singleton<InputMgr>, IBaseMgr
         {
             MessageCenter.Instance.Dispatcher(MessageCode.Play_Attack);
         }
+        
+        if (Input.GetMouseButtonDown(1))
+        {
+            MessageCenter.Instance.Dispatcher(MessageCode.Play_Aim);
+        }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
             MessageCenter.Instance.Dispatcher(MessageCode.Play_Reload);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
     }
 

@@ -7,11 +7,14 @@ public class WeaponController : MonoBehaviour, IBaseController
 {
 	public int weaponId;
 	[SerializeField] public string weaponName;
-	[Tooltip("子弹预制体")][SerializeField] Transform bulletPrefab;
 	[Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
 	[Tooltip("武器类型")][SerializeField] public WeaponType weaponType;
 	[Tooltip("子弹类型")][SerializeField] public BulletType bulletType;
 	[Tooltip("音频")][SerializeField] public AudioSource audioSource;
+	[Tooltip("武器配置")][SerializeField] public SOWeapon weaponSetting;
+	
+	[Tooltip("武器右手抓取地方")][SerializeField] public Transform weaponRightHandGripTran;
+	[Tooltip("武器左手抓取地方")][SerializeField] public Transform weaponLeftHandGripTran;
 
 	public void OnInit()
 	{
@@ -41,6 +44,7 @@ public class WeaponController : MonoBehaviour, IBaseController
 		
 	}
 
+	private float nextFireTime;
 	/// <summary>
 	/// 射击事件
 	/// </summary>
@@ -50,12 +54,13 @@ public class WeaponController : MonoBehaviour, IBaseController
 		RaycastHit hit;
 		if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25)))
 		{
-			var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
-			b.transform.position = bulletShotTran.position;
-			b.transform.GetComponent<BulletController>().targetTran = hit.point;
-			if (!audioSource.isPlaying)
+			if (Time.time > nextFireTime)
 			{
-				audioSource.Play();
+				var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+				b.transform.position = bulletShotTran.position;
+				b.transform.GetComponent<BulletController>().targetTran = hit.point;
+				audioSource.PlayOneShot(weaponSetting.weaponAttackSound);
+				nextFireTime = Time.time + weaponSetting.weaponAttackRate;
 			}
 		}
 	}

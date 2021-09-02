@@ -1,4 +1,3 @@
-using System;
 using Data;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -42,28 +41,30 @@ public class PlayerController : MonoBehaviour, IBaseController
     [SerializeField] private bool isWalk;
     [SerializeField] private bool isRun;
     [SerializeField] private bool isJump;
+    [SerializeField] private bool isAim;
+
     public float dropForce;
     
     private Vector3 moveDirection = Vector3.zero;//移动方向
     private float hor;//水平输入
     private float ver;//垂直输入
-    
-    public AnimatorController ac;
+
+    private AnimatorController ac;
     public Transform weaponHandleTran;//武器挂载点
-    public Transform weaponTran;
     private RaycastHit hit;
 
-    public PlayerOperateWin pow;
-    public AnimatorControl acl;
-
+    private PlayerOperateWin pow;
+    public RigController rc;
+    public Transform weaponRoot;
     public void OnInit()
     {
         InitController();
-        acl.OnInit();
+        rc.OnInit();
         MessageCenter.Instance.Register(MessageCode.Play_Attack, AttackEvent);
         MessageCenter.Instance.Register(MessageCode.Play_Reload, ReloadEvent);
         MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
         MessageCenter.Instance.Register(MessageCode.Play_DropWeapon, PlayerDropWeapon);
+        MessageCenter.Instance.Register(MessageCode.Play_Aim, AimEvent);
         pow = FindObjectOfType<PlayerOperateWin>();
     }
 
@@ -106,17 +107,25 @@ public class PlayerController : MonoBehaviour, IBaseController
     }
 
     /// <summary>
-    /// 挂载武器 - 表现
+    /// 挂载武器 - Rig 表现
     /// </summary>
-    /// <param name="weaponTran"></param>
-    public void HandleWeapon(Transform weaponTran)
+    /// <param name="weaponName"></param>
+    public void WeaponNormalHandle(WeaponController wc)
     {
-        Destroy(weaponTran.GetComponent<Rigidbody>());
-        weaponTran.parent = weaponHandleTran;
-        weaponTran.localPosition = Vector3.zero;
-        weaponTran.localRotation = Quaternion.identity;
+        Destroy(wc.gameObject.GetComponent<Rigidbody>());
+        var t = wc.GetComponentInParent<Transform>();
+        if (null != t)
+        {
+            t.SetParent(weaponRoot);
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+            rc.OnSetWeaponAimingTarget(wc.transform);
+            rc.OnSetWeaponPoseTarget(wc.transform);
+            rc.OnSetHandIKTarget(wc.weaponRightHandGripTran, wc.weaponLeftHandGripTran);
+            rc.OnWeaponNormalHandle();
+        }
     }
-    
+
     /// <summary>
     /// 丢弃武器 - 表现
     /// </summary>
@@ -131,11 +140,30 @@ public class PlayerController : MonoBehaviour, IBaseController
         rb.AddForce(controllerTran.forward * dropForce, ForceMode.Impulse);
     }
 
+    void AimEvent()
+    {
+        if (!isAim)
+        {
+            rc.OnWeaponAimHandle();
+            isAim = true;
+            Debug.Log("瞄准");
+        }
+        else
+        {
+            rc.OnWeaponNormalHandle();
+            isAim = false;
+        }
+    }
+
     /// <summary>
     /// 射击事件
     /// </summary>
     void AttackEvent()
     {
+        if (!isAim)
+        {
+            return;
+        }
         var wid = PlayerWeaponHandle.Instance.PlayerGetCurWeapon(playerId);
         var weapon = WeaponMgr.Instance.GetWeaponById(wid);
         if (null != weapon)
@@ -250,7 +278,6 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     private void EyeRaycaseEvent()
     {
-        // var playerOperateWin = PlayerOperateController.Instance.PlayerOperateWin;
         var ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Item")))
         {
@@ -291,9 +318,8 @@ public class PlayerController : MonoBehaviour, IBaseController
         var w = WeaponMgr.Instance.GetWeaponById(wid);
         if (null != w)
         {
+            //玩家捡起武器
             PlayerWeaponHandle.Instance.PlayerPickWeapon(playerId, wid);
-            var p = PlayerMgr.Instance.GetPlayerById(playerId);
-            p.BaseData.playerController.weaponTran = hit.collider.transform;
         }
     }
 

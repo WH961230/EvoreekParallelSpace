@@ -31,7 +31,7 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
         weaponObj.transform.position = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornVec;
         weaponObj.transform.localRotation = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornQua;
 
-        var wc = weaponObj.GetComponent<WeaponController>();
+        var wc = weaponObj.GetComponentInChildren<WeaponController>();
         wc.OnInit();
         wc.weaponId = ++id;
 
@@ -41,7 +41,8 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
             wc.weaponName,
             wc.weaponType,
             wc,
-            wc.bulletType
+            wc.bulletType,
+            wc.weaponSetting
             );
 
         Weapons.Add(weapon);
