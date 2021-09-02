@@ -5,6 +5,7 @@ public class ConfigMgr : Singleton<ConfigMgr> , IBaseMgr{
     [SerializeField] [Tooltip("SOScene")] public SOScene sceneConfig;
     [SerializeField] [Tooltip("SOAudio")] public SOAudio audioConfig;
     [SerializeField] [Tooltip("SOPlayer")] public SOPlayer playerConfig;
+    [SerializeField] [Tooltip("SOAI")] public SOAI AIConfig;
     [SerializeField] [Tooltip("SOBullet")] public SOBullet bulletConfig;
     [SerializeField] [Tooltip("SOWeapon")] public SOWeapon weaponConfig;
 
@@ -12,6 +13,7 @@ public class ConfigMgr : Singleton<ConfigMgr> , IBaseMgr{
         engine.managers.Add(this);
 
         playerConfig = (SOPlayer) AssetLoader.LoadAsset(AssetType.Scriptable, "SOPlayer");
+        AIConfig = (SOAI) AssetLoader.LoadAsset(AssetType.Scriptable, "SOAI");
         gameSettingConfig = (SOGameSetting) AssetLoader.LoadAsset(AssetType.Scriptable, "SOGameSetting");
         audioConfig = (SOAudio) AssetLoader.LoadAsset(AssetType.Scriptable, "SOAudio");
         sceneConfig = (SOScene)AssetLoader.LoadAsset(AssetType.Scriptable, "SOScene");

@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     [FormerlySerializedAs("controller")]
     [Header("==== 控制器 ====")] 
-    [Tooltip("角色控制器")][SerializeField] CharacterController characterController;
+    [Tooltip("角色控制器")][SerializeField] public CharacterController characterController;
     [Tooltip("角色")][SerializeField] Transform body;
 
     [Tooltip("音频")][SerializeField] AudioSource audioSource;
@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     private PlayerOperateWin pow;
     public RigController rc;
     public Transform weaponRoot;
+    private Transform tip;
     public void OnInit()
     {
         InitController();
@@ -91,6 +92,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         SetFrontCameraTarget();
         MoveEvent();
         EyeEvent();
+        rc.OnUpdate();
     }
     
     public void OnFixedUpdate()
@@ -146,11 +148,13 @@ public class PlayerController : MonoBehaviour, IBaseController
         {
             rc.OnWeaponAimHandle();
             isAim = true;
+            GameData.GameCamera.isAim = true;
             Debug.Log("瞄准");
         }
         else
         {
             rc.OnWeaponNormalHandle();
+            GameData.GameCamera.isAim = false;
             isAim = false;
         }
     }
@@ -279,7 +283,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     private void EyeRaycaseEvent()
     {
         var ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Item")))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Item") | 1 << LayerMask.NameToLayer("AI")))
         {
             var wc = hit.collider.GetComponent<WeaponController>();
             if (null != wc)
@@ -292,10 +296,23 @@ public class PlayerController : MonoBehaviour, IBaseController
             {
                 pow.Tip.text = bsb.AMMO_TIP;
             }
+            
+            var aic = hit.collider.GetComponentInParent<AIController>();
+            if (null != aic)
+            {
+                tip = aic.Tip;
+                tip.gameObject.SetActive(true);
+                pow.SetCrossAndPotColor(Color.red);
+            }
         }
         else
         {
             pow.Tip.text = "";
+            if (null != tip && null != tip.gameObject)
+            {
+                tip.gameObject.SetActive(false);
+            }
+            pow.SetCrossAndPotColor(Color.white);
         }
     }
 

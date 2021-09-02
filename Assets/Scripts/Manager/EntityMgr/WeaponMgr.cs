@@ -18,6 +18,20 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
 
     public void OnUpdate()
     {
+        if (null != Weapons && Weapons.Count > 0) {
+            for (var i = 0 ; i < Weapons.Count ; ++i)
+            {
+                var w = Weapons[i];
+                if (w != null)
+                {
+                    var wc = w.BaseData.weaponController;
+                    if (wc != null)
+                    {
+                        wc.OnUpdate();
+                    }
+                }
+            }
+        }
     }
 
     private void InitWeapon()
