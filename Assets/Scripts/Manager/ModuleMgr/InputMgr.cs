@@ -8,6 +8,13 @@ public class InputMgr : Singleton<InputMgr>, IBaseMgr
 {
     private bool IsOpenInput = true;
 
+    public struct InputData {
+        public float mouseX;
+        public float mouseY;
+        public float horizontal;
+        public float vertical;
+    }
+    
     public void OnInit(GameEngine engine)
     {
         engine.managers.Add(this);
@@ -99,6 +106,22 @@ public class InputMgr : Singleton<InputMgr>, IBaseMgr
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
+        }
+
+        if (Mathf.Abs(Input.GetAxis("Mouse X")) > 0.001f ||
+            Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.001f ||
+            Mathf.Abs(Input.GetAxis("Horizontal")) > 0.001f||
+            Mathf.Abs(Input.GetAxis("Vertical")) > 0.001f) {
+
+            var inputData = new InputData() {
+                mouseX = Input.GetAxis("Mouse X"),
+                mouseY = Input.GetAxis("Mouse Y"),
+                horizontal = Input.GetAxis("Horizontal"),
+                vertical = Input.GetAxis("Vertical")
+            };
+            MessageCenter.Instance.Dispatcher(MessageCode.Game_InputData, inputData);
+        } else {
+            MessageCenter.Instance.Dispatcher(MessageCode.Game_InputData, new InputData());
         }
     }
 

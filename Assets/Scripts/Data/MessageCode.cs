@@ -20,5 +20,7 @@
         public const int Play_DropWeapon = 7;
         //武器瞄准
         public const int Play_Aim = 8;
+        //键盘输入水平和垂直
+        public const int Game_InputData = 9;
     }
 }

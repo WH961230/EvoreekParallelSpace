@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     private Vector3 moveDirection = Vector3.zero;//移动方向
     private float hor;//水平输入
     private float ver;//垂直输入
+    private float mouseX;//鼠标X
+    private float mouseY;//鼠标Y
 
     private AnimatorController ac;
     public Transform weaponHandleTran;//武器挂载点
@@ -66,6 +68,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
         MessageCenter.Instance.Register(MessageCode.Play_DropWeapon, PlayerDropWeapon);
         MessageCenter.Instance.Register(MessageCode.Play_Aim, AimEvent);
+        MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, InputEvent);
         pow = FindObjectOfType<PlayerOperateWin>();
     }
 
@@ -273,11 +276,8 @@ public class PlayerController : MonoBehaviour, IBaseController
         {
             return;
         }
-
-        var y = Input.GetAxis("Mouse Y");
-        var x = Input.GetAxis("Mouse X");
-        characterController.transform.Rotate(Vector3.up * x * xSpeed);
-        roleCameraRotObj.transform.Rotate(Vector3.left * y * ySpeed);
+        characterController.transform.Rotate(Vector3.up * mouseX * xSpeed);
+        roleCameraRotObj.transform.Rotate(Vector3.left * mouseY * ySpeed);
     }
 
     private void EyeRaycaseEvent()
@@ -302,7 +302,7 @@ public class PlayerController : MonoBehaviour, IBaseController
             {
                 tip = aic.Tip;
                 tip.gameObject.SetActive(true);
-                pow.SetCrossAndPotColor(Color.red);
+                pow.crossController.SetCrossAndPotColor(Color.red);
             }
         }
         else
@@ -312,7 +312,7 @@ public class PlayerController : MonoBehaviour, IBaseController
             {
                 tip.gameObject.SetActive(false);
             }
-            pow.SetCrossAndPotColor(Color.white);
+            pow.crossController.SetCrossAndPotColor(Color.white);
         }
     }
 
@@ -349,8 +349,6 @@ public class PlayerController : MonoBehaviour, IBaseController
         {
             return;
         }
-
-        InputsEvent();
         JumpEvent();
         GroundEvent();
         GravityEvent();
@@ -383,10 +381,12 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 获取输入
     /// </summary>
-    private void InputsEvent()
+    private void InputEvent(InputMgr.InputData data)
     {
-        hor = Input.GetAxis("Horizontal");
-        ver = Input.GetAxis("Vertical");
+        mouseY = data.mouseY;
+        mouseX = data.mouseX;
+        hor = data.horizontal;
+        ver = data.vertical;
     }
 
     /// <summary>
@@ -442,7 +442,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         
         //跑步事件
         RunEvent();
-        
+
         //角色移动向量
         moveDirection = new Vector3(hor, 0, ver);
         moveDirection = characterController.transform.TransformDirection(moveDirection);
