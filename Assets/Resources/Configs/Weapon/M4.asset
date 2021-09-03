@@ -18,3 +18,4 @@ MonoBehaviour:
     weaponBornQua: {x: 0, y: 0, z: 0, w: 0}
   weaponAttackSound: {fileID: 8300000, guid: dbbed2f14e28e4540b3a0d6cd09bde2c, type: 3}
   weaponAttackRate: 0.1
+  weaponBulletFlyOutSign: BulletFlyOut

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 266bb83a45c3a2a478fad96f0f7c6f31, type: 3}
   m_Name: SOBullet
   m_EditorClassIdentifier: 
-  bulletSign: FX_Bullet_Trail_Mesh 1
+  bulletSign: Bullet

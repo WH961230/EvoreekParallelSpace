@@ -15,12 +15,16 @@ public class SOWeapon : ScriptableObject
     [SerializeField] [Tooltip("武器标识")] private string weaponSign;
     [SerializeField] [Tooltip("武器生成点")] private WeaponCreateInfo weaponCreateInfo;
 
-
     [Header("==== 武器音效 ====")]
     [SerializeField] [Tooltip("武器射击音效")] public AudioClip weaponAttackSound;
     
+    [Header("==== 武器参数 ====")]
     [SerializeField] [Tooltip("武器射击速率")] public float weaponAttackRate;
+    
+    [Header("==== 武器特效 ====")]
+    [SerializeField] [Tooltip("武器弹壳飞出特效")] public string weaponBulletFlyOutSign;
 
     public string WeaponSign => weaponSign;
     public WeaponCreateInfo WeaponInfo => weaponCreateInfo;
+    public string WeaponBulletFlyOutSign => weaponBulletFlyOutSign;
 }
