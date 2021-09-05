@@ -18,8 +18,11 @@ public class SOAI : ScriptableObject
     [Header("==== AI战斗相关 ====")]
     [SerializeField] [Tooltip("AI飙血特效")] private string aIBloodSign;
 
+    [Header("==== AI基础参数信息 ====")]
+    [SerializeField] [Tooltip("AI最大血量")] private int maxHp;
+
     public string AISign => aISign;
     public AIBornInfo AIBornInfo=> aIBornInfo;
     public string AIBloodSign => aIBloodSign;
-
+    public int MaxHp => maxHp;
 }

@@ -17,10 +17,19 @@ public class AIController : MonoBehaviour, IBaseController
     public AnimatorController ac;
     public Transform Tip;
     public Text text;
+    public int hp;
+    public int maxHp;
     public void OnInit()
     {
         InitController();
+        InitBaseProperty();
         InitTipName();
+    }
+    
+    private void InitBaseProperty() {
+        //血量
+        maxHp = ConfigMgr.Instance.AIConfig.MaxHp;
+        hp = maxHp;
     }
 
     private void InitTipName()

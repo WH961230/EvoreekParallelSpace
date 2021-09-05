@@ -25,7 +25,8 @@ public class AIMgr : Singleton<AIMgr>, IBaseMgr
         var ai = new AI(
             ac.AIId,
             ac.AIName,
-            ac
+            ac,
+            ac.hp
         );
 
         AIs.Add(ai);
@@ -34,7 +35,7 @@ public class AIMgr : Singleton<AIMgr>, IBaseMgr
     private Transform InitAIObj() {
         //获取预制体
         var ac = ConfigMgr.Instance.AIConfig;
-        var ao = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ac.AISign)) as GameObject;
+        var ao = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Role, ac.AISign)) as GameObject;
         if (null == ao)
         {
             return null;

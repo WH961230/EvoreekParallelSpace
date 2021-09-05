@@ -50,8 +50,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     /// <summary>
     /// 创建玩家
     /// </summary>
-    private void InitPlayer()
-    {
+    private void InitPlayer() {
         var po = InitPlayerObj();
         if (null == po)
         {
@@ -65,7 +64,8 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
         var player = new Player(
             pc.playerId,
             pc.playerName,
-            pc
+            pc,
+            pc.hp
         );
 
         Players.Add(player);
@@ -76,7 +76,7 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     {
         //获取预制体
         var pc = ConfigMgr.Instance.playerConfig;
-        var po = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, pc.PlayerSign)) as GameObject;
+        var po = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Role, pc.PlayerSign)) as GameObject;
         if (null == po)
         {
             return null;

@@ -37,15 +37,15 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
     private void InitWeapon()
     {
         //获取预制体
-        var weaponObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.weaponConfig.WeaponSign)) as GameObject;
-        if (null == weaponObj) {
+        var w = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.weaponConfig.WeaponSign)) as GameObject;
+        if (null == w) {
             return;
         }
 
-        weaponObj.transform.position = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornVec;
-        weaponObj.transform.localRotation = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornQua;
+        w.transform.position = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornVec;
+        w.transform.localRotation = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornQua;
 
-        var wc = weaponObj.GetComponentInChildren<WeaponController>();
+        var wc = w.GetComponentInChildren<WeaponController>();
         wc.OnInit();
         wc.weaponId = ++id;
 

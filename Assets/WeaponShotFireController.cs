@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public class BulletFlyOutController : MonoBehaviour, IBaseController {
-    public bool IsStop;
-    private void Hide()
-    {
+public class WeaponShotFireController : MonoBehaviour, IBaseController
+{
+    public void OnEnable() {
+        Invoke("Hide", 0.5f);
+    }
+
+    private void Hide() {
         gameObject.SetActive(false);
     }
 
@@ -11,9 +14,6 @@ public class BulletFlyOutController : MonoBehaviour, IBaseController {
     }
 
     public void OnUpdate() {
-        if (IsStop) {
-            Hide();
-        }
     }
 
     public void OnFixedUpdate() {

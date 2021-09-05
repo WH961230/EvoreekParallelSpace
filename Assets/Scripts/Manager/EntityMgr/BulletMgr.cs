@@ -22,7 +22,7 @@ public class BulletMgr : Singleton<BulletMgr>,IBaseMgr
     /// <param name="bc"></param>
     private void InitBullet()
     {
-        var bulletObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+        var bulletObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
         if (null == bulletObj)
         {
             return;

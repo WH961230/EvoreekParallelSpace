@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +9,8 @@ public class WeaponController : MonoBehaviour, IBaseController
 	public int weaponId;
 	[SerializeField] public string weaponName;
 	[Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
-	[Tooltip("弹壳飞出特效位置")][SerializeField] Transform bulletFlyOutPointTran;
+	[Tooltip("弹壳飞出特效位置")] [SerializeField] private Transform bulletFlyOutPointTran;
+	[Tooltip("武器枪口特效位置")][SerializeField] private Transform weaponShotFireTran;
 	[Tooltip("武器类型")][SerializeField] public WeaponType weaponType;
 	[Tooltip("子弹类型")][SerializeField] public BulletType bulletType;
 	[Tooltip("音频")][SerializeField] public AudioSource audioSource;
@@ -18,20 +20,36 @@ public class WeaponController : MonoBehaviour, IBaseController
 	[Tooltip("武器左手抓取地方")][SerializeField] public Transform weaponLeftHandGripTran;
 	private PlayerOperateWin pow;
 	private GameObject bulletFlyOutObj;
+	private GameObject weaponShotFireObj;
+	private BulletFlyOutController bulletFlyOutController;
+	private WeaponShotFireController weaponShotFireController;
+	public Transform weaponTempParent;
+	private bool isShoting = false;
+	private float nextFireTime;
+
 	public void OnInit()
 	{
-		InitWeaponFX();
 		pow = FindObjectOfType<PlayerOperateWin>();
 	}
 
-	private void InitWeaponFX()
-	{
-		bulletFlyOutObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, weaponSetting.WeaponBulletFlyOutSign)) as GameObject;
-		bulletFlyOutObj.SetActive(false);
+	private void SetWeaponTempParent(Transform tran) {
+		tran.SetParent(weaponTempParent);
 	}
 
 	public void OnUpdate()
 	{
+		if (null != bulletFlyOutController) {
+			var bc = bulletFlyOutController;
+			bc.OnUpdate();
+			if (isShoting) {
+				bc.IsStop = true;
+			}
+		}
+		
+		if (null != weaponShotFireController) {
+			var w = weaponShotFireController;
+			w.OnUpdate();
+		}
 	}
 
 	public void OnFixedUpdate()
@@ -51,10 +69,8 @@ public class WeaponController : MonoBehaviour, IBaseController
 	/// 瞄准事件
 	/// </summary>
 	public void AimEvent() {
-		
 	}
 
-	private float nextFireTime;
 	/// <summary>
 	/// 射击事件
 	/// </summary>
@@ -64,16 +80,27 @@ public class WeaponController : MonoBehaviour, IBaseController
 		RaycastHit hit;
 		if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25)))
 		{
-			if (!bulletFlyOutObj.gameObject.activeSelf)
-			{
-				var tran = bulletFlyOutObj.transform;
-				tran.position = bulletFlyOutPointTran.position;
-				bulletFlyOutObj.gameObject.SetActive(true);
-			}
 			if (Time.time > nextFireTime) {
-				pow.BloodAnimation.Play("BloodNumFlyOut");
-				var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+				//射击火花
+				weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponShotFireSign)) as GameObject;
+				SetWeaponTempParent(weaponShotFireObj.transform);
+				var t1 = weaponShotFireObj.transform;
+				t1.position = weaponShotFireTran.position;
+				t1.rotation = weaponShotFireTran.rotation;
+				
+				//血量飚出
+				var o = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.UI, ConfigMgr.Instance.uIConfig.BloodNumFlyOutSign)) as GameObject;
+				o.transform.SetParent(pow.transform);
+				var t2 = o.transform;
+				t2.localPosition = Vector3.zero;
+				t2.localRotation = quaternion.identity;
+				pow.BloodEffectController = o.GetComponent<BloodEffectController>();
+				pow.BloodEffectController.OnInit();
+				
+				var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+				SetWeaponTempParent(b.transform);
 				b.transform.position = bulletShotTran.position;
+				b.transform.rotation = bulletShotTran.rotation;
 				b.transform.GetComponent<BulletController>().targetTran = hit.point;
 				audioSource.PlayOneShot(weaponSetting.weaponAttackSound);
 				nextFireTime = Time.time + weaponSetting.weaponAttackRate;

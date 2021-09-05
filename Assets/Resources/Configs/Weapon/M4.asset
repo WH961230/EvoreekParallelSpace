@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8701d98e726aabb4283f174518d050ad, type: 3}
   m_Name: M4
   m_EditorClassIdentifier: 
-  weaponSign: 
+  weaponSign: M4
   weaponCreateInfo:
-    weaponBornVec: {x: 0, y: 0, z: 0}
-    weaponBornQua: {x: 0, y: 0, z: 0, w: 0}
+    weaponBornVec: {x: -1.4286418, y: 3.8, z: 16.86}
+    weaponBornQua: {x: 0, y: 0, z: 0, w: 1}
   weaponAttackSound: {fileID: 8300000, guid: dbbed2f14e28e4540b3a0d6cd09bde2c, type: 3}
-  weaponAttackRate: 0.1
+  weaponAttackRate: 0.01
   weaponBulletFlyOutSign: BulletFlyOut
+  weaponShotFireSign: WeaponShotFire

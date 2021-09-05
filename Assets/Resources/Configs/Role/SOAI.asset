@@ -16,3 +16,5 @@ MonoBehaviour:
   aIBornInfo:
     AIBornVec: {x: 0, y: 5, z: 0}
     AIBornQua: {x: 0, y: 0, z: 0, w: 0}
+  aIBloodSign: 
+  maxHp: 100

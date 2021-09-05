@@ -1,6 +1,7 @@
 using Data;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
 
 /// <summary>
@@ -11,48 +12,39 @@ public class PlayerController : MonoBehaviour, IBaseController
     [Header("==== 角色ID ====")] 
     [SerializeField] public int playerId = -1;
     [SerializeField] public string playerName;
-
     [FormerlySerializedAs("controller")]
     [Header("==== 控制器 ====")] 
     [Tooltip("角色控制器")][SerializeField] public CharacterController characterController;
     [Tooltip("角色")][SerializeField] Transform body;
-
     [Tooltip("音频")][SerializeField] AudioSource audioSource;
-
     [Header("==== 移动参数 ====")]
     [Tooltip("重力系数")][SerializeField] float gravity;
-
     [Tooltip("行走速度")][SerializeField] float walkSpeed;//行走速度
     [Tooltip("跑步速度系数")][SerializeField] float runSpeed;//跑步速度系数
     [Tooltip("跳跃速度")][SerializeField] float jumpSpeed;//跳跃速度
-
     [Tooltip("相机左右视角速度")][SerializeField] float ySpeed;//相机左右视角速in
     [Tooltip("相机上下视角速度")][SerializeField] float xSpeed;//相机上下视角速度
-
     [Header("==== 预制 ====")]
     [Tooltip("挂载在角色身上的相机目标")][SerializeField] Transform roleCameraTarget;
-
     [Tooltip("角色面相机移动向导")][SerializeField] Transform roleFrontCameraTarget;
     [Tooltip("角色相机旋转物体")][SerializeField] Transform roleCameraRotObj;
-
     [Tooltip("跑步控制器")][SerializeField] public bool RunInput;//跑步控制器
     [Tooltip("跳跃控制器")][SerializeField] public bool JumpInput;//跑步控制器
-
     [SerializeField] private bool isWalk;
     [SerializeField] private bool isRun;
     [SerializeField] private bool isJump;
     [SerializeField] private bool isAim;
-
+    public int hp;
+    public int maxHp;
     public float dropForce;
     
     private Vector3 moveDirection = Vector3.zero;//移动方向
-    private float hor;//水平输入
-    private float ver;//垂直输入
+    private float h;//水平输入
+    private float v;//垂直输入
     private float mouseX;//鼠标X
     private float mouseY;//鼠标Y
 
     private AnimatorController ac;
-    public Transform weaponHandleTran;//武器挂载点
     private RaycastHit hit;
 
     private PlayerOperateWin pow;
@@ -70,6 +62,13 @@ public class PlayerController : MonoBehaviour, IBaseController
         MessageCenter.Instance.Register(MessageCode.Play_Aim, AimEvent);
         MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, InputEvent);
         pow = FindObjectOfType<PlayerOperateWin>();
+        InitBaseProperty();
+    }
+
+    private void InitBaseProperty() {
+        //血量
+        maxHp = ConfigMgr.Instance.playerConfig.MaxHp;
+        hp = maxHp;
     }
 
     /// <summary>
@@ -283,8 +282,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     private void EyeRaycaseEvent()
     {
         var ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Item") | 1 << LayerMask.NameToLayer("AI")))
-        {
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity,
+            1 << LayerMask.NameToLayer("Item") | 1 << LayerMask.NameToLayer("AI"))) {
             var wc = hit.collider.GetComponent<WeaponController>();
             if (null != wc)
             {
@@ -296,23 +295,12 @@ public class PlayerController : MonoBehaviour, IBaseController
             {
                 pow.Tip.text = bsb.AMMO_TIP;
             }
-            
-            var aic = hit.collider.GetComponentInParent<AIController>();
-            if (null != aic)
-            {
-                tip = aic.Tip;
-                tip.gameObject.SetActive(true);
-                pow.CrossController.SetCrossColor(Color.red);
-            }
-        }
-        else
-        {
+        } else {
             pow.Tip.text = "";
             if (null != tip && null != tip.gameObject)
             {
                 tip.gameObject.SetActive(false);
             }
-            pow.CrossController.SetCrossColor(Color.white);
         }
     }
 
@@ -385,8 +373,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     {
         mouseY = data.mouseY;
         mouseX = data.mouseX;
-        hor = data.horizontal;
-        ver = data.vertical;
+        h = data.horizontal;
+        v = data.vertical;
     }
 
     /// <summary>
@@ -423,8 +411,8 @@ public class PlayerController : MonoBehaviour, IBaseController
         WalkEvent();
 
         //状态机设定
-        ac.animator.SetFloat("Horizontal", hor);
-        ac.animator.SetFloat("Vertical", ver);
+        ac.animator.SetFloat("Horizontal", h);
+        ac.animator.SetFloat("Vertical", v);
     }
 
     /// <summary>
@@ -433,7 +421,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     private void WalkEvent()
     {
         //没有输入前进或者后退
-        if (IsZero(hor) && IsZero(ver))
+        if (IsZero(h) && IsZero(v))
         {
             moveDirection = default;
             isWalk = false;
@@ -444,7 +432,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         RunEvent();
 
         //角色移动向量
-        moveDirection = new Vector3(hor, 0, ver);
+        moveDirection = new Vector3(h, 0, v);
         moveDirection = characterController.transform.TransformDirection(moveDirection);
         moveDirection *= walkSpeed;
         isWalk = true;
@@ -472,7 +460,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     private void RunEvent()
     {
         //垂直输入向量为 0
-        if (IsZero(ver))
+        if (IsZero(v))
         {
             isRun = false;
             return; 
@@ -486,7 +474,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
 
         //速度
-        ver *= runSpeed; 
+        v *= runSpeed; 
         isRun = true;
     }
 

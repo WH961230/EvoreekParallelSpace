@@ -7,6 +7,7 @@ public struct PlayerBaseData
 {
     public int id;
     public string name;
+    public int hp;
     public PlayerController playerController;
 }
 
@@ -16,11 +17,12 @@ public struct PlayerBaseData
 public class Player : IBaseEntites
 {
     public PlayerBaseData BaseData;
-    public Player(int id, string name, PlayerController pc)
+    public Player(int id, string name, PlayerController pc, int hp)
     { 
         this.BaseData.id = id;
         this.BaseData.name = name;
         this.BaseData.playerController = pc;
+        this.BaseData.hp = hp;
         Debug.LogFormat("创建角色 ：name {0} id {1}", name, id);
     }
     public void OnInit()

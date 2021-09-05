@@ -7,6 +7,7 @@ public struct AIBaseData
 {
     public int id;
     public string name;
+    public int hp;
     public AIController AIController;
 }
 
@@ -17,11 +18,12 @@ public class AI
 {
     public AIBaseData BaseData;
     
-    public AI(int id, string name, AIController ac)
+    public AI(int id, string name, AIController ac, int hp)
     { 
         this.BaseData.id = id;
         this.BaseData.name = name;
         this.BaseData.AIController = ac;
+        this.BaseData.hp = hp;
         Debug.LogFormat("创建AI ：name {0} id {1}", name, id);
     }
 }
