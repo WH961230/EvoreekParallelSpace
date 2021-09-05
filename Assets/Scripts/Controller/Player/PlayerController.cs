@@ -302,7 +302,7 @@ public class PlayerController : MonoBehaviour, IBaseController
             {
                 tip = aic.Tip;
                 tip.gameObject.SetActive(true);
-                pow.crossController.SetCrossAndPotColor(Color.red);
+                pow.CrossController.SetCrossColor(Color.red);
             }
         }
         else
@@ -312,7 +312,7 @@ public class PlayerController : MonoBehaviour, IBaseController
             {
                 tip.gameObject.SetActive(false);
             }
-            pow.crossController.SetCrossAndPotColor(Color.white);
+            pow.CrossController.SetCrossColor(Color.white);
         }
     }
 

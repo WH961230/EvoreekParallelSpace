@@ -16,11 +16,12 @@ public class WeaponController : MonoBehaviour, IBaseController
 	
 	[Tooltip("武器右手抓取地方")][SerializeField] public Transform weaponRightHandGripTran;
 	[Tooltip("武器左手抓取地方")][SerializeField] public Transform weaponLeftHandGripTran;
-
+	private PlayerOperateWin pow;
 	private GameObject bulletFlyOutObj;
 	public void OnInit()
 	{
 		InitWeaponFX();
+		pow = FindObjectOfType<PlayerOperateWin>();
 	}
 
 	private void InitWeaponFX()
@@ -69,8 +70,8 @@ public class WeaponController : MonoBehaviour, IBaseController
 				tran.position = bulletFlyOutPointTran.position;
 				bulletFlyOutObj.gameObject.SetActive(true);
 			}
-			if (Time.time > nextFireTime)
-			{
+			if (Time.time > nextFireTime) {
+				pow.BloodAnimation.Play("BloodNumFlyOut");
 				var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
 				b.transform.position = bulletShotTran.position;
 				b.transform.GetComponent<BulletController>().targetTran = hit.point;
