@@ -1,3 +1,4 @@
+using Data;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -6,113 +7,129 @@ using UnityEngine;
 /// </summary>
 public class WeaponController : MonoBehaviour, IBaseController
 {
-	public int weaponId;
-	[SerializeField] public string weaponName;
-	[Tooltip("子弹发射位置")][SerializeField] Transform bulletShotTran;
-	[Tooltip("弹壳飞出特效位置")] [SerializeField] private Transform bulletFlyOutPointTran;
-	[Tooltip("武器枪口特效位置")][SerializeField] private Transform weaponShotFireTran;
-	[Tooltip("武器类型")][SerializeField] public WeaponType weaponType;
-	[Tooltip("子弹类型")][SerializeField] public BulletType bulletType;
-	[Tooltip("音频")][SerializeField] public AudioSource audioSource;
-	[Tooltip("武器配置")][SerializeField] public SOWeapon weaponSetting;
-	
-	[Tooltip("武器右手抓取地方")][SerializeField] public Transform weaponRightHandGripTran;
-	[Tooltip("武器左手抓取地方")][SerializeField] public Transform weaponLeftHandGripTran;
-	private PlayerOperateWin pow;
-	private GameObject bulletFlyOutObj;
-	private GameObject weaponShotFireObj;
-	private BulletFlyOutController bulletFlyOutController;
-	private WeaponShotFireController weaponShotFireController;
-	public Transform weaponTempParent;
-	private bool isShoting = false;
-	private float nextFireTime;
+    public int weaponId;
+    [SerializeField] public string weaponName;
+    [Tooltip("子弹发射位置")] [SerializeField] Transform bulletShotTran;
+    [Tooltip("弹壳飞出特效位置")] [SerializeField] private Transform bulletFlyOutPointTran;
+    [Tooltip("武器枪口特效位置")] [SerializeField] private Transform weaponShotFireTran;
+    [Tooltip("武器类型")] [SerializeField] public WeaponType weaponType;
+    [Tooltip("子弹类型")] [SerializeField] public BulletType bulletType;
+    [Tooltip("音频")] [SerializeField] public AudioSource audioSource;
+    [Tooltip("武器配置")] [SerializeField] public SOWeapon weaponSetting;
 
-	public void OnInit()
-	{
-		pow = FindObjectOfType<PlayerOperateWin>();
-	}
+    [Tooltip("武器右手抓取地方")] [SerializeField] public Transform weaponRightHandGripTran;
+    [Tooltip("武器左手抓取地方")] [SerializeField] public Transform weaponLeftHandGripTran;
+    private PlayerOperateWin pow;
+    private GameObject bulletFlyOutObj;
+    private GameObject weaponShotFireObj;
+    private BulletFlyOutController bulletFlyOutController;
+    private WeaponShotFireController weaponShotFireController;
+    public Transform weaponTempParent;
+    private bool isShoting = false;
+    private float nextFireTime;
 
-	private void SetWeaponTempParent(Transform tran) {
-		tran.SetParent(weaponTempParent);
-	}
+    public void OnInit() {
+        pow = FindObjectOfType<PlayerOperateWin>();
+        MessageCenter.Instance.Register<int>(MessageCode.Weapon_Shot, ShotEvent);
+        MessageCenter.Instance.Register(MessageCode.Weapon_CountDownBulletNum, CountDownBulletNum);
+    }
 
-	public void OnUpdate()
-	{
-		if (null != bulletFlyOutController) {
-			var bc = bulletFlyOutController;
-			bc.OnUpdate();
-			if (isShoting) {
-				bc.IsStop = true;
-			}
-		}
-		
-		if (null != weaponShotFireController) {
-			var w = weaponShotFireController;
-			w.OnUpdate();
-		}
-	}
+    private void SetWeaponTempParent(Transform tran) {
+        tran.SetParent(weaponTempParent);
+    }
 
-	public void OnFixedUpdate()
-	{
-	}
+    public void OnUpdate() {
+        if (null != bulletFlyOutController) {
+            var bc = bulletFlyOutController;
+            bc.OnUpdate();
+            if (isShoting) {
+                bc.IsStop = true;
+            }
+        }
 
-	public void OnLateUpdate()
-	{
-	}
+        if (null != weaponShotFireController) {
+            var w = weaponShotFireController;
+            w.OnUpdate();
+        }
+    }
 
-	public void OnClear()
-	{
-		Destroy(this.gameObject);
-	}
+    public void OnFixedUpdate() {
+    }
 
-	/// <summary>
-	/// 瞄准事件
-	/// </summary>
-	public void AimEvent() {
-	}
+    public void OnLateUpdate() {
+    }
 
-	/// <summary>
-	/// 射击事件
-	/// </summary>
-	public void ShotEvent()
-	{
-		var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-		RaycastHit hit;
-		if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25)))
-		{
-			if (Time.time > nextFireTime) {
-				//射击火花
-				weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponShotFireSign)) as GameObject;
-				SetWeaponTempParent(weaponShotFireObj.transform);
-				var t1 = weaponShotFireObj.transform;
-				t1.position = weaponShotFireTran.position;
-				t1.rotation = weaponShotFireTran.rotation;
-				
-				//血量飚出
-				var o = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.UI, ConfigMgr.Instance.uIConfig.BloodNumFlyOutSign)) as GameObject;
-				o.transform.SetParent(pow.transform);
-				var t2 = o.transform;
-				t2.localPosition = Vector3.zero;
-				t2.localRotation = quaternion.identity;
-				pow.BloodEffectController = o.GetComponent<BloodEffectController>();
-				pow.BloodEffectController.OnInit();
-				
-				var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
-				SetWeaponTempParent(b.transform);
-				b.transform.position = bulletShotTran.position;
-				b.transform.rotation = bulletShotTran.rotation;
-				b.transform.GetComponent<BulletController>().targetTran = hit.point;
-				audioSource.PlayOneShot(weaponSetting.weaponAttackSound);
-				nextFireTime = Time.time + weaponSetting.weaponAttackRate;
-			}
-		}
-	}
+    public void OnClear() {
+        Destroy(this.gameObject);
+    }
 
-	/// <summary>
-	/// 换弹事件
-	/// </summary>
-	public void ReloadEvent()
-	{
-		Debug.Log("换弹");
-	}
+    /// <summary>
+    /// 瞄准事件
+    /// </summary>
+    public void AimEvent() {
+    }
+
+    /// <summary>
+    /// 射击事件
+    /// </summary>
+    private void ShotEvent(int playerId) {
+        var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        RaycastHit hit;
+        if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
+            if (Time.time > nextFireTime) {
+                var num = WeaponBulletHandle.Instance.GetWeaponBulletNum(weaponId);
+                if (num <= 0) {
+                    MessageCenter.Instance.Dispatcher(MessageCode.Tip_BulletNull);
+                    return;
+                }
+                
+                //初始化子弹
+                var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+                
+                SetWeaponTempParent(b.transform);
+                b.transform.position = bulletShotTran.position;
+                b.transform.rotation = bulletShotTran.rotation;
+                b.transform.GetComponent<BulletController>().targetTran = hit.point;
+                
+                MessageCenter.Instance.Dispatcher(MessageCode.Weapon_CountDownBulletNum);
+                
+                //射击火花
+                weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponShotFireSign)) as GameObject;
+                SetWeaponTempParent(weaponShotFireObj.transform);
+                
+                var t1 = weaponShotFireObj.transform;
+                t1.position = weaponShotFireTran.position;
+                t1.rotation = weaponShotFireTran.rotation;
+
+                //血量飚出
+                var o = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.UI, ConfigMgr.Instance.uIConfig.BloodNumFlyOutSign)) as GameObject;
+                o.transform.SetParent(pow.transform);
+                var t2 = o.transform;
+                t2.localPosition = Vector3.zero;
+                t2.localRotation = quaternion.identity;
+                
+                //UI显示
+                pow.BloodEffectController = o.GetComponent<BloodEffectController>();
+                pow.BloodEffectController.OnInit();
+                
+                audioSource.PlayOneShot(weaponSetting.weaponAttackSound);
+                nextFireTime = Time.time + weaponSetting.weaponAttackRate;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 消耗弹药
+    /// </summary>
+    private void CountDownBulletNum() {
+        WeaponBulletHandle.Instance.WeaponConsumeBullet(weaponId, 1);
+    }
+
+    /// <summary>
+    /// 换弹事件
+    /// </summary>
+    public void ReloadEvent()
+    {
+        Debug.Log("换弹");
+    }
 }

@@ -55,12 +55,14 @@ public class PlayerController : MonoBehaviour, IBaseController
     {
         InitController();
         rc.OnInit();
+        
         MessageCenter.Instance.Register(MessageCode.Play_Attack, AttackEvent);
         MessageCenter.Instance.Register(MessageCode.Play_Reload, ReloadEvent);
         MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
         MessageCenter.Instance.Register(MessageCode.Play_DropWeapon, PlayerDropWeapon);
         MessageCenter.Instance.Register(MessageCode.Play_Aim, AimEvent);
         MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, InputEvent);
+        
         pow = FindObjectOfType<PlayerOperateWin>();
         InitBaseProperty();
     }
@@ -172,8 +174,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
         var wid = PlayerWeaponHandle.Instance.PlayerGetCurWeapon(playerId);
         var weapon = WeaponMgr.Instance.GetWeaponById(wid);
-        if (null != weapon)
-        {
+        if (null != weapon) {
             //根据攻击类型执行攻击
             AttackByType(weapon.BaseData);   
         }
@@ -215,7 +216,7 @@ public class PlayerController : MonoBehaviour, IBaseController
                 Debug.Log("近战暂未开发");
                 break;
             case WeaponType.枪械:
-                baseData.weaponController.ShotEvent();
+                MessageCenter.Instance.Dispatcher(MessageCode.Weapon_Shot, playerId);
                 break;
             case WeaponType.投掷:
                 Debug.Log("投掷暂未开发");

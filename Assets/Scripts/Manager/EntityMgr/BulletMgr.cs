@@ -11,8 +11,7 @@ public class BulletMgr : Singleton<BulletMgr>,IBaseMgr
         gameEngine.managers.Add(this);
     }
 
-    public void OnUpdate()
-    {
+    public void OnUpdate() {
     }
 
     /// <summary>
