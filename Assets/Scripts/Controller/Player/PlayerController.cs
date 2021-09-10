@@ -13,10 +13,12 @@ public class PlayerController : MonoBehaviour, IBaseController
     [SerializeField] public int playerId = -1;
     [SerializeField] public string playerName;
     [FormerlySerializedAs("controller")]
+    
     [Header("==== 控制器 ====")] 
     [Tooltip("角色控制器")][SerializeField] public CharacterController characterController;
     [Tooltip("角色")][SerializeField] Transform body;
     [Tooltip("音频")][SerializeField] AudioSource audioSource;
+    
     [Header("==== 移动参数 ====")]
     [Tooltip("重力系数")][SerializeField] float gravity;
     [Tooltip("行走速度")][SerializeField] float walkSpeed;//行走速度
@@ -24,16 +26,19 @@ public class PlayerController : MonoBehaviour, IBaseController
     [Tooltip("跳跃速度")][SerializeField] float jumpSpeed;//跳跃速度
     [Tooltip("相机左右视角速度")][SerializeField] float ySpeed;//相机左右视角速in
     [Tooltip("相机上下视角速度")][SerializeField] float xSpeed;//相机上下视角速度
+    
     [Header("==== 预制 ====")]
     [Tooltip("挂载在角色身上的相机目标")][SerializeField] Transform roleCameraTarget;
     [Tooltip("角色面相机移动向导")][SerializeField] Transform roleFrontCameraTarget;
     [Tooltip("角色相机旋转物体")][SerializeField] Transform roleCameraRotObj;
     [Tooltip("跑步控制器")][SerializeField] public bool RunInput;//跑步控制器
     [Tooltip("跳跃控制器")][SerializeField] public bool JumpInput;//跑步控制器
+    
     [SerializeField] private bool isWalk;
     [SerializeField] private bool isRun;
     [SerializeField] private bool isJump;
     [SerializeField] private bool isAim;
+    
     public int hp;
     public int maxHp;
     public float dropForce;
@@ -56,19 +61,17 @@ public class PlayerController : MonoBehaviour, IBaseController
         InitController();
         rc.OnInit();
         
-        MessageCenter.Instance.Register(MessageCode.Play_Attack, AttackEvent);
-        MessageCenter.Instance.Register(MessageCode.Play_Reload, ReloadEvent);
+        MessageCenter.Instance.Register(MessageCode.Play_Attack, Attack);
         MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
         MessageCenter.Instance.Register(MessageCode.Play_DropWeapon, PlayerDropWeapon);
-        MessageCenter.Instance.Register(MessageCode.Play_Aim, AimEvent);
-        MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, InputEvent);
+        MessageCenter.Instance.Register(MessageCode.Play_Aim, Aim);
+        MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, Input);
         
         pow = FindObjectOfType<PlayerOperateWin>();
         InitBaseProperty();
     }
 
     private void InitBaseProperty() {
-        //血量
         maxHp = ConfigMgr.Instance.playerConfig.MaxHp;
         hp = maxHp;
     }
@@ -94,8 +97,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     {
         SetCameraTarget();
         SetFrontCameraTarget();
-        MoveEvent();
-        EyeEvent();
+        Move();
+        Eye();
         rc.OnUpdate();
     }
     
@@ -146,7 +149,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         rb.AddForce(controllerTran.forward * dropForce, ForceMode.Impulse);
     }
 
-    void AimEvent()
+    void Aim()
     {
         if (!isAim)
         {
@@ -166,7 +169,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 射击事件
     /// </summary>
-    void AttackEvent()
+    void Attack()
     {
         if (!isAim)
         {
@@ -177,30 +180,6 @@ public class PlayerController : MonoBehaviour, IBaseController
         if (null != weapon) {
             //根据攻击类型执行攻击
             AttackByType(weapon.BaseData);   
-        }
-    }
-
-    void ReloadEvent()
-    {
-        ReloadByType(new WeaponBaseData());
-    }
-
-    /// <summary>
-    /// 玩家发起 - 装载
-    /// </summary>
-    /// <param name="baseData"></param>
-    void ReloadByType(WeaponBaseData baseData)
-    {
-        switch (baseData.weaponType)
-        {
-            case WeaponType.近战:
-                Debug.Log("近战暂未开发");
-                break;
-            case WeaponType.枪械:
-                break;
-            case WeaponType.投掷:
-                Debug.Log("投掷暂未开发");
-                break;
         }
     }
 
@@ -263,14 +242,14 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 角色视角事件
     /// </summary>
-    private void EyeEvent()
+    private void Eye()
     {
         //视角相关事件
-        EyeRotEvent();
-        EyeRaycaseEvent();
+        EyeRot();
+        EyeRaycase();
     }
 
-    private void EyeRotEvent()
+    private void EyeRot()
     {
         if (!roleCameraRotObj || !characterController)
         {
@@ -280,7 +259,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         roleCameraRotObj.transform.Rotate(Vector3.left * mouseY * ySpeed);
     }
 
-    private void EyeRaycaseEvent()
+    private void EyeRaycase()
     {
         var ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width / 2, Screen.height / 2));
         if (Physics.Raycast(ray, out hit, Mathf.Infinity,
@@ -332,19 +311,19 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 移动事件
     /// </summary>
-    private void MoveEvent()
+    private void Move()
     {
         if (!characterController || !ac.animator)
         {
             return;
         }
-        JumpEvent();
-        GroundEvent();
-        GravityEvent();
+        Jump();
+        Ground();
+        Gravity();
         characterController.Move(moveDirection * Time.deltaTime);
     }
 
-    private void JumpEvent()
+    private void Jump()
     {
         //没有跳跃指令返回
         if (!JumpInput)
@@ -370,7 +349,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 获取输入
     /// </summary>
-    private void InputEvent(InputMgr.InputData data)
+    private void Input(InputMgr.InputData data)
     {
         mouseY = data.mouseY;
         mouseX = data.mouseX;
@@ -381,7 +360,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 重力系统
     /// </summary>
-    private void GravityEvent()
+    private void Gravity()
     {
         if (characterController.isGrounded)
         {
@@ -393,7 +372,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 地面事件
     /// </summary>
-    private void GroundEvent()
+    private void Ground()
     {
         //不在地面返回
         if (!characterController.isGrounded)
@@ -409,7 +388,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
 
         //走路事件
-        WalkEvent();
+        Walk();
 
         //状态机设定
         ac.animator.SetFloat("Horizontal", h);
@@ -419,7 +398,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 行走事件
     /// </summary>
-    private void WalkEvent()
+    private void Walk()
     {
         //没有输入前进或者后退
         if (IsZero(h) && IsZero(v))
@@ -430,7 +409,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
         
         //跑步事件
-        RunEvent();
+        Run();
 
         //角色移动向量
         moveDirection = new Vector3(h, 0, v);
@@ -458,7 +437,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     /// <summary>
     /// 跑步事件
     /// </summary>
-    private void RunEvent()
+    private void Run()
     {
         //垂直输入向量为 0
         if (IsZero(v))

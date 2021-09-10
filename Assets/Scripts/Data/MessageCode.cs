@@ -16,7 +16,7 @@
         //跳跃
         public const int Play_Jump = 4;
         //换弹
-        public const int Play_Reload = 5;
+        public const int Weapon_Reload = 5;
         //拾取武器
         public const int Play_PickWeapon = 6;
         //丢弃武器
@@ -33,5 +33,6 @@
         public const int Weapon_Shot = 12;
         //提示 - 弹药不足
         public const int Tip_BulletNull = 13;
+
     }
 }

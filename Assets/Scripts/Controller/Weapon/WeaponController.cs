@@ -30,8 +30,10 @@ public class WeaponController : MonoBehaviour, IBaseController
 
     public void OnInit() {
         pow = FindObjectOfType<PlayerOperateWin>();
-        MessageCenter.Instance.Register<int>(MessageCode.Weapon_Shot, ShotEvent);
+        MessageCenter.Instance.Register<int>(MessageCode.Weapon_Shot, Shot);
         MessageCenter.Instance.Register(MessageCode.Weapon_CountDownBulletNum, CountDownBulletNum);
+        MessageCenter.Instance.Register(MessageCode.Weapon_Reload, Reload);
+
     }
 
     private void SetWeaponTempParent(Transform tran) {
@@ -72,7 +74,7 @@ public class WeaponController : MonoBehaviour, IBaseController
     /// <summary>
     /// 射击事件
     /// </summary>
-    private void ShotEvent(int playerId) {
+    private void Shot(int playerId) {
         var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         RaycastHit hit;
         if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
@@ -80,6 +82,7 @@ public class WeaponController : MonoBehaviour, IBaseController
                 var num = WeaponBulletHandle.Instance.GetWeaponBulletNum(weaponId);
                 if (num <= 0) {
                     MessageCenter.Instance.Dispatcher(MessageCode.Tip_BulletNull);
+                    MessageCenter.Instance.Dispatcher(MessageCode.Weapon_Reload);
                     return;
                 }
                 
@@ -102,15 +105,13 @@ public class WeaponController : MonoBehaviour, IBaseController
                 t1.rotation = weaponShotFireTran.rotation;
 
                 //血量飚出
-                var o = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.UI, ConfigMgr.Instance.uIConfig.BloodNumFlyOutSign)) as GameObject;
-                o.transform.SetParent(pow.transform);
-                var t2 = o.transform;
-                t2.localPosition = Vector3.zero;
-                t2.localRotation = quaternion.identity;
-                
-                //UI显示
-                pow.BloodEffectController = o.GetComponent<BloodEffectController>();
-                pow.BloodEffectController.OnInit();
+                // var o = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.UI, ConfigMgr.Instance.uIConfig.BloodNumFlyOutSign)) as GameObject;
+                // o.transform.SetParent(pow.transform);
+                // var t2 = o.transform;
+                // t2.localPosition = Vector3.zero;
+                // t2.localRotation = quaternion.identity;
+                // pow.BloodEffectController = o.GetComponent<BloodEffectController>();
+                // pow.BloodEffectController.OnInit();
                 
                 audioSource.PlayOneShot(weaponSetting.weaponAttackSound);
                 nextFireTime = Time.time + weaponSetting.weaponAttackRate;
@@ -128,8 +129,9 @@ public class WeaponController : MonoBehaviour, IBaseController
     /// <summary>
     /// 换弹事件
     /// </summary>
-    public void ReloadEvent()
+    private void Reload()
     {
         Debug.Log("换弹");
+        WeaponBulletHandle.Instance.WeaponAddBullet(weaponId, 5);
     }
 }

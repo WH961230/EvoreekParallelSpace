@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour,IBaseController
@@ -6,7 +8,7 @@ public class BulletController : MonoBehaviour,IBaseController
     [Tooltip("弹药类型")][SerializeField] public BulletType bulletType;
     [HideInInspector] public Vector3 targetTran;
     void Start() {
-        Invoke("OnDestroy", 0.5f);
+        Invoke("OnDestroy", 10f);
     }
 
     void Update() {
@@ -32,6 +34,15 @@ public class BulletController : MonoBehaviour,IBaseController
     }
 
     public void OnLateUpdate() {
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.collider.gameObject.layer != LayerMask.NameToLayer("Player") &&
+            other.collider.gameObject.layer != LayerMask.NameToLayer("Item"))
+        {
+            Debug.Log(other.collider.name);
+        }
     }
 
     public void OnClear() {
