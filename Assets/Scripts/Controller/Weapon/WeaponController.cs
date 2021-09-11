@@ -31,12 +31,10 @@ public class WeaponController : MonoBehaviour, IBaseController
     public void OnInit() {
         pow = FindObjectOfType<PlayerOperateWin>();
         MessageCenter.Instance.Register<int>(MessageCode.Weapon_Shot, Shot);
-        MessageCenter.Instance.Register(MessageCode.Weapon_CountDownBulletNum, CountDownBulletNum);
         MessageCenter.Instance.Register(MessageCode.Weapon_Reload, Reload);
-
     }
 
-    private void SetWeaponTempParent(Transform tran) {
+    public void SetWeaponTempParent(Transform tran) {
         tran.SetParent(weaponTempParent);
     }
 
@@ -75,9 +73,9 @@ public class WeaponController : MonoBehaviour, IBaseController
     /// 射击事件
     /// </summary>
     private void Shot(int playerId) {
-        var targetVec = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        var target = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         RaycastHit hit;
-        if (Physics.Raycast(targetVec, out hit, 200, ~(1 << 25))) {
+        if (Physics.Raycast(target, out hit, 200, ~(1 << 25))) {
             if (Time.time > nextFireTime) {
                 var num = WeaponBulletHandle.Instance.GetWeaponBulletNum(weaponId);
                 if (num <= 0) {
@@ -85,16 +83,9 @@ public class WeaponController : MonoBehaviour, IBaseController
                     MessageCenter.Instance.Dispatcher(MessageCode.Weapon_Reload);
                     return;
                 }
-                
-                //初始化子弹
-                var b = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
-                
-                SetWeaponTempParent(b.transform);
-                b.transform.position = bulletShotTran.position;
-                b.transform.rotation = bulletShotTran.rotation;
-                b.transform.GetComponent<BulletController>().targetTran = hit.point;
-                
-                MessageCenter.Instance.Dispatcher(MessageCode.Weapon_CountDownBulletNum);
+
+                BoxTool.CreateShape("target", PrimitiveType.Sphere, hit.point, Color.green, 5);
+                WeaponBulletHandle.Instance.WeaponShotBullet(weaponId, bulletShotTran.position, bulletShotTran.rotation, hit.point);
                 
                 //射击火花
                 weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponShotFireSign)) as GameObject;
@@ -117,13 +108,6 @@ public class WeaponController : MonoBehaviour, IBaseController
                 nextFireTime = Time.time + weaponSetting.weaponAttackRate;
             }
         }
-    }
-
-    /// <summary>
-    /// 消耗弹药
-    /// </summary>
-    private void CountDownBulletNum() {
-        WeaponBulletHandle.Instance.WeaponConsumeBullet(weaponId, 1);
     }
 
     /// <summary>

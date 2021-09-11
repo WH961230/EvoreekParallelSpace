@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
     //weaponId bulletNum
-    private Dictionary<int,int> WeaponBulletDic = new Dictionary<int, int>();
+    private Dictionary<int,List<int>> WeaponBulletDic = new Dictionary<int, List<int>>();
 
     #region 弹药增删改查
     /// <summary>
@@ -15,15 +15,21 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
         if (null == WeaponBulletDic) {
             return;
         }
+        var list = BulletMgr.Instance.InitBulletByNum(addBulletNum);
+
         if (WeaponBulletDic.ContainsKey(weaponId)) {
-            var bulletNum = WeaponBulletDic[weaponId];
-            WeaponBulletDic[weaponId] = bulletNum + addBulletNum;
+            var bulletList = WeaponBulletDic[weaponId];
+            foreach (var l in list)
+            {
+                bulletList.Add(l);
+            }
+            WeaponBulletDic[weaponId] = bulletList;
         } else {
-            WeaponBulletDic.Add(weaponId, addBulletNum);
+            WeaponBulletDic.Add(weaponId, list);
         }
         Debug.LogFormat("补充武器 {0} 总弹药数 {1} 补充弹药数 {2}", 
             WeaponMgr.Instance.GetWeaponInfoById(weaponId), 
-            WeaponBulletDic[weaponId], addBulletNum);
+            WeaponBulletDic[weaponId].Count, addBulletNum);
     }
 
     /// <summary>
@@ -31,21 +37,31 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
     /// </summary>
     /// <param name="weaponId">武器</param>
     /// <param name="consumeBulletNum">消耗数量</param>
-    public void WeaponConsumeBullet(int weaponId, int consumeBulletNum) {
-        if (null == WeaponBulletDic) {
+    private void WeaponConsumeBullet(int weaponId, int bulletId)
+    {
+        if (null == WeaponBulletDic)
+        {
             return;
         }
-        if (WeaponBulletDic.ContainsKey(weaponId)) {
-            var bulletNum = WeaponBulletDic[weaponId];
-            var afterBulletNum = Mathf.Max(0, bulletNum - consumeBulletNum);
-            WeaponBulletDic[weaponId] = afterBulletNum;
-        } else {
-            WeaponBulletDic.Add(weaponId, 0);
+
+        if (WeaponBulletDic.ContainsKey(weaponId))
+        {
+            var bulletIdList = WeaponBulletDic[weaponId];
+            if (bulletIdList.Count <= 0)
+            {
+                return;
+            }
+
+            if (bulletIdList.Contains(bulletId))
+            {
+                bulletIdList.Remove(bulletId);
+            }
+
+            WeaponBulletDic[weaponId] = bulletIdList;
         }
-        Debug.LogFormat("消耗武器 {0} 弹药数 {1}", 
-            WeaponMgr.Instance.GetWeaponInfoById(weaponId), 
-            WeaponBulletDic[weaponId]
-            );
+
+        Debug.LogFormat("消耗武器 {0} 弹药数 {1}", WeaponMgr.Instance.GetWeaponInfoById(weaponId),
+            WeaponBulletDic[weaponId].Count);
     }
 
     /// <summary>
@@ -60,10 +76,35 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
 
         int bulletNum = 0;
         if (WeaponBulletDic.ContainsKey(weaponId)) {
-            bulletNum = WeaponBulletDic[weaponId];
+            bulletNum = WeaponBulletDic[weaponId].Count;
         }
 
         return bulletNum;
     }
+    #endregion
+
+    #region 弹药操作
+
+    public void WeaponShotBullet(int weaponId, Vector3 startPoint, Quaternion startQua, Vector3 target)
+    {
+        if (WeaponBulletDic.ContainsKey(weaponId))
+        {
+            int bulletId = -1;
+            var listBulletId = WeaponBulletDic[weaponId];
+            if (listBulletId.Count > 0)
+            {
+                bulletId = listBulletId[0];
+                var b = BulletMgr.Instance.GetBulletById(bulletId);
+                var bTran = b.BaseData.bulletController.transform;
+                bTran.position = startPoint;
+                bTran.rotation = startQua;
+                b.BaseData.bulletController.target = target;
+            }
+            
+            WeaponConsumeBullet(weaponId, bulletId);
+        }
+    }
+
+
     #endregion
 }

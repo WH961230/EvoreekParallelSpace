@@ -21,7 +21,7 @@ public struct BulletBaseData
 /// </summary>
 public class Bullet : IBaseEntites
 {
-    private BulletBaseData BaseData;
+    public BulletBaseData BaseData;
 
     public Bullet(int id, BulletType type, BulletController bc)
     {

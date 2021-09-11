@@ -1,33 +1,37 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour,IBaseController
 {
-    [SerializeField] private float speed;
+    [Tooltip("弹药速度")][SerializeField] private float speed;
     [Tooltip("弹药类型")][SerializeField] public BulletType bulletType;
-    [HideInInspector] public Vector3 targetTran;
-    void Start() {
-        Invoke("OnDestroy", 10f);
-    }
-
-    void Update() {
-        Debug.DrawLine(transform.position, targetTran, Color.magenta);
-        transform.LookAt(targetTran);
-        transform.position = Vector3.Lerp(transform.position, targetTran, Time.deltaTime * speed);
-        if (Vector3.Distance(transform.position, targetTran) < 0.01f) {
-            OnDestroy();
-        }
-    }
+    public int bulletId;
+    public Vector3 target;
+    public Vector3 gravity;
+    private RaycastHit[] hits = new RaycastHit[10];
+    private Vector3 lastPoint;
 
     void OnDestroy() {
         Destroy(gameObject);
     }
 
-    public void OnInit() {
+    public void OnInit()
+    {
+        lastPoint = transform.position;
     }
 
-    public void OnUpdate() {
+    public void OnUpdate()
+    {
+        if (transform.position != lastPoint)
+        {
+            Debug.Log("current Point : " + transform.position + " | distance : " + Vector3.Distance(transform.position, lastPoint));
+        }
+        var t = transform;
+        t.LookAt(target);
+        var p = t.position;
+        p = Vector3.Lerp(p, target, Time.deltaTime * speed);
+        t.position = p;
+
+        lastPoint = p;
     }
 
     public void OnFixedUpdate() {

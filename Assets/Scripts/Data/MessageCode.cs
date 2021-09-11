@@ -25,10 +25,6 @@
         public const int Play_Aim = 8;
         //键盘输入水平和垂直
         public const int Game_InputData = 9;
-        //掉血
-        public const int Play_CountDownHp = 10;
-        //掉子弹
-        public const int Weapon_CountDownBulletNum = 11;
         //武器射击
         public const int Weapon_Shot = 12;
         //提示 - 弹药不足

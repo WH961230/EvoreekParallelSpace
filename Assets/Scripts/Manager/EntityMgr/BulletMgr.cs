@@ -11,21 +11,15 @@ public class BulletMgr : Singleton<BulletMgr>,IBaseMgr
         gameEngine.managers.Add(this);
     }
 
-    public void OnUpdate() {
-    }
-
     /// <summary>
     /// 初始化弹药
     /// </summary>
     /// <param name="type"></param>
     /// <param name="bc"></param>
-    private void InitBullet()
+    public int InitBullet()
     {
-        var bulletObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
-        if (null == bulletObj)
-        {
-            return;
-        }
+        var bulletObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon,
+            ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
         var bc = bulletObj.GetComponent<BulletController>();
         var type = bc.bulletType;
         id++;
@@ -33,16 +27,49 @@ public class BulletMgr : Singleton<BulletMgr>,IBaseMgr
         bullets.Add(bullet);
         //隐藏资源备用
         bc.gameObject.SetActive(false);
+        return id;
     }
 
-    public int InitBulletByNum(int num)
+    public List<int> InitBulletByNum(int num)
     {
+        List<int> bulletList = new List<int>();
         for (int i = 0; i < num; i++)
         {
-            InitBullet();
+            var n = InitBullet();
+            bulletList.Add(n);
         }
 
-        return num;
+        return bulletList;
+    }
+
+    public Bullet GetBulletById(int id)
+    {
+        foreach (var b in bullets)
+        {
+            if (b.BaseData.id == id)
+            {
+                return b;
+            }
+        }
+
+        return null;
+    }
+    
+    public void OnUpdate() {
+        if (null != bullets && bullets.Count > 0) {
+            for (var i = 0 ; i < bullets.Count ; ++i)
+            {
+                var b = bullets[i];
+                if (b != null)
+                {
+                    var bc = b.BaseData.bulletController;
+                    if (bc != null)
+                    {
+                        bc.OnUpdate();
+                    }
+                }
+            }
+        }
     }
 
     public void OnClear()
