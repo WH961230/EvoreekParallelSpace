@@ -20,3 +20,4 @@ MonoBehaviour:
   weaponAttackRate: 0.01
   weaponBulletFlyOutSign: BulletFlyOut
   weaponShotFireSign: WeaponShotFire
+  weaponDecalSign: Decal

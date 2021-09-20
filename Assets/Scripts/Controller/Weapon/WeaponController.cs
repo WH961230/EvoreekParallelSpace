@@ -22,6 +22,7 @@ public class WeaponController : MonoBehaviour, IBaseController
     private PlayerOperateWin pow;
     private GameObject bulletFlyOutObj;
     private GameObject weaponShotFireObj;
+    private GameObject weaponDecalObj;
     private BulletFlyOutController bulletFlyOutController;
     private WeaponShotFireController weaponShotFireController;
     public Transform weaponTempParent;
@@ -84,9 +85,14 @@ public class WeaponController : MonoBehaviour, IBaseController
                     return;
                 }
 
-                BoxTool.CreateShape("target", PrimitiveType.Sphere, hit.point, Color.green, 5);
+                //BoxTool.CreateShape("target", PrimitiveType.Sphere, hit.point, Color.green, 5);
                 WeaponBulletHandle.Instance.WeaponShotBullet(weaponId, bulletShotTran.position, bulletShotTran.rotation, hit.point);
                 
+                weaponDecalObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponDecalSign)) as GameObject;
+                var t2 = weaponDecalObj.transform;
+                t2.position = hit.point;
+                t2.LookAt(GameData.LockPlayer.BaseData.playerController.characterController.transform.position);
+
                 //射击火花
                 weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponShotFireSign)) as GameObject;
                 SetWeaponTempParent(weaponShotFireObj.transform);

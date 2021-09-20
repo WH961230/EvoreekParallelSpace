@@ -21,10 +21,6 @@ public class BulletController : MonoBehaviour,IBaseController
 
     public void OnUpdate()
     {
-        if (transform.position != lastPoint)
-        {
-            Debug.Log("current Point : " + transform.position + " | distance : " + Vector3.Distance(transform.position, lastPoint));
-        }
         var t = transform;
         t.LookAt(target);
         var p = t.position;

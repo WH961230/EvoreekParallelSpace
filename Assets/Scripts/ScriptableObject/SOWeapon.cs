@@ -25,9 +25,13 @@ public class SOWeapon : ScriptableObject
     [SerializeField] [Tooltip("武器弹壳飞出特效")] public string weaponBulletFlyOutSign;
     [SerializeField] [Tooltip("武器开火枪口火花特效")] public string weaponShotFireSign;
 
+    [Header("==== 武器弹药口特效 ====")]
+    [SerializeField] public string weaponDecalSign;
+
     public string WeaponSign => weaponSign;
     public WeaponCreateInfo WeaponInfo => weaponCreateInfo;
     public string WeaponBulletFlyOutSign => weaponBulletFlyOutSign;
     public string WeaponShotFireSign => weaponShotFireSign;
+    public string WeaponDecalSign => weaponDecalSign;
 
 }
