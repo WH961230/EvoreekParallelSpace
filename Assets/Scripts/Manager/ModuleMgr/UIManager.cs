@@ -1,7 +1,7 @@
 using Data;
 using UnityEngine;
 
-public class UIMgr : Singleton<UIMgr>, IBaseMgr {
+public class UIManager : Singleton<UIManager>, IBaseManager {
     private CrossController crossController;
     public void OnInit(GameEngine gameEngine) {
         gameEngine.managers.Add(this);

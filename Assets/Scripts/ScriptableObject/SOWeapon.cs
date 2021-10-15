@@ -9,7 +9,7 @@ public class WeaponCreateInfo
 }
 
 [CreateAssetMenu(menuName = "SOWeapon", order = 0)]
-public class SOWeapon : ScriptableObject
+public class WeaponScriptableObject : ScriptableObjectBase
 {
     [Header("==== 武器生成信息 ====")]
     [SerializeField] [Tooltip("武器标识")] private string weaponSign;

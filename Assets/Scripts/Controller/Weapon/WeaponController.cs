@@ -15,7 +15,7 @@ public class WeaponController : MonoBehaviour, IBaseController
     [Tooltip("武器类型")] [SerializeField] public WeaponType weaponType;
     [Tooltip("子弹类型")] [SerializeField] public BulletType bulletType;
     [Tooltip("音频")] [SerializeField] public AudioSource audioSource;
-    [Tooltip("武器配置")] [SerializeField] public SOWeapon weaponSetting;
+    [Tooltip("武器配置")] [SerializeField] public WeaponScriptableObject setting;
 
     [Tooltip("武器右手抓取地方")] [SerializeField] public Transform weaponRightHandGripTran;
     [Tooltip("武器左手抓取地方")] [SerializeField] public Transform weaponLeftHandGripTran;
@@ -88,7 +88,7 @@ public class WeaponController : MonoBehaviour, IBaseController
                 WeaponBulletHandle.Instance.WeaponShotBullet(weaponId, bulletShotTran.position, bulletShotTran.rotation, hit.point);
                 
                 //射击火花
-                weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponShotFireSign)) as GameObject;
+                weaponShotFireObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, setting.weaponShotFireSign)) as GameObject;
                 SetWeaponTempParent(weaponShotFireObj.transform);
                 
                 var t1 = weaponShotFireObj.transform;
@@ -104,8 +104,8 @@ public class WeaponController : MonoBehaviour, IBaseController
                 // pow.BloodEffectController = o.GetComponent<BloodEffectController>();
                 // pow.BloodEffectController.OnInit();
                 
-                audioSource.PlayOneShot(weaponSetting.weaponAttackSound);
-                nextFireTime = Time.time + weaponSetting.weaponAttackRate;
+                audioSource.PlayOneShot(setting.weaponAttackSound);
+                nextFireTime = Time.time + setting.weaponAttackRate;
             }
         }
     }

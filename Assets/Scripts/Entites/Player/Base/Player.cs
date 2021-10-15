@@ -14,9 +14,15 @@ public struct PlayerBaseData
 /// <summary>
 /// 玩家
 /// </summary>
-public class Player : IBaseEntites
-{
+public class Player : IBaseEntites {
+    private GameEngine gameEngine;
     public PlayerBaseData BaseData;
+
+    public GameEngine MyGameEngine {
+        get { return gameEngine; }
+        set { gameEngine = value; }
+    }
+    
     public Player(int id, string name, PlayerController pc, int hp)
     { 
         this.BaseData.id = id;

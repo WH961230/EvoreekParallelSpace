@@ -16,7 +16,7 @@ public class MarkEditor
             return;
         }
         var t = Selection.objects[0] as GameObject;
-        var o = AssetLoader.LoadAsset(AssetType.Scriptable, AssetInfoType.Weapon, "M4") as SOWeapon;
+        var o = AssetLoader.LoadAsset(AssetType.Scriptable, AssetInfoType.Weapon, "M4") as WeaponScriptableObject;
         o.WeaponInfo.weaponBornVec = t.transform.position;
         o.WeaponInfo.weaponBornQua = t.transform.rotation;
         Debug.Log("武器生成初始位置保存成功");

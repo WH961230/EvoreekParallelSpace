@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 武器管理 - 数据处理
 /// </summary>
-public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
+public class WeaponManager : Singleton<WeaponManager>, IBaseManager
 {
     private readonly List<Weapon> Weapons = new List<Weapon>();
     private int id = -1;
@@ -37,13 +37,13 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
     private void InitWeapon()
     {
         //获取预制体
-        var w = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigMgr.Instance.weaponConfig.WeaponSign)) as GameObject;
+        var w = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigManager.Instance.weaponConfig.WeaponSign)) as GameObject;
         if (null == w) {
             return;
         }
 
-        w.transform.position = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornVec;
-        w.transform.localRotation = ConfigMgr.Instance.weaponConfig.WeaponInfo.weaponBornQua;
+        w.transform.position = ConfigManager.Instance.weaponConfig.WeaponInfo.weaponBornVec;
+        w.transform.localRotation = ConfigManager.Instance.weaponConfig.WeaponInfo.weaponBornQua;
 
         var wc = w.GetComponentInChildren<WeaponController>();
         wc.OnInit();
@@ -56,7 +56,7 @@ public class WeaponMgr : Singleton<WeaponMgr>, IBaseMgr
             wc.weaponType,
             wc,
             wc.bulletType,
-            wc.weaponSetting
+            wc.setting
             );
 
         Weapons.Add(weapon);

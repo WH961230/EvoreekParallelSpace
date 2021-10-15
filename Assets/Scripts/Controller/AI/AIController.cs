@@ -28,7 +28,7 @@ public class AIController : MonoBehaviour, IBaseController
     
     private void InitBaseProperty() {
         //血量
-        maxHp = ConfigMgr.Instance.AIConfig.MaxHp;
+        maxHp = ConfigManager.Instance.AIConfig.MaxHp;
         hp = maxHp;
     }
 

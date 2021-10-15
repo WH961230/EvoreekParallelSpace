@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     [Tooltip("角色控制器")][SerializeField] public CharacterController characterController;
     [Tooltip("角色")][SerializeField] Transform body;
     [Tooltip("音频")][SerializeField] AudioSource audioSource;
-    
+
     [Header("==== 移动参数 ====")]
     [Tooltip("重力系数")][SerializeField] float gravity;
     [Tooltip("行走速度")][SerializeField] float walkSpeed;//行走速度
@@ -72,16 +72,12 @@ public class PlayerController : MonoBehaviour, IBaseController
     }
 
     private void InitBaseProperty() {
-        maxHp = ConfigMgr.Instance.playerConfig.MaxHp;
+        maxHp = ConfigManager.Instance.config.MaxHp;
         hp = maxHp;
     }
 
-    /// <summary>
-    /// 初始化控制器 - 玩家控制器 动画控制器
-    /// </summary>
     private void InitController()
     {
-        //如果控制器不为空 创建动画控制器 赋值动画控制器
         if (null != body)
         {
             ac = new AnimatorController();
@@ -135,10 +131,6 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
     }
 
-    /// <summary>
-    /// 丢弃武器 - 表现
-    /// </summary>
-    /// <param name="weaponTran"></param>
     public void DropWeapon(Transform weaponTran)
     {
         var rb = weaponTran.AddComponent<Rigidbody>();
@@ -166,9 +158,6 @@ public class PlayerController : MonoBehaviour, IBaseController
         }
     }
 
-    /// <summary>
-    /// 射击事件
-    /// </summary>
     void Attack()
     {
         if (!isAim)
@@ -176,17 +165,13 @@ public class PlayerController : MonoBehaviour, IBaseController
             return;
         }
         var wid = PlayerWeaponHandle.Instance.PlayerGetCurWeapon(playerId);
-        var weapon = WeaponMgr.Instance.GetWeaponById(wid);
+        var weapon = WeaponManager.Instance.GetWeaponById(wid);
         if (null != weapon) {
             //根据攻击类型执行攻击
             AttackByType(weapon.BaseData);   
         }
     }
 
-    /// <summary>
-    /// 玩家发起 - 攻击
-    /// </summary>
-    /// <param name="baseData"></param>
     void AttackByType(WeaponBaseData baseData)
     {
         switch (baseData.weaponType)
@@ -300,7 +285,7 @@ public class PlayerController : MonoBehaviour, IBaseController
             return;
         }
         var wid = wc.weaponId;
-        var w = WeaponMgr.Instance.GetWeaponById(wid);
+        var w = WeaponManager.Instance.GetWeaponById(wid);
         if (null != w)
         {
             //玩家捡起武器
@@ -346,6 +331,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         isJump = true; 
         ac.animator.SetBool("Jump",true);
     }
+
     /// <summary>
     /// 获取输入
     /// </summary>

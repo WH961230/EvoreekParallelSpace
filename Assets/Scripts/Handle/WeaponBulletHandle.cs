@@ -15,7 +15,7 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
         if (null == WeaponBulletDic) {
             return;
         }
-        var list = BulletMgr.Instance.InitBulletByNum(addBulletNum);
+        var list = BulletManager.Instance.InitBulletByNum(addBulletNum);
 
         if (WeaponBulletDic.ContainsKey(weaponId)) {
             var bulletList = WeaponBulletDic[weaponId];
@@ -28,7 +28,7 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
             WeaponBulletDic.Add(weaponId, list);
         }
         Debug.LogFormat("补充武器 {0} 总弹药数 {1} 补充弹药数 {2}", 
-            WeaponMgr.Instance.GetWeaponInfoById(weaponId), 
+            WeaponManager.Instance.GetWeaponInfoById(weaponId), 
             WeaponBulletDic[weaponId].Count, addBulletNum);
     }
 
@@ -60,7 +60,7 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
             WeaponBulletDic[weaponId] = bulletIdList;
         }
 
-        Debug.LogFormat("消耗武器 {0} 弹药数 {1}", WeaponMgr.Instance.GetWeaponInfoById(weaponId),
+        Debug.LogFormat("消耗武器 {0} 弹药数 {1}", WeaponManager.Instance.GetWeaponInfoById(weaponId),
             WeaponBulletDic[weaponId].Count);
     }
 
@@ -94,7 +94,7 @@ public class WeaponBulletHandle : Singleton<WeaponBulletHandle> {
             if (listBulletId.Count > 0)
             {
                 bulletId = listBulletId[0];
-                var b = BulletMgr.Instance.GetBulletById(bulletId);
+                var b = BulletManager.Instance.GetBulletById(bulletId);
                 var bTran = b.BaseData.bulletController.transform;
                 bTran.position = startPoint;
                 bTran.rotation = startQua;

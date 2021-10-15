@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AudioMgr : Singleton<AudioMgr> , IBaseMgr
+public class AudioManager : Singleton<AudioManager> , IBaseManager
 {
     private SOAudio config;
     private bool isOpenBackgroundMusic = false;

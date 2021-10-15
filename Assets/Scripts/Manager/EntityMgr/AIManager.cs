@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// AI管理 - AI数据管理
 /// </summary>
-public class AIMgr : Singleton<AIMgr>, IBaseMgr
+public class AIManager : Singleton<AIManager>, IBaseManager
 {
     private List<AI> AIs = new List<AI>();
     private int id = -1;
@@ -34,7 +34,7 @@ public class AIMgr : Singleton<AIMgr>, IBaseMgr
 
     private Transform InitAIObj() {
         //获取预制体
-        var ac = ConfigMgr.Instance.AIConfig;
+        var ac = ConfigManager.Instance.AIConfig;
         var ao = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Role, ac.AISign)) as GameObject;
         if (null == ao)
         {

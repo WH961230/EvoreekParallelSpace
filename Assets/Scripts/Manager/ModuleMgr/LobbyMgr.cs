@@ -14,6 +14,6 @@ public class LobbyMgr : MonoBehaviour
 
     private void OnStartGame()
     {
-        SceneManager.LoadScene(MainSceneName);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(MainSceneName);
     }
 }

@@ -1,4 +1,4 @@
-﻿public class ScopeMgr : Singleton<ScopeMgr>, IBaseMgr{
+﻿public class ScopeManager : Singleton<ScopeManager>, IBaseManager{
     public void OnInit(GameEngine gameEngine) {
         gameEngine.managers.Add(this);
     }

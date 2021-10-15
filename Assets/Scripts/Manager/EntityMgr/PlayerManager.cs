@@ -1,20 +1,19 @@
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
 
 /// <summary>
 /// 玩家管理 - 玩家数据管理
 /// </summary>
-public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
-    private List<Player> Players = new List<Player>();
+public class PlayerManager : ManagerBase{
+    private List<Player> players = new List<Player>();
     private int id = -1;
 
     public Player GetPlayerById(int id)
     {
         Player player = null;
-        if (null != Players && Players.Count > 0)
+        if (null != players && players.Count > 0)
         {
-            foreach (var p in Players)
+            foreach (var p in players)
             {
                 if (p.BaseData.id == id)
                 {
@@ -33,18 +32,6 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     public string GetPlayerNameById(int id)
     {
         return GetPlayerById(id).BaseData.name + " ["+ id + "]";
-    }
-    
-    /// <summary>
-    /// 初始化 - 获取配置
-    /// </summary>
-    /// <returns></returns>
-    public void OnInit(GameEngine engine) {
-        engine.managers.Add(this);
-        //消息注册
-        MessageCenter.Instance.Register(MessageCode.Game_GameStart, InitPlayer);
-        MessageCenter.Instance.Register(MessageCode.Game_GameOver, OnClear);
-        MessageCenter.Instance.Register<int>(MessageCode.Play_Dead, RemovePlayerById);
     }
 
     /// <summary>
@@ -67,15 +54,16 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
             pc,
             pc.hp
         );
-
-        Players.Add(player);
+        
+        player.OnInit();
+        players.Add(player);
         GameData.LockPlayer = player;
     }
 
     private Transform InitPlayerObj()
     {
         //获取预制体
-        var pc = ConfigMgr.Instance.playerConfig;
+        var pc = ConfigManager.Instance.config;
         var po = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Role, pc.PlayerSign)) as GameObject;
         if (null == po)
         {
@@ -92,14 +80,14 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     /// 移除指定的玩家
     /// </summary>
     /// <param name="id"></param>
-    private void RemovePlayerById(int id) {
-        for (var i = 0 ; i < Players.Count ; ++i) {
-            if (Players[i] != null)
+    public void RemovePlayerById(int id) ,{
+        for (var i = 0 ; i < players.Count ; ++i) {
+            if (null != players[i])
             {
-                var p = Players[i];
+                var p = players[i];
                 if (p.BaseData.id == id) {
                     p.OnClear();
-                    Players.Remove(p);
+                    players.Remove(p);
                     break;
                 }
             }
@@ -107,14 +95,14 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     }
 
     public void OnUpdate() {
-        if (null != Players && Players.Count > 0) {
-            for (var i = 0 ; i < Players.Count ; ++i)
+        if (null != players && players.Count > 0) {
+            for (var i = 0 ; i < players.Count ; ++i)
             {
-                var p = Players[i];
-                if (p != null)
+                var p = players[i];
+                if (null != p)
                 {
                     var c = p.BaseData.playerController;
-                    if (c != null)
+                    if (null != c)
                     {
                         c.OnUpdate();
                     }
@@ -124,19 +112,65 @@ public class PlayerMgr : Singleton<PlayerMgr> , IBaseMgr{
     }
 
     public void OnClear() {
-        if (null != Players && Players.Count > 0) {
-            for (var i = 0 ; i < Players.Count ; ++i)
+        if (null != players && players.Count > 0) {
+            for (var i = 0 ; i < players.Count ; ++i)
             {
-                var p = Players[i];
-                if (p != null)
+                var p = players[i];
+                if (null != p)
                 {
                     var c = p.BaseData.playerController;
-                    if (c != null)
+                    if (null != c)
                     {
                         c.OnClear();
                     }
                 };
             }
         }
+    }
+    
+        
+    private bool Has(int id) {
+        foreach (var player in players) {
+            if (player.BaseData.id == id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void Add(Player player) {
+        if (!Has(player.BaseData.id)) {
+            players.Add(player);
+        }
+    }
+
+    public void RemovePlayer(int id) {
+        foreach (var player in players) {
+            if (player.BaseData.id == id) {
+                players.Remove(player);
+                break;
+            }
+        }
+    }
+
+    public void UpdatePlayer(Player updatePlayer) {
+        foreach (var player in players) {
+            if (player.BaseData.id == updatePlayer.BaseData.id) {
+                players.Remove(player);
+                Add(updatePlayer);
+                break;
+            }
+        }
+    }
+
+    public Player GetPlayer(int id) {
+        foreach (var player in players) {
+            if (player.BaseData.id == id) {
+                return player;
+            }
+        }
+
+        return null;
     }
 }

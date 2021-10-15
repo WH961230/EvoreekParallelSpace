@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletMgr : Singleton<BulletMgr>,IBaseMgr
+public class BulletManager : Singleton<BulletManager>,IBaseManager
 {
     public List<Bullet> bullets = new List<Bullet>();
     private int id = -1;
@@ -19,7 +19,7 @@ public class BulletMgr : Singleton<BulletMgr>,IBaseMgr
     public int InitBullet()
     {
         var bulletObj = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon,
-            ConfigMgr.Instance.bulletConfig.BulletSign)) as GameObject;
+            ConfigManager.Instance.bulletConfig.BulletSign)) as GameObject;
         var bc = bulletObj.GetComponent<BulletController>();
         var type = bc.bulletType;
         id++;

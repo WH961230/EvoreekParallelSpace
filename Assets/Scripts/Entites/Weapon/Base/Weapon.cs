@@ -19,16 +19,16 @@ public struct WeaponBaseData{
     public WeaponType weaponType;
     public WeaponController weaponController;
     public BulletType bulletType;
-    public SOWeapon weaponSetting;
+    public WeaponScriptableObject setting;
 
-    public WeaponBaseData(int Id, string wn, WeaponType wt, WeaponController wc, BulletType bt, SOWeapon ws)
+    public WeaponBaseData(int Id, string wn, WeaponType wt, WeaponController wc, BulletType bt, WeaponScriptableObject ws)
     {
         this.id = Id;
         this.weaponName = wn;
         this.weaponType = wt;
         this.weaponController = wc;
         this.bulletType = bt;
-        this.weaponSetting = ws;
+        this.setting = ws;
     }
 }
 
@@ -44,14 +44,14 @@ public class Weapon : IBaseEntites
     /// </summary>
     /// <param name="id"></param>
     /// <param name="oc"></param>
-    public Weapon(int id, string wn, WeaponType wt, WeaponController wc, BulletType bt, SOWeapon ws)
+    public Weapon(int id, string wn, WeaponType wt, WeaponController wc, BulletType bt, WeaponScriptableObject ws)
     {
         this.BaseData.id = id;
         this.BaseData.weaponName = wn;
         this.BaseData.weaponController = wc;
         this.BaseData.weaponType = wt;
         this.BaseData.bulletType = bt;
-        this.BaseData.weaponSetting = ws;
+        this.BaseData.setting = ws;
     }
     
     /// <summary>
@@ -59,13 +59,13 @@ public class Weapon : IBaseEntites
     /// </summary>
     /// <param name="id"></param>
     /// <param name="oc"></param>
-    public Weapon(int id, string wn, WeaponType wt, WeaponController wc, SOWeapon ws)
+    public Weapon(int id, string wn, WeaponType wt, WeaponController wc, WeaponScriptableObject ws)
     {
         this.BaseData.id = id;
         this.BaseData.weaponName = wn;
         this.BaseData.weaponController = wc;
         this.BaseData.weaponType = wt;
-        this.BaseData.weaponSetting = ws;
+        this.BaseData.setting = ws;
     }
     
     /// <summary>
