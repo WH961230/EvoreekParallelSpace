@@ -22,20 +22,23 @@ public class PlayerData : DataBase{
         playerConfig = (PlayerScriptableObject)AssetLoader.LoadAsset(AssetType.Scriptable, AssetInfoType.Role, "SOPlayer");
     }
 
-    public Player InitStartPlayer() {
+    public void InitStartPlayer() {
         var obj = AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Role, playerConfig.PlayerSign);
         var playerObj = (GameObject)Object.Instantiate(obj);
         if (null == playerObj) {
-            return null;
+            return;
         }
 
         playerObj.transform.position = playerConfig.PlayerInfo.playerBornVec;
         playerObj.transform.localRotation = playerConfig.PlayerInfo.playerBornQua;
 
         var controller = playerObj.GetComponent<PlayerController>();
-        controller.OnInit();
-        controller.playerId
-        
+        var player = playerManager.InitPlayer(playerConfig.PlayerSign, controller, playerConfig.MaxHp);
+        controller.OnInit(player);
+    }
+
+    public void ClearPlayer(int[] playerIds) {
+        playerManager.RemovePlayer(playerIds);
     }
 
     public override void OnClear() {

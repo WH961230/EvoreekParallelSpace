@@ -1,12 +1,16 @@
 ﻿using Data;
+using UnityEngine;
 
 public class PlayerSystem : SystemBase {
     private PlayerData playerData;
+    private InputData inputData;
     public override void OnInit(GameEngine gameEngine) {
         base.OnInit(gameEngine);
         MessageCenter.Instance.Register(MessageCode.Game_GameStart, StartGameAction);
         MessageCenter.Instance.Register(MessageCode.Game_GameOver, OverGameAction);
-        MessageCenter.Instance.Register<int>(MessageCode.Play_Dead, PlayerDead);
+        MessageCenter.Instance.Register<int>(MessageCode.Play_Attack, Attack);
+        MessageCenter.Instance.Register<int[]>(MessageCode.Play_Dead, Dead);
+        MessageCenter.Instance.Register<InputData>(MessageCode.Game_InputData, GetInput);
     }
 
     public override void InitData() {
@@ -15,17 +19,25 @@ public class PlayerSystem : SystemBase {
     }
 
     private void StartGameAction() {
+        playerData.InitStartPlayer();
     }
 
     private void OverGameAction() {
     }
 
-    private void PlayerDead(int[] playerIds) {
-        if (playerIds.Length > 0) {
-            foreach (var playerId in playerIds) {
-                playerData.ClearPlayer();
-            }
-        }
+    private void GetInput(InputData data) {
+        inputData.mouseY = data.mouseY;
+        inputData.mouseX = data.mouseX;
+        inputData.horizontal = data.horizontal;
+        inputData.vertical = data.vertical;
+    }
+
+    private void Attack(int playerId) {
+        Debug.Log("PlayerId : " + playerId);
+    }
+
+    private void Dead(int[] playerIds) {
+        playerData.ClearPlayer(playerIds);
     }
 
     public override void OnUpdate() {

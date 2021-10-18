@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerManager : ManagerBase{
     private List<Player> players = new List<Player>();
-    private int id = -1;
+    public int id = -1;
 
     public Player GetPlayerById(int id)
     {
@@ -37,43 +37,18 @@ public class PlayerManager : ManagerBase{
     /// <summary>
     /// 创建玩家
     /// </summary>
-    private void InitPlayer() {
-        var po = InitPlayerObj();
-        if (null == po)
-        {
-            return;
-        }
-
-        var pc = po.GetComponent<PlayerController>();
-        pc.OnInit();
-        pc.playerId = ++id;
-        
+    public Player InitPlayer(string name, PlayerController controller, int hp) {
         var player = new Player(
-            pc.playerId,
-            pc.playerName,
-            pc,
-            pc.hp
+            ++id,
+            name,
+            controller,
+            hp
         );
         
         player.OnInit();
         players.Add(player);
         GameData.LockPlayer = player;
-    }
-
-    private Transform InitPlayerObj()
-    {
-        //获取预制体
-        var pc = ConfigManager.Instance.config;
-        var po = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Role, pc.PlayerSign)) as GameObject;
-        if (null == po)
-        {
-            return null;
-        }
-
-        var pt = po.transform;
-        pt.position = pc.PlayerInfo.playerBornVec;
-        pt.localRotation = pc.PlayerInfo.playerBornQua;
-        return pt;
+        return player;
     }
 
     /// <summary>
@@ -145,12 +120,14 @@ public class PlayerManager : ManagerBase{
         }
     }
 
-    public void RemovePlayer(int id) {
-        foreach (var player in players) {
-            if (player.BaseData.id == id) {
-                players.Remove(player);
-                break;
-            }
+    public void RemovePlayer(int[] ids) {
+        foreach (var id in ids) {
+            foreach (var player in players) {
+                if (player.BaseData.id == id) {
+                    players.Remove(player);
+                    break;
+                }
+            } 
         }
     }
 

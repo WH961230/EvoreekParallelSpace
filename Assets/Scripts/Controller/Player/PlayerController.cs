@@ -56,8 +56,11 @@ public class PlayerController : MonoBehaviour, IBaseController
     public RigController rc;
     public Transform weaponRoot;
     private Transform tip;
-    public void OnInit()
+    public Player MyPlayer;
+    
+    public void OnInit(Player player)
     {
+        MyPlayer = player;
         InitController();
         rc.OnInit();
         
@@ -65,7 +68,6 @@ public class PlayerController : MonoBehaviour, IBaseController
         MessageCenter.Instance.Register(MessageCode.Play_PickWeapon, PlayerPickWepaon);
         MessageCenter.Instance.Register(MessageCode.Play_DropWeapon, PlayerDropWeapon);
         MessageCenter.Instance.Register(MessageCode.Play_Aim, Aim);
-        MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, Input);
         
         pow = FindObjectOfType<PlayerOperateWin>();
         InitBaseProperty();
@@ -332,10 +334,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         ac.animator.SetBool("Jump",true);
     }
 
-    /// <summary>
-    /// 获取输入
-    /// </summary>
-    private void Input(InputMgr.InputData data)
+    private void Input(InputData data)
     {
         mouseY = data.mouseY;
         mouseX = data.mouseX;
@@ -343,9 +342,6 @@ public class PlayerController : MonoBehaviour, IBaseController
         v = data.vertical;
     }
 
-    /// <summary>
-    /// 重力系统
-    /// </summary>
     private void Gravity()
     {
         if (characterController.isGrounded)
