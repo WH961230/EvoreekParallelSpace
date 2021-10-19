@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Data;
 using UnityEngine;
@@ -6,6 +7,10 @@ public enum SystemType {
     None = 0,
     PlayerSystem = 1,
     InputSystem = 2,
+    GravitySystem = 3,
+    NaturalSystem = 4,
+    WeaponSystem = 5,
+    CameraSystem = 6,
 }
 
 public class GameEngine : MonoBehaviour {
@@ -26,8 +31,20 @@ public class GameEngine : MonoBehaviour {
                 case SystemType.PlayerSystem: 
                     systemBase = new PlayerSystem();
                     break;
+                case SystemType.WeaponSystem:
+                    systemBase = new WeaponSystem();
+                    break;
                 case SystemType.InputSystem: 
                     systemBase = new InputSystem();
+                    break;
+                case SystemType.GravitySystem:
+                    systemBase = new GravitySystem();
+                    break;
+                case SystemType.NaturalSystem:
+                    systemBase = new NaturalSystem();
+                    break;
+                case SystemType.CameraSystem:
+                    systemBase = new CameraSystem();
                     break;
             }
 
@@ -58,6 +75,16 @@ public class GameEngine : MonoBehaviour {
             if (null != systems && systems.Count > 0) {
                 foreach (var system in systems) {
                     system.OnUpdate();
+                }
+            }
+        }
+    }
+
+    private void FixedUpdate() {
+        if (openSystemUpdate) {
+            if (null != systems && systems.Count > 0) {
+                foreach (var system in systems) {
+                    system.OnFixedUpdate();
                 }
             }
         }

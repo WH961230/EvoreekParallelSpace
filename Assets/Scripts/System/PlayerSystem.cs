@@ -19,7 +19,7 @@ public class PlayerSystem : SystemBase {
     }
 
     private void StartGameAction() {
-        playerData.InitStartPlayer();
+        playerData.InitPlayer();
     }
 
     private void OverGameAction() {
@@ -42,6 +42,7 @@ public class PlayerSystem : SystemBase {
 
     public override void OnUpdate() {
         base.OnUpdate();
+        playerData.OnUpdate();
     }
 
     public override void OnClear() {

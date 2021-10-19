@@ -1,4 +1,5 @@
-﻿public class WeaponSystem : SystemBase{
+﻿public class CameraManager : ManagerBase
+{
     public override void OnInit(GameEngine gameEngine) {
         base.OnInit(gameEngine);
     }

@@ -6,7 +6,7 @@ public class DataBase : IBaseData {
     public virtual void OnInit(GameEngine gameEngine) {
     }
     
-    protected virtual void InitMgr() {
+    protected virtual void InitManager() {
     }
 
     protected virtual void InitConfig() {

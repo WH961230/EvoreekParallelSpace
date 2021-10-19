@@ -6,37 +6,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerManager : ManagerBase{
     private List<Player> players = new List<Player>();
-    public int id = -1;
+    private int id = -1;
 
-    public Player GetPlayerById(int id)
-    {
-        Player player = null;
-        if (null != players && players.Count > 0)
-        {
-            foreach (var p in players)
-            {
-                if (p.BaseData.id == id)
-                {
-                    player = p;
-                }
-            }
-        }
-
-        return player;
-    }
-    /// <summary>
-    /// 获取玩家名字
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public string GetPlayerNameById(int id)
-    {
-        return GetPlayerById(id).BaseData.name + " ["+ id + "]";
-    }
-
-    /// <summary>
-    /// 创建玩家
-    /// </summary>
     public Player InitPlayer(string name, PlayerController controller, int hp) {
         var player = new Player(
             ++id,
@@ -51,56 +22,16 @@ public class PlayerManager : ManagerBase{
         return player;
     }
 
-    /// <summary>
-    /// 移除指定的玩家
-    /// </summary>
-    /// <param name="id"></param>
-    public void RemovePlayerById(int id) ,{
-        for (var i = 0 ; i < players.Count ; ++i) {
-            if (null != players[i])
-            {
-                var p = players[i];
-                if (p.BaseData.id == id) {
-                    p.OnClear();
-                    players.Remove(p);
-                    break;
-                }
-            }
-        }
+    public override void OnInit(GameEngine gameEngine) {
+        base.OnInit(gameEngine);
     }
 
-    public void OnUpdate() {
-        if (null != players && players.Count > 0) {
-            for (var i = 0 ; i < players.Count ; ++i)
-            {
-                var p = players[i];
-                if (null != p)
-                {
-                    var c = p.BaseData.playerController;
-                    if (null != c)
-                    {
-                        c.OnUpdate();
-                    }
-                }
-            }
-        }
+    public override void OnUpdate() {
+        base.OnUpdate();
     }
 
-    public void OnClear() {
-        if (null != players && players.Count > 0) {
-            for (var i = 0 ; i < players.Count ; ++i)
-            {
-                var p = players[i];
-                if (null != p)
-                {
-                    var c = p.BaseData.playerController;
-                    if (null != c)
-                    {
-                        c.OnClear();
-                    }
-                };
-            }
-        }
+    public override void OnClear() {
+        base.OnClear();
     }
     
         

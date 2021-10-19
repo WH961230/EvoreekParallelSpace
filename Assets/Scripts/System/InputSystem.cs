@@ -10,14 +10,18 @@ public struct InputData {
 
 public class InputSystem : SystemBase {
     private bool IsOpenInput = true;
+    private Player lockPlayer;
 
     public override void OnInit(GameEngine gameEngine) {
         base.OnInit(gameEngine);
+        lockPlayer = GameData.LockPlayer;
     }
 
     public override void OnUpdate() {
         base.OnUpdate();
-        var p = GameData.LockPlayer;
+        if (null == lockPlayer) {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Q)) {
             Cursor.lockState = (Cursor.lockState == CursorLockMode.Locked)
                 ? CursorLockMode.None
@@ -25,11 +29,9 @@ public class InputSystem : SystemBase {
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) {
-            if (p != null) {
-                var c = p.BaseData.playerController;
-                if (c != null) {
-                    c.JumpInput = true;
-                }
+            var c = lockPlayer.BaseData.playerController;
+            if (c != null) {
+                c.JumpInput = true;
             }
         }
 
@@ -46,29 +48,23 @@ public class InputSystem : SystemBase {
         }
 
         if (Input.GetKeyUp(KeyCode.Space)) {
-            if (p != null) {
-                var c = p.BaseData.playerController;
-                if (c != null) {
-                    c.JumpInput = false;
-                }
+            var c = lockPlayer.BaseData.playerController;
+            if (c != null) {
+                c.JumpInput = false;
             }
         }
 
         if (Input.GetKey(KeyCode.LeftShift)) {
-            if (p != null) {
-                var c = p.BaseData.playerController;
-                if (c != null) {
-                    c.RunInput = true;
-                }
+            var c = lockPlayer.BaseData.playerController;
+            if (c != null) {
+                c.RunInput = true;
             }
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift)) {
-            if (p != null) {
-                var c = p.BaseData.playerController;
-                if (c != null) {
-                    c.RunInput = false;
-                }
+            var c = lockPlayer.BaseData.playerController;
+            if (c != null) {
+                c.RunInput = false;
             }
         }
 

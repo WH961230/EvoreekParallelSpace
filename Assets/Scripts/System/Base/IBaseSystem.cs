@@ -16,6 +16,9 @@ public class SystemBase : IBaseSystem {
     public virtual void InitData() {
     }
 
+    public virtual void OnFixedUpdate() {
+    }
+
     public virtual void OnUpdate() {
     }
 
