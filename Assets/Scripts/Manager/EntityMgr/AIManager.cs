@@ -11,7 +11,7 @@ public class AIManager : Singleton<AIManager>, IBaseManager
 
     public void OnInit(GameEngine gameEngine)
     {
-        gameEngine.managers.Add(this);
+        /*gameEngine.managers.Add(this);
         var ao = InitAIObj();
         if (null == ao)
         {
@@ -29,7 +29,7 @@ public class AIManager : Singleton<AIManager>, IBaseManager
             ac.hp
         );
 
-        AIs.Add(ai);
+        AIs.Add(ai);*/
     }
 
     private Transform InitAIObj() {

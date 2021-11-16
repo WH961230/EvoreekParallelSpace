@@ -21,10 +21,24 @@ public static class AssetLoader {
     private const string GloblePath = "Globle/";
     private const string UIPath = "UI/";
 
-    public static Object LoadAsset(AssetType at, AssetInfoType ait, string name) {
+    public static GameObject LoadAsset(AssetType at, AssetInfoType ait, string name, bool createPrefab)
+    {
+        var p = GetLoadAssetPathByType(at, ait);
+        var obj = Resources.Load(p + name);
+        if (createPrefab)
+        {
+            obj = MyGameObject.Instantiate(Resources.Load(p + name));
+        }
+
+        return (GameObject) obj;
+    }
+    
+    public static Object LoadAsset(AssetType at, AssetInfoType ait, string name)
+    {
         var p = GetLoadAssetPathByType(at, ait);
         return Resources.Load(p + name);
     }
+
 
     public static T LoadAsset<T>(string name) where T : Object {
         return Resources.Load<T>(name);

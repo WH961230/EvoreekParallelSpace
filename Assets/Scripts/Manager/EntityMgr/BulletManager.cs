@@ -8,7 +8,9 @@ public class BulletManager : Singleton<BulletManager>,IBaseManager
 
     public void OnInit(GameEngine gameEngine)
     {
+        /*
         gameEngine.managers.Add(this);
+    */
     }
 
     /// <summary>

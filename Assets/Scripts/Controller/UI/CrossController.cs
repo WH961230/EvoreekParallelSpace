@@ -23,7 +23,7 @@ public class CrossController : MonoBehaviour, IBaseController {
     private bool isMove;
 
     public void OnInit() {
-        MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, SetCrossDinamic);
+        // MessageCenter.Instance.Register<InputMgr.InputData>(MessageCode.Game_InputData, SetCrossDinamic);
         InitCrossData();
     }
 
@@ -67,13 +67,13 @@ public class CrossController : MonoBehaviour, IBaseController {
         }
     }
 
-    /// <summary>
-    /// 准心随玩家运动
-    /// </summary>
-    private void SetCrossDinamic(InputMgr.InputData data) {
-        h = data.horizontal;
-        v = data.vertical;
-    }
+    // /// <summary>
+    // /// 准心随玩家运动
+    // /// </summary>
+    // private void SetCrossDinamic(InputMgr.InputData data) {
+    //     h = data.horizontal;
+    //     v = data.vertical;
+    // }
 
     /// <summary>
     /// 初始化准心数据

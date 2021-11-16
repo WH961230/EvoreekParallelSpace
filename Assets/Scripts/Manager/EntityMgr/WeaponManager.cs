@@ -12,8 +12,8 @@ public class WeaponManager : Singleton<WeaponManager>, IBaseManager
     
     public void OnInit(GameEngine gameEngine)
     {
-        gameEngine.managers.Add(this);
-        MessageCenter.Instance.Register(MessageCode.Game_GameStart, InitWeapon);
+        /*gameEngine.managers.Add(this);
+        MessageCenter.Instance.Register(MessageCode.Game_GameStart, InitWeapon);*/
     }
 
     public void OnUpdate()
@@ -36,7 +36,7 @@ public class WeaponManager : Singleton<WeaponManager>, IBaseManager
 
     private void InitWeapon()
     {
-        //获取预制体
+        /*//获取预制体
         var w = Object.Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, ConfigManager.Instance.weaponConfig.WeaponSign)) as GameObject;
         if (null == w) {
             return;
@@ -62,7 +62,7 @@ public class WeaponManager : Singleton<WeaponManager>, IBaseManager
         Weapons.Add(weapon);
         
         //提供基础弹药 30 发  生成 30 发弹药
-        WeaponBulletHandle.Instance.WeaponAddBullet(wc.weaponId, 5);
+        WeaponBulletHandle.Instance.WeaponAddBullet(wc.weaponId, 5);*/
     }
 
     public Weapon GetWeaponById(int id)

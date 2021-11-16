@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneManager : Singleton<SceneManager>, IBaseManager {
     public void OnInit(GameEngine engine) {
-        engine.managers.Add(this);
-        LoadScene(ConfigManager.Instance.sceneConfig.SceneSign, LoadSceneMode.Additive);
+        /*engine.managers.Add(this);
+        LoadScene(ConfigManager.Instance.sceneConfig.SceneSign, LoadSceneMode.Additive);*/
     }
 
     private void LoadScene(string sceneSign, LoadSceneMode mode) {

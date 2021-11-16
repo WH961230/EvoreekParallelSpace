@@ -1,15 +1,11 @@
 ﻿public interface IBaseData : IBaseSystem{
 }
 
-public class DataBase : IBaseData {
-    private GameEngine gameEngine;
+public class DataBase : IBaseData
+{
+    protected ManagerBase MyManagerBase;
+    protected GameEngine gameEngine;
     public virtual void OnInit(GameEngine gameEngine) {
-    }
-    
-    protected virtual void InitManager() {
-    }
-
-    protected virtual void InitConfig() {
     }
 
     public virtual void OnUpdate() {

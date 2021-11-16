@@ -7,13 +7,11 @@
 public class SystemBase : IBaseSystem {
     private GameEngine gameEngine;
     public GameEngine MyGameEngine => gameEngine;
-
+    public DataBase MyData;
     public virtual void OnInit(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
         this.gameEngine.Systems.Add(this);
-    }
-
-    public virtual void InitData() {
+        this.gameEngine.RegisterSystem(this);
     }
 
     public virtual void OnFixedUpdate() {

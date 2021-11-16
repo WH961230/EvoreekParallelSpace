@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     }
 
     private void InitBaseProperty() {
-        maxHp = ConfigManager.Instance.config.MaxHp;
+        // maxHp = ConfigManager.Instance.config.MaxHp;
         hp = maxHp;
     }
 
@@ -89,6 +89,10 @@ public class PlayerController : MonoBehaviour, IBaseController
                 ac.animator = ani;
             }
         }
+    }
+
+    public void OnInit()
+    {
     }
 
     public void OnUpdate()

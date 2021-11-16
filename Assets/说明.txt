@@ -1,0 +1,36 @@
+项目框架
+
+
+游戏引擎 ：游戏入口 管理全局系统
+GameEngine
+
+系统
+System
+
+数据
+Data
+
+管理
+Manager
+
+配置
+ScriptableObject
+
+控制层
+Controller
+
+实体
+[name]
+
+资源管理
+AssetLoader
+[name]Loader
+
+框架：
+GameEngine => System => Data => Manager / ScriptableObject / Controllers => [name]
+
+引擎 => 系统 => 数据 => 管理 配置 控制器 => 实体
+
+规范：
+
+消息类方法：Mgr[name]

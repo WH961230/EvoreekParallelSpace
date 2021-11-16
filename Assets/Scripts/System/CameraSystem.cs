@@ -5,11 +5,6 @@
         base.OnInit(gameEngine);
     }
 
-    public override void InitData() {
-        base.InitData();
-        data = new CameraData();
-    }
-
     public override void OnFixedUpdate() {
         base.OnFixedUpdate();
     }

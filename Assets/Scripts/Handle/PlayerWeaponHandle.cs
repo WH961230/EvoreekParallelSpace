@@ -35,9 +35,9 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
                 PlayerWeaponCurDic.Add(playerId, weaponId);
             }
 
-            Debug.LogFormat("设置当前武器：玩家 {0} 武器 {1}", 
-                PlayerManager.Instance.GetPlayerNameById(playerId),
-                WeaponManager.Instance.GetWeaponInfoById(weaponId));
+            // Debug.LogFormat("设置当前武器：玩家 {0} 武器 {1}", 
+                // PlayerManager.Instance.GetPlayerNameById(playerId),
+                // WeaponManager.Instance.GetWeaponInfoById(weaponId));
         }
     }
     
@@ -68,28 +68,23 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
         //是否存在玩家键值对
         if (PlayerWeaponCurDic.ContainsKey(playerId))
         {
-            Debug.LogFormat("删除当前武器：玩家 {0} 武器 {1}", 
-                PlayerManager.Instance.GetPlayerNameById(playerId), 
-                WeaponManager.Instance.GetWeaponInfoById(PlayerWeaponCurDic[playerId])
-            );
+            // Debug.LogFormat("删除当前武器：玩家 {0} 武器 {1}", 
+            //     PlayerManager.Instance.GetPlayerNameById(playerId), 
+            //     WeaponManager.Instance.GetWeaponInfoById(PlayerWeaponCurDic[playerId])
+            // );
             //设置玩家当前武器键值对
             PlayerWeaponCurDic[playerId] = -1;
         }
     }
-    
-    /// <summary>
-    /// 丢弃武器
-    /// </summary>
-    /// <param name="playerId"></param>
-    /// <param name="weaponId"></param>
+
     public void PlayerDropWeapon(int playerId)
     {
-        var player = PlayerManager.Instance.GetPlayerById(playerId);
+        /*var player = PlayerManager.Instance.GetPlayerById(playerId);
         if (null == player)//玩家没找到
         {
             return;
         }
-
+    
         var weaponId = PlayerGetCurWeapon(playerId);
         if (weaponId == -1)//当前武器为空
         {
@@ -114,17 +109,12 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
         Debug.LogFormat("丢弃当前武器：玩家 {0} 武器 {1}", 
             PlayerManager.Instance.GetPlayerNameById(playerId), 
             WeaponManager.Instance.GetWeaponInfoById(weaponId)
-        );
+        );*/
     }
-    
-    /// <summary>
-    /// 拾起武器 - 如果是第一把 赋值当前武器
-    /// </summary>
-    /// <param name="playerId"></param>
-    /// <param name="weaponId"></param>
+
     public void PlayerPickWeapon(int playerId, int weaponId)
     {
-        var player = PlayerManager.Instance.GetPlayerById(playerId);
+        /*var player = PlayerManager.Instance.GetPlayerById(playerId);
         var weapon = WeaponManager.Instance.GetWeaponById(weaponId);
         if (null == player || null == weapon)
         {
@@ -162,7 +152,7 @@ public class PlayerWeaponHandle : Singleton<PlayerWeaponHandle>
                 PlayerManager.Instance.GetPlayerNameById(playerId), 
                 WeaponManager.Instance.GetWeaponInfoById(weaponId)
             );
-        }
+        }*/
     }
 
     /// <summary>

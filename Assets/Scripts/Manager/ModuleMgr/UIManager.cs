@@ -4,7 +4,9 @@ using UnityEngine;
 public class UIManager : Singleton<UIManager>, IBaseManager {
     private CrossController crossController;
     public void OnInit(GameEngine gameEngine) {
+        /*
         gameEngine.managers.Add(this);
+        */
         MessageCenter.Instance.Register(MessageCode.Game_GameStart, InitController);
     }
 

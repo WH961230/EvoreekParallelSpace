@@ -19,13 +19,13 @@ public class AudioManager : Singleton<AudioManager> , IBaseManager
     }
 
     public void OnInit(GameEngine engine) {
-        engine.managers.Add(this);
+        /*engine.managers.Add(this);
         if (isOpenBackgroundMusic == false) return;
         source = new AudioSource();
         Play(source, BackgroundClip);
         if (null == source) {
             Debug.LogError("audioManager or source not find");
-        }
+        }*/
     }
 
     public void OnUpdate() {

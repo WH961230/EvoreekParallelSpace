@@ -24,7 +24,7 @@ public class WeaponController : MonoBehaviour, IBaseController
     private GameObject weaponShotFireObj;
     private GameObject weaponDecalObj;
     private BulletFlyOutController bulletFlyOutController;
-    private WeaponShotFireController weaponShotFireController;
+    // private WeaponShotFireController weaponShotFireController;
     public Transform weaponTempParent;
     private bool isShoting = false;
     private float nextFireTime;
@@ -48,10 +48,10 @@ public class WeaponController : MonoBehaviour, IBaseController
             }
         }
 
-        if (null != weaponShotFireController) {
-            var w = weaponShotFireController;
-            w.OnUpdate();
-        }
+        // if (null != weaponShotFireController) {
+        //     var w = weaponShotFireController;
+        //     w.OnUpdate();
+        // }
     }
 
     public void OnFixedUpdate() {
@@ -88,7 +88,7 @@ public class WeaponController : MonoBehaviour, IBaseController
                 //BoxTool.CreateShape("target", PrimitiveType.Sphere, hit.point, Color.green, 5);
                 WeaponBulletHandle.Instance.WeaponShotBullet(weaponId, bulletShotTran.position, bulletShotTran.rotation, hit.point);
                 
-                weaponDecalObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponDecalSign)) as GameObject;
+                // weaponDecalObj = Instantiate(AssetLoader.LoadAsset(AssetType.Prefab, AssetInfoType.Weapon, weaponSetting.weaponDecalSign)) as GameObject;
                 var t2 = weaponDecalObj.transform;
                 t2.position = hit.point;
                 t2.LookAt(GameData.LockPlayer.BaseData.playerController.characterController.transform.position);
