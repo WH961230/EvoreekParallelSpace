@@ -7,14 +7,8 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Lobby.unity
-    guid: cd30b3d6786c9e44bad92c3687290722
+    guid: a0a4c9aa6dc69354bade57f8dbcc49cf
   - enabled: 1
-    path: Assets/Scenes/Main.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/Environment.unity
-    guid: 9839c2c249af204469ee5f8fb77624e0
-  - enabled: 1
-    path: Assets/Scenes/PolygonMilitary/Scenes/Demo_01.unity
-    guid: 93195e8f68a149f49a51512a91091643
+    path: Assets/Scenes/Battle.unity
+    guid: bdc4533246e809b4d8ac1a35dbf0f76f
   m_configObjects: {}
