@@ -1,7 +1,9 @@
 ﻿
+using System;
+
 public class Loader
 {
-    public static UnityEngine.Object LoadGameEngine()
+    public static Object LoadGameEngine()
     {
         return UnityEngine.Resources.Load("Prefabs/Globle/GameEngine");
     }
