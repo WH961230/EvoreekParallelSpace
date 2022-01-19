@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class GameWorldManager : Singleton<GameWorldManager>
+public class GameWorldManager
 {
     private GameEngine gameEngine;
     private List<IGameWorld> gameWorld = new List<IGameWorld>();
