@@ -1,13 +1,17 @@
 ﻿using UnityEngine;
 
-public class RoleComponent : MyComponent {
+public class RoleComponent : AbsComponent {
     private long comId;
-    public void OnInit<T> (IControlBase controlBase, long comId){
-        base.OnInit<RoleComponent>(controlBase, comId);
+    public void OnInit<T> (IControlBase controlBase, long comId) where T : IComponentBase, new(){
+        base.OnInit<T>(controlBase, comId);
     }
 
     public override void OnUpdate() {
         base.OnUpdate();
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Translate(Vector3.up);
+        }
     }
 
     public override void OnFixedUpdate() {

@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public interface IComponentBase {
-    void OnInit(IControlBase controlBase);
+    void OnInit<T>(IControlBase controlBase, long comId) where T : IComponentBase, new();
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
@@ -11,8 +11,10 @@ public interface IComponentBase {
 
 public abstract class AbsComponent : MonoBehaviour, IComponentBase {
     protected MyControl controlBase;
-    public void OnInit(IControlBase controlBase) {
+    public void OnInit<T>(IControlBase controlBase, long comId) where T : IComponentBase, new()
+    {
         controlBase = (MyControl)controlBase;
+        ComponentManagerLab.Instance.AddComponent<T>(comId);
     }
 
     public virtual void OnUpdate() {
@@ -25,29 +27,5 @@ public abstract class AbsComponent : MonoBehaviour, IComponentBase {
     }
 
     public virtual void OnClear() {
-    }
-}
-
-public class MyComponent : AbsComponent {
-    protected void OnInit<T> (IControlBase controlBase, long comId) where T : MyComponent, new() {
-        base.OnInit(controlBase);
-        // ComponentManager.Instance.AddComponent<T>();
-        ComponentManagerLab.Instance.AddComponent<T>(comId);
-    }
-
-    public override void OnUpdate() {
-        base.OnUpdate();
-    }
-
-    public override void OnFixedUpdate() {
-        base.OnFixedUpdate();
-    }
-
-    public override void OnLateUpdate() {
-        base.OnLateUpdate();
-    }
-
-    public override void OnClear() {
-        base.OnClear();
     }
 }

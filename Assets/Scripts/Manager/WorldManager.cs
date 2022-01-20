@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class WorldManager
+public class WorldManager : Singleton<WorldManager>
 {
     private Engine engine;
     private List<IWorld> IWorlds = new List<IWorld>();
     private Dictionary<Type, IWorld> IWorldDic = new Dictionary<Type, IWorld>();
 
-    public WorldManager(Engine engine)
+    public void OnInit(Engine engine)
     {
         this.engine = engine;
         engine.OnUpdateAction += OnUpdate;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Collections.Generic;
 
 public class ComponentManagerLab : Singleton<ComponentManagerLab> {
     private MyControl control;
@@ -56,11 +53,11 @@ public class ComponentManagerLab : Singleton<ComponentManagerLab> {
 
     public void AddComponent<T>(long comId) where T : IComponentBase, new() {
         if (!HasComponentValue<T>(comId)) {
-            if (componentDic.TryGetValue(comId, out var list)) {
+            if (componentDic.TryGetValue(comId, out var tempList)) {
                 IComponentBase temp = new T();
-                list.Add(temp);
-                temp.OnInit(control);
-                componentDic[comId] = list;
+                tempList.Add(temp);
+                temp.OnInit<T>(control, comId);
+                componentDic[comId] = tempList;
             }
         }
     }

@@ -36,10 +36,7 @@ public class MySystem : AbsSystem {
     public override void OnInit(IWorld worldMaster) {
         base.OnInit(worldMaster);
         ControlManager.Instance.OnInit(this);
-        AddControl();
-    }
-
-    private void AddControl() {
+        //不限时间周期
         ControlManager.Instance.AddControl<RoleControl>();
         ControlManager.Instance.AddControl<WeaponConatrol>();
     }

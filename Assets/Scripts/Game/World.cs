@@ -29,7 +29,6 @@ public abstract class AbsWorld : IWorld
 
 public class World : AbsWorld
 {
-    private SystemManager systemManager;
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
@@ -37,18 +36,8 @@ public class World : AbsWorld
     public override void OnInit(Engine engine)
     {
         base.OnInit(engine);
-        InitSystem();
-        AddSystem();
-    }
-
-    private void InitSystem()
-    {
         SystemManager.Instance.OnInit(this);
-    }
-
-    private void AddSystem()
-    {
-        SystemManager.Instance.AddSystem<PlayerSystem>();
+        SystemManager.Instance.AddSystem<RoleSystem>();
         SystemManager.Instance.AddSystem<WeaponSystem>();
     }
 

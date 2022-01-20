@@ -10,8 +10,8 @@ public class Engine : MonoBehaviour
     public Action OnQuitAction;
     void Start()
     {
-        worldManager = new WorldManager(this);
-        worldManager.AddWorld<World>();
+        WorldManager.Instance.OnInit(this);
+        WorldManager.Instance.AddWorld<World>();
     }
 
     void Update()
@@ -21,7 +21,6 @@ public class Engine : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
         OnFixedUpdateAction?.Invoke();
     }
 

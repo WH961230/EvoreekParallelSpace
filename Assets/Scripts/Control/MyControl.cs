@@ -34,7 +34,7 @@ public class MyControl : AbsControl {
     public Action OnLateUpdateAction;
     public override void OnInit(ISystemBase systemBase) {
         base.OnInit(systemBase);
-        ComponentManager.Instance.OnInit(this);
+        ComponentManagerLab.Instance.OnInit(this);
     }
 
     public override void OnUpdate() {

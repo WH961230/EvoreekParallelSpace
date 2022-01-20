@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 public class ComponentManager : Singleton<ComponentManager> {
-     private MyControl control;
+    private MyControl control;
     private List<IComponentBase> components = new List<IComponentBase>();
     private Dictionary<Type, IComponentBase> componentDic = new Dictionary<Type, IComponentBase>();
 
@@ -40,12 +40,12 @@ public class ComponentManager : Singleton<ComponentManager> {
         control.OnLateUpdateAction -= OnLateUpdate;
     }
 
-    public void AddComponent<T>() where T : IComponentBase, new() {
+    public void AddComponent<T>(long id) where T : IComponentBase, new() {
         if (null == GetComponent<T>()) {
             IComponentBase e = new T();
             components.Add(e);
             componentDic.Add(typeof(T), e);
-            e.OnInit(control);
+            e.OnInit<T>(control, id);
         }
     }
 

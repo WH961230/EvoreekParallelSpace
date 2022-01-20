@@ -1,11 +1,11 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerSystem : MySystem {
-    private RoleControl control;
+public class RoleSystem : MySystem {
     public override void OnInit(IWorld worldMaster)
     {
         base.OnInit(worldMaster);
+        ControlManager.Instance.AddControl<RoleControl>();
     }
 
     public override void OnUpdate()
