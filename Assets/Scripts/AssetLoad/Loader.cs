@@ -1,9 +1,9 @@
 ﻿
 using System;
 
-public class Loader
+public class Loader : Singleton<Loader>
 {
-    public static Object LoadGameEngine()
+    public Object LoadGameEngine()
     {
         return UnityEngine.Resources.Load("Prefabs/Globle/GameEngine");
     }

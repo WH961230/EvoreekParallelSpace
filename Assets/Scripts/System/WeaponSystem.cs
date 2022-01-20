@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-
-public class RoleComponent : MyComponent {
-    private long comId;
-    public void OnInit<T> (IControlBase controlBase, long comId){
-        base.OnInit<RoleComponent>(controlBase, comId);
+﻿public class WeaponSystem : MySystem {
+    private WeaponConatrol control;
+    public override void OnInit(IWorld worldMaster) {
+        base.OnInit(worldMaster);
     }
 
     public override void OnUpdate() {

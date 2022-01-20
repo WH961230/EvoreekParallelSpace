@@ -3,23 +3,19 @@ using System.Collections.Generic;
 
 public class SystemManager : Singleton<SystemManager>
 {
-    private GameWorld gameWorld;
+    private World world;
     private List<ISystemBase> system = new List<ISystemBase>();
     private Dictionary<Type, ISystemBase> systemTypeDic = new Dictionary<Type, ISystemBase>();
 
-    public SystemManager()
+    public void OnInit(World world)
     {
+        this.world = world;
+        world.OnUpdateAction += OnUpdate;
+        world.OnFixedUpdateAction += OnFixedUpdate;
+        world.OnLateUpdateAction += OnLateUpdate;
     }
 
-    public SystemManager(GameWorld gameWorld)
-    {
-        this.gameWorld = gameWorld;
-        gameWorld.OnUpdateAction += OnUpdate;
-        gameWorld.OnFixedUpdateAction += OnFixedUpdate;
-        gameWorld.OnLateUpdateAction += OnLateUpdate;
-    }
-
-    public void OnUpdate()
+    private void OnUpdate()
     {
         int count = system.Count;
         for (int i = 0; i < count; i++)
@@ -28,7 +24,7 @@ public class SystemManager : Singleton<SystemManager>
         }
     }
 
-    public void OnFixedUpdate()
+    private void OnFixedUpdate()
     {
         int count = system.Count;
         for (int i = 0; i < count; i++)
@@ -37,7 +33,7 @@ public class SystemManager : Singleton<SystemManager>
         }
     }
 
-    public void OnLateUpdate()
+    private void OnLateUpdate()
     {
         int count = system.Count;
         for (int i = 0; i < count; i++)
@@ -48,11 +44,9 @@ public class SystemManager : Singleton<SystemManager>
 
     public void OnClear()
     {
-        gameWorld.OnUpdateAction -= OnUpdate;
-        gameWorld.OnFixedUpdateAction -= OnFixedUpdate;
-        gameWorld.OnLateUpdateAction -= OnLateUpdate;
-        gameWorld.OnClear();
-        gameWorld = null;
+        world.OnUpdateAction -= OnUpdate;
+        world.OnFixedUpdateAction -= OnFixedUpdate;
+        world.OnLateUpdateAction -= OnLateUpdate;
     }
 
     public void AddSystem<T>() where T : ISystemBase, new()
@@ -62,11 +56,11 @@ public class SystemManager : Singleton<SystemManager>
             ISystemBase e = new T();
             system.Add(e);
             systemTypeDic.Add(typeof(T), e);
-            e.OnInit(gameWorld);
+            e.OnInit(world);
         }
     }
 
-    public T GetSystem<T>()
+    private T GetSystem<T>()
     {
         if (systemTypeDic.TryGetValue(typeof(T), out ISystemBase target))
         {

@@ -1,18 +1,18 @@
 ﻿using System;
 
-public interface ISystemBase {
-    void OnInit(IWorld world);
+public interface IControlBase {
+    void OnInit(ISystemBase systemBase);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public abstract class AbsSystem : ISystemBase {
-    protected World world;
+public abstract class AbsControl : IControlBase {
+    protected MySystem systemBase;
 
-    public virtual void OnInit(IWorld world) {
-        this.world = (World)world;
+    public virtual void OnInit(ISystemBase systemBase) {
+        systemBase = (MySystem)systemBase;
     }
 
     public virtual void OnUpdate() {
@@ -28,20 +28,13 @@ public abstract class AbsSystem : ISystemBase {
     }
 }
 
-public class MySystem : AbsSystem {
-    public Action OnUpdateAction;
+public class MyControl : AbsControl {
+    public Action OnUpdateAction; 
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
-
-    public override void OnInit(IWorld worldMaster) {
-        base.OnInit(worldMaster);
-        ControlManager.Instance.OnInit(this);
-        AddControl();
-    }
-
-    private void AddControl() {
-        ControlManager.Instance.AddControl<RoleControl>();
-        ControlManager.Instance.AddControl<WeaponConatrol>();
+    public override void OnInit(ISystemBase systemBase) {
+        base.OnInit(systemBase);
+        ComponentManager.Instance.OnInit(this);
     }
 
     public override void OnUpdate() {
@@ -60,7 +53,6 @@ public class MySystem : AbsSystem {
     }
 
     public override void OnClear() {
-        ControlManager.Instance.OnClear();
         base.OnClear();
     }
 }

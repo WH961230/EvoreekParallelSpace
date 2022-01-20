@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
-public class PlayerSystem : MySystem
-{
-    public override void OnInit(IGameWorld gameWorldMaster)
+public class PlayerSystem : MySystem {
+    private RoleControl control;
+    public override void OnInit(IWorld worldMaster)
     {
-        base.OnInit(gameWorldMaster);
+        base.OnInit(worldMaster);
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
-        Debug.LogError("player");
     }
 
     public override void OnFixedUpdate()

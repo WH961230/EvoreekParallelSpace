@@ -1,21 +1,21 @@
 ﻿using System;
 using UnityEngine;
 
-public interface IGameWorld
+public interface IWorld
 {
-    void OnInit(GameEngine gameEngine);
+    void OnInit(Engine engine);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public abstract class AbsGameWorld : IGameWorld
+public abstract class AbsWorld : IWorld
 {
-    protected GameEngine gameEngine;
-    public virtual void OnInit(GameEngine gameEngine)
+    protected Engine engine;
+    public virtual void OnInit(Engine engine)
     {
-        this.gameEngine = gameEngine;
+        this.engine = engine;
     }
 
     public virtual void OnUpdate() { }
@@ -27,28 +27,29 @@ public abstract class AbsGameWorld : IGameWorld
     public virtual void OnClear() { }
 }
 
-public class GameWorld : AbsGameWorld
+public class World : AbsWorld
 {
     private SystemManager systemManager;
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
 
-    public override void OnInit(GameEngine gameEngine)
+    public override void OnInit(Engine engine)
     {
-        base.OnInit(gameEngine);
+        base.OnInit(engine);
         InitSystem();
         AddSystem();
     }
 
     private void InitSystem()
     {
-        systemManager = new SystemManager(this);
+        SystemManager.Instance.OnInit(this);
     }
 
     private void AddSystem()
     {
-        systemManager.AddSystem<PlayerSystem>();
+        SystemManager.Instance.AddSystem<PlayerSystem>();
+        SystemManager.Instance.AddSystem<WeaponSystem>();
     }
 
     public override void OnUpdate()
@@ -71,7 +72,7 @@ public class GameWorld : AbsGameWorld
 
     public override void OnClear()
     {
-        gameEngine.OnClearAction?.Invoke();
+        engine.OnQuitAction?.Invoke();
         base.OnClear();
     }
 }
