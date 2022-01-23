@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class SystemManager : Singleton<SystemManager>
 {
     private World world;
-    private List<ISystemBase> system = new List<ISystemBase>();
-    private Dictionary<Type, ISystemBase> systemTypeDic = new Dictionary<Type, ISystemBase>();
+    private List<MySystem> system = new List<MySystem>();
+    private Dictionary<Type, MySystem> systemTypeDic = new Dictionary<Type, MySystem>();
 
     public void OnInit(World world)
     {
@@ -49,20 +49,20 @@ public class SystemManager : Singleton<SystemManager>
         world.OnLateUpdateAction -= OnLateUpdate;
     }
 
-    public void AddSystem<T>() where T : ISystemBase, new()
+    public void AddSystem<T>() where T : MySystem, new()
     {
         if (null == GetSystem<T>())
         {
-            ISystemBase e = new T();
+            MySystem e = new T();
             system.Add(e);
             systemTypeDic.Add(typeof(T), e);
             e.OnInit(world);
         }
     }
 
-    private T GetSystem<T>()
+    private T GetSystem<T>() where T : MySystem, new()
     {
-        if (systemTypeDic.TryGetValue(typeof(T), out ISystemBase target))
+        if (systemTypeDic.TryGetValue(typeof(T), out MySystem target))
         {
             return (T) target;
         }
@@ -70,19 +70,19 @@ public class SystemManager : Singleton<SystemManager>
         return default;
     }
 
-    public void RemoveSystem<T>() where T : ISystemBase, new()
+    public void RemoveSystem<T>() where T : MySystem, new()
     {
         var index = FindSystemIndex<T>();
         if (index >= 0)
         {
-            ISystemBase e = system[index];
+            MySystem e = system[index];
             system.RemoveAt(index);
             systemTypeDic.Remove(e.GetType());
             e.OnClear();
         }
     }
 
-    private int FindSystemIndex<T>() where T : ISystemBase, new()
+    private int FindSystemIndex<T>() where T : MySystem, new()
     {
         for (var i = 0; i < systemTypeDic.Count; ++i)
         {

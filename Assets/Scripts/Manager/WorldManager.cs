@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class WorldManager : Singleton<WorldManager>
 {
     private Engine engine;
     private List<IWorld> IWorlds = new List<IWorld>();
     private Dictionary<Type, IWorld> IWorldDic = new Dictionary<Type, IWorld>();
+    private Dictionary<long, IWorld> worldDic = new Dictionary<long, IWorld>();
 
     public void OnInit(Engine engine)
     {
@@ -53,27 +55,51 @@ public class WorldManager : Singleton<WorldManager>
         engine = null;
     }
 
-    public void AddWorld<T>() where T : IWorld, new()
-    {
-        if (null == GetWorld<T>())
-        {
-            IWorld e = new T();
-            IWorlds.Add(e);
-            IWorldDic.Add(typeof(T), e);
-            e.OnInit(engine);
+    // public void AddWorld<T>(WorldInfo info) where T : IWorld, new()
+    // {
+    //     if (null == GetWorld<T>())
+    //     {
+    //         IWorld e = new T();
+    //         IWorlds.Add(e);
+    //         IWorldDic.Add(typeof(T), e);
+    //         info.worldId = ++count;
+    //         e.OnInit(engine, info);
+    //     }
+    // }
+    
+    public void AddWorld<T>(WorldInfo info) where T : IWorld, new() {
+        var id = info.worldId;
+        if (worldDic.TryGetValue(id, out var target)) {
+            Debug.LogError($"重复创建世界[{info.ToString()}]");
+            return;
         }
+
+        IWorld e = new T();
+        IWorlds.Add(e);
+        worldDic.Add(id, e);
+        e.OnInit(engine, info);
     }
 
-    public T GetWorld<T>()
+    // private T GetWorld<T>()
+    // {
+    //     if (IWorldDic.TryGetValue(typeof(T), out IWorld target))
+    //     {
+    //         return (T) target;
+    //     }
+    //
+    //     return default;
+    // }
+
+    private T GetWorld<T>(long id)
     {
-        if (IWorldDic.TryGetValue(typeof(T), out IWorld target))
+        if (worldDic.TryGetValue(id, out IWorld target))
         {
             return (T) target;
         }
 
         return default;
     }
-
+    
     private void RemoveWorld<T>() where T : IWorld, new()
     {
         var index = FindWorldIndex<T>();

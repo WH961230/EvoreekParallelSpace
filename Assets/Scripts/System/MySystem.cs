@@ -1,6 +1,6 @@
 ﻿using System;
 
-public interface ISystemBase {
+interface ISystemBase {
     void OnInit(IWorld world);
     void OnUpdate();
     void OnFixedUpdate();
@@ -8,56 +8,30 @@ public interface ISystemBase {
     void OnClear();
 }
 
-public abstract class AbsSystem : ISystemBase {
-    protected World world;
-
-    public virtual void OnInit(IWorld world) {
-        this.world = (World)world;
-    }
-
-    public virtual void OnUpdate() {
-    }
-
-    public virtual void OnFixedUpdate() {
-    }
-
-    public virtual void OnLateUpdate() {
-    }
-
-    public virtual void OnClear() {
-    }
-}
-
-public class MySystem : AbsSystem {
+public class MySystem : ISystemBase {
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
 
-    public override void OnInit(IWorld worldMaster) {
-        base.OnInit(worldMaster);
+    public virtual void OnInit(IWorld world) {
         ControlManager.Instance.OnInit(this);
-        //不限时间周期
         ControlManager.Instance.AddControl<RoleControl>();
         ControlManager.Instance.AddControl<WeaponConatrol>();
     }
 
-    public override void OnUpdate() {
-        base.OnUpdate();
+    public virtual void OnUpdate() {
         OnUpdateAction?.Invoke();
     }
 
-    public override void OnFixedUpdate() {
-        base.OnFixedUpdate();
+    public virtual void OnFixedUpdate() {
         OnFixedUpdateAction?.Invoke();
     }
 
-    public override void OnLateUpdate() {
-        base.OnLateUpdate();
+    public virtual void OnLateUpdate() {
         OnLateUpdateAction?.Invoke();
     }
 
-    public override void OnClear() {
+    public virtual void OnClear() {
         ControlManager.Instance.OnClear();
-        base.OnClear();
     }
 }

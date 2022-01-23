@@ -1,58 +1,33 @@
 ﻿using System;
 
 public interface IControlBase {
-    void OnInit(ISystemBase systemBase);
+    void OnInit(MySystem system);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public abstract class AbsControl : IControlBase {
-    protected MySystem systemBase;
-
-    public virtual void OnInit(ISystemBase systemBase) {
-        systemBase = (MySystem)systemBase;
-    }
-
-    public virtual void OnUpdate() {
-    }
-
-    public virtual void OnFixedUpdate() {
-    }
-
-    public virtual void OnLateUpdate() {
-    }
-
-    public virtual void OnClear() {
-    }
-}
-
-public class MyControl : AbsControl {
+public class MyControl : IControlBase {
     public Action OnUpdateAction; 
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
-    public override void OnInit(ISystemBase systemBase) {
-        base.OnInit(systemBase);
+    public virtual void OnInit(MySystem system) {
         ComponentManagerLab.Instance.OnInit(this);
     }
 
-    public override void OnUpdate() {
-        base.OnUpdate();
+    public virtual void OnUpdate() {
         OnUpdateAction?.Invoke();
     }
 
-    public override void OnFixedUpdate() {
-        base.OnFixedUpdate();
+    public virtual void OnFixedUpdate() {
         OnFixedUpdateAction?.Invoke();
     }
 
-    public override void OnLateUpdate() {
-        base.OnLateUpdate();
+    public virtual void OnLateUpdate() {
         OnLateUpdateAction?.Invoke();
     }
 
-    public override void OnClear() {
-        base.OnClear();
+    public virtual void OnClear() {
     }
 }

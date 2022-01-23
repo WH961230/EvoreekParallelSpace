@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class ComponentManager : Singleton<ComponentManager> {
     private MyControl control;
-    private List<IComponentBase> components = new List<IComponentBase>();
-    private Dictionary<Type, IComponentBase> componentDic = new Dictionary<Type, IComponentBase>();
+    private List<MyComponent> components = new List<MyComponent>();
+    private Dictionary<Type, MyComponent> componentDic = new Dictionary<Type, MyComponent>();
 
     public void OnInit(MyControl control) {
         this.control = control;
@@ -40,34 +40,34 @@ public class ComponentManager : Singleton<ComponentManager> {
         control.OnLateUpdateAction -= OnLateUpdate;
     }
 
-    public void AddComponent<T>(long id) where T : IComponentBase, new() {
-        if (null == GetComponent<T>()) {
-            IComponentBase e = new T();
-            components.Add(e);
-            componentDic.Add(typeof(T), e);
-            e.OnInit<T>(control, id);
-        }
+    public void AddComponent<T>(long id) where T : MyComponent, new() {
+        // if (null == GetComponent<T>()) {
+        //     MyComponent e = new T();
+        //     components.Add(e);
+        //     componentDic.Add(typeof(T), e);
+        //     e.OnInit<T>(control, id);
+        // }
     }
 
-    private T GetComponent<T>() {
-        if (componentDic.TryGetValue(typeof(T), out IComponentBase target)) {
+    private T GetComponent<T>() where T : MyComponent, new() {
+        if (componentDic.TryGetValue(typeof(T), out MyComponent target)) {
             return (T)target;
         }
 
         return default;
     }
 
-    public void RemoveComponent<T>() where T : IComponentBase, new() {
+    public void RemoveComponent<T>() where T : MyComponent, new() {
         var index = FindComponentIndex<T>();
         if (index >= 0) {
-            IComponentBase e = components[index];
+            MyComponent e = components[index];
             components.RemoveAt(index);
             componentDic.Remove(e.GetType());
             e.OnClear();
         }
     }
 
-    private int FindComponentIndex<T>() where T : IComponentBase, new() {
+    private int FindComponentIndex<T>() where T : MyComponent, new() {
         for (var i = 0 ; i < componentDic.Count ; ++i) {
             if (components[i].GetType() == typeof(T)) {
                 return i;

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 
+//组件管理：组件是独立于控制器存在的
 public class ComponentManagerLab : Singleton<ComponentManagerLab> {
     private MyControl control;
-    private Dictionary<long, List<IComponentBase>> componentDic = new Dictionary<long, List<IComponentBase>>();//ID + 组件
+    private Dictionary<long, List<MyComponent>> componentDic = new Dictionary<long, List<MyComponent>>();
 
     public void OnInit(MyControl control) {
         this.control = control;
@@ -14,7 +15,7 @@ public class ComponentManagerLab : Singleton<ComponentManagerLab> {
     private void OnUpdate() {
         var keys = componentDic.Keys;
         foreach (var key in keys) {
-            if (componentDic.TryGetValue(key, out List<IComponentBase> list)) {
+            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
                 foreach (var l in list) {
                     l.OnUpdate();
                 }
@@ -25,7 +26,7 @@ public class ComponentManagerLab : Singleton<ComponentManagerLab> {
     private void OnFixedUpdate() {
         var keys = componentDic.Keys;
         foreach (var key in keys) {
-            if (componentDic.TryGetValue(key, out List<IComponentBase> list)) {
+            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
                 foreach (var l in list) {
                     l.OnFixedUpdate();
                 }
@@ -36,7 +37,7 @@ public class ComponentManagerLab : Singleton<ComponentManagerLab> {
     private void OnLateUpdate() {
         var keys = componentDic.Keys;
         foreach (var key in keys) {
-            if (componentDic.TryGetValue(key, out List<IComponentBase> list)) {
+            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
                 foreach (var l in list) {
                     l.OnLateUpdate();
                 }
@@ -51,15 +52,23 @@ public class ComponentManagerLab : Singleton<ComponentManagerLab> {
         componentDic = null;
     }
 
-    public void AddComponent<T>(long comId) where T : IComponentBase, new() {
-        if (!HasComponentValue<T>(comId)) {
-            if (componentDic.TryGetValue(comId, out var tempList)) {
-                IComponentBase temp = new T();
-                tempList.Add(temp);
-                temp.OnInit<T>(control, comId);
-                componentDic[comId] = tempList;
-            }
-        }
+    public void AddComponent<T>() where T : MyComponent, new() {
+        // if (HasComponentValue<T>()) {
+        //     return;
+        // }
+        //
+        // MyComponent tempComponent = new T();
+        // tempComponent.OnInit<T>(control, );
+        // if (componentDic.TryGetValue(comId, out var list)) {
+        //     if (null == list) {
+        //         list = new List<MyComponent>(){tempComponent};
+        //     } else {
+        //         list.Add(tempComponent);
+        //     }
+        //     componentDic[comId] = list;
+        // } else {
+        //     componentDic.Add(comId, );
+        // }
     }
 
     private bool HasComponentValue<T>(long id) {
@@ -74,8 +83,8 @@ public class ComponentManagerLab : Singleton<ComponentManagerLab> {
         return false;
     }
 
-    public void RemoveComponent<T>(long id) where T : IComponentBase, new() {
-        if (componentDic.TryGetValue(id, out List<IComponentBase> tempList)) {
+    public void RemoveComponent<T>(long id) where T : MyComponent, new() {
+        if (componentDic.TryGetValue(id, out List<MyComponent> tempList)) {
             for (int j = 0 ; j < tempList.Count ; j++) {
                 if (tempList[j].GetType() == typeof(T)) {
                     tempList[j].OnClear();

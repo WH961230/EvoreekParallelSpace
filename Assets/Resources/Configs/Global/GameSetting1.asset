@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 266bb83a45c3a2a478fad96f0f7c6f31, type: 3}
-  m_Name: SOBullet
+  m_Script: {fileID: 11500000, guid: 2f671a2a0cd54bd79fdbcaf9eb1dda9b, type: 3}
+  m_Name: GameSetting1
   m_EditorClassIdentifier: 
-  bulletSign: Bullet
+  loadSceneMode: 1
+  IsInitScene: 0
+  SceneSign: Lobby

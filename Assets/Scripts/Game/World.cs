@@ -1,67 +1,51 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public interface IWorld
 {
-    void OnInit(Engine engine);
+    void OnInit(Engine engine, WorldInfo info);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public abstract class AbsWorld : IWorld
-{
-    protected Engine engine;
-    public virtual void OnInit(Engine engine)
-    {
-        this.engine = engine;
-    }
-
-    public virtual void OnUpdate() { }
-
-    public virtual void OnFixedUpdate() { }
-
-    public virtual void OnLateUpdate() { }
-
-    public virtual void OnClear() { }
-}
-
-public class World : AbsWorld
-{
+public class World : IWorld {
+    private Engine engine;
+    private WorldData data;
+    private SOGameSetting config;
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
 
-    public override void OnInit(Engine engine)
-    {
-        base.OnInit(engine);
-        SystemManager.Instance.OnInit(this);
-        SystemManager.Instance.AddSystem<RoleSystem>();
-        SystemManager.Instance.AddSystem<WeaponSystem>();
+    public virtual void OnInit(Engine engine, WorldInfo info) {
+        this.engine = engine;
+        data = new WorldData(info);
+        config = Loader.Instance.LoadConfig<SOGameSetting>("GameSetting");
+        UnityEngine.SceneManagement.SceneManager.LoadScene(config.SceneSign, config.loadSceneMode);
+        // SystemManager.Instance.OnInit(this);
+        // SystemManager.Instance.AddSystem<RoleSystem>();
+        // SystemManager.Instance.AddSystem<WeaponSystem>();
     }
 
-    public override void OnUpdate()
+    public virtual void OnUpdate()
     {
-        base.OnUpdate();
         OnUpdateAction?.Invoke();
     }
 
-    public override void OnFixedUpdate()
+    public virtual void OnFixedUpdate()
     {
-        base.OnFixedUpdate();
         OnFixedUpdateAction?.Invoke();
     }
 
-    public override void OnLateUpdate()
+    public virtual void OnLateUpdate()
     {
-        base.OnLateUpdate();
         OnLateUpdateAction?.Invoke();
     }
 
-    public override void OnClear()
+    public virtual void OnClear()
     {
         engine.OnQuitAction?.Invoke();
-        base.OnClear();
     }
 }

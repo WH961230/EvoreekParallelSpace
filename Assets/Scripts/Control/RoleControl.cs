@@ -1,25 +1,23 @@
+using System;
 using UnityEngine;
 
-public class RoleControl : MyControl
-{
-    private Transform RoleLayer;
-    public override void OnInit(ISystemBase systemBase)
+public class RoleControl : MyControl {
+    private RoleSystem mySystem;
+    private SUPPLIERTYPE myType;
+    private RoleData myData;
+    public override void OnInit(MySystem system)
     {
-        base.OnInit(systemBase);
-        RoleLayer = CreatRoleLayer();
-        CreatRole().OnInit<RoleComponent>(this, 1);
+        base.OnInit(system);
+        mySystem = (RoleSystem)system;
+        myType = SUPPLIERTYPE.Role;
+        myData = mySystem.data;
+        CreatRole();
     }
 
-    private RoleComponent CreatRole()
+    private void CreatRole()
     {
-        var g = Creator.Instance.Creat("Prefabs/Role/Role");
-        var go = Object.Instantiate(g, RoleLayer, true);
-        return go.AddComponent<RoleComponent>();
-    }
-
-    private Transform CreatRoleLayer()
-    {
-        return new GameObject("RoleLayer").transform;
+        var tempGameObj = Supplier.Instance.CreatGameObj(myType);
+        Supplier.Instance.AddComponent<RoleComponent>(tempGameObj, this, 1);
     }
 
     public override void OnUpdate()

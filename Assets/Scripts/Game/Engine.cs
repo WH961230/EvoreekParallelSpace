@@ -1,36 +1,33 @@
 using System;
 using UnityEngine;
 
-public class Engine : MonoBehaviour
-{
-    private WorldManager worldManager;
+public class Engine : MonoBehaviour {
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
     public Action OnQuitAction;
-    void Start()
-    {
+
+    void Start() {
+        ConfigManager.Instance.OnInit();
         WorldManager.Instance.OnInit(this);
-        WorldManager.Instance.AddWorld<World>();
+        long wid = 0;
+        WorldManager.Instance.AddWorld<World>(new WorldInfo() {worldId = ++wid, worldSign = "世界1", sceneSign = "Battle"});
+        WorldManager.Instance.AddWorld<World>(new WorldInfo() {worldId = ++wid, worldSign = "世界2", sceneSign = ""});
     }
 
-    void Update()
-    {
+    void Update() {
         OnUpdateAction?.Invoke();
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         OnFixedUpdateAction?.Invoke();
     }
 
-    private void LateUpdate()
-    {
+    private void LateUpdate() {
         OnLateUpdateAction?.Invoke();
     }
 
-    public void Quit()
-    {
+    public void Quit() {
         OnQuitAction?.Invoke();
         Clear();
     }
@@ -40,6 +37,5 @@ public class Engine : MonoBehaviour
         OnFixedUpdateAction = null;
         OnLateUpdateAction = null;
         OnQuitAction = null;
-        worldManager = null;
     }
 }

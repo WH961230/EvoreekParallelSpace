@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 
-public class RoleComponent : AbsComponent {
-    private long comId;
-    public void OnInit<T> (IControlBase controlBase, long comId) where T : IComponentBase, new(){
-        base.OnInit<T>(controlBase, comId);
-    }
-
+public class RoleComponent : MyComponent {
     public override void OnUpdate() {
         base.OnUpdate();
         if (Input.GetKey(KeyCode.A))

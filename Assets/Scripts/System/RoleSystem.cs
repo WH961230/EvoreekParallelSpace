@@ -1,7 +1,5 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
-
-public class RoleSystem : MySystem {
+﻿public class RoleSystem : MySystem {
+    public RoleData data = new RoleData();
     public override void OnInit(IWorld worldMaster)
     {
         base.OnInit(worldMaster);

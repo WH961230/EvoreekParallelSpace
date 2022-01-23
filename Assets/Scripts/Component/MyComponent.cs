@@ -1,20 +1,18 @@
 ﻿using System;
 using UnityEngine;
 
-public interface IComponentBase {
-    void OnInit<T>(IControlBase controlBase, long comId) where T : IComponentBase, new();
+interface IComponentBase {
+    void OnInit<T>() where T : MyComponent, new();
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public abstract class AbsComponent : MonoBehaviour, IComponentBase {
-    protected MyControl controlBase;
-    public void OnInit<T>(IControlBase controlBase, long comId) where T : IComponentBase, new()
+public class MyComponent : MonoBehaviour, IComponentBase {
+    public void OnInit<T>() where T : MyComponent, new()
     {
-        controlBase = (MyControl)controlBase;
-        ComponentManagerLab.Instance.AddComponent<T>(comId);
+        ComponentManagerLab.Instance.AddComponent<T>();
     }
 
     public virtual void OnUpdate() {
