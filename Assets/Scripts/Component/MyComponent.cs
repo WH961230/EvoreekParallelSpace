@@ -1,18 +1,21 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 interface IComponentBase {
-    void OnInit<T>() where T : MyComponent, new();
+    void OnInit<T>(long id) where T : MyComponent, new();
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public class MyComponent : MonoBehaviour, IComponentBase {
-    public void OnInit<T>() where T : MyComponent, new()
+public class MyComponent : MonoBehaviour, IComponentBase
+{
+    [SerializeField] public long ComponentId;
+    public void OnInit<T>(long id) where T : MyComponent, new()
     {
-        ComponentManagerLab.Instance.AddComponent<T>();
+        ComponentId = id;
+        ComponentManager.Instance.AddComponent<T>(id);
     }
 
     public virtual void OnUpdate() {

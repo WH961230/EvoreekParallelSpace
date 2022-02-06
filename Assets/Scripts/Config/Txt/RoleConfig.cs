@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
 public class RoleConfig : IConfig{
-    public RoleConfig() {
-        Init();
+    public RoleConfig(string input) {
     }
 
-    public void Init() {
+    public static void OnInit()
+    {
         
     }
 }

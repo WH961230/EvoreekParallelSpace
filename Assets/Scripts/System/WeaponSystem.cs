@@ -1,7 +1,8 @@
 ﻿public class WeaponSystem : MySystem {
-    private WeaponConatrol control;
-    public override void OnInit(IWorld worldMaster) {
-        base.OnInit(worldMaster);
+    private WeaponControl control;
+    public override void OnInit() {
+        base.OnInit();
+        ControlManager.Instance.AddControl<WeaponControl>();
     }
 
     public override void OnUpdate() {

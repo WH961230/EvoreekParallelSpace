@@ -4,30 +4,53 @@ using UnityEngine.SceneManagement;
 
 public interface IWorld
 {
-    void OnInit(Engine engine, WorldInfo info);
+    void OnInit(WorldInfo info);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public class World : IWorld {
-    private Engine engine;
-    private WorldData data;
-    private SOGameSetting config;
-    public Action OnUpdateAction;
-    public Action OnFixedUpdateAction;
-    public Action OnLateUpdateAction;
+public class World : IWorld
+{
+    //配置
+    private GameConfig gameConfig;
+    private SceneConfig sceneConfig;
+    //行为
+    private Action OnUpdateAction;
+    private Action OnFixedUpdateAction;
+    private Action OnLateUpdateAction;
+    private Action OnQuitAction;
+    //系统
+    private SystemManager systemManager;
 
-    public virtual void OnInit(Engine engine, WorldInfo info) {
-        this.engine = engine;
-        data = new WorldData(info);
-        config = Loader.Instance.LoadConfig<SOGameSetting>("GameSetting");
-        UnityEngine.SceneManagement.SceneManager.LoadScene(config.SceneSign, config.loadSceneMode);
-        // SystemManager.Instance.OnInit(this);
-        // SystemManager.Instance.AddSystem<RoleSystem>();
-        // SystemManager.Instance.AddSystem<WeaponSystem>();
+    public virtual void OnInit(WorldInfo info)
+    {
+        //世界系统管理器
+        systemManager = new SystemManager();
+        systemManager.OnInit(this);
+        //游戏配置
+        gameConfig = info.gameConfig;
+        //场景配置
+        sceneConfig = info.sceneConfig;
+        //加载世界队对应场景
+        // SceneManager.LoadSceneByMode(sceneConfig.sceneSign, LoadSceneMode.Single);
+        //添加世界角色系统
+        systemManager.AddSystem<RoleSystem>();
+        systemManager.AddSystem<WeaponSystem>();
+        //获取游戏配置
+        var soGameSetting = Loader.Instance.LoadGameSettingConfig<SOGameSetting>(gameConfig.configSign);
+        Debug.LogError(soGameSetting.TestStr);
     }
+
+    public void AddUpdateAction(Action action) { OnUpdateAction += action; }
+    public void AddFixedUpdateAction(Action action) { OnFixedUpdateAction += action; }
+    public void AddLateUpdateAction(Action action) { OnLateUpdateAction += action; }
+    public void AddQuitAction(Action action) { OnQuitAction += action; }
+    public void RemoveUpdateAction(Action action) { OnUpdateAction -= action; }
+    public void RemoveFixedUpdateAction(Action action) { OnFixedUpdateAction -= action; }
+    public void RemoveLateUpdateAction(Action action) { OnLateUpdateAction -= action; }
+    public void RemoveQuitAction(Action action) { OnQuitAction -= action; }
 
     public virtual void OnUpdate()
     {
@@ -46,6 +69,6 @@ public class World : IWorld {
 
     public virtual void OnClear()
     {
-        engine.OnQuitAction?.Invoke();
+        OnQuitAction?.Invoke();
     }
 }

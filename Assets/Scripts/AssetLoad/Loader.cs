@@ -1,19 +1,39 @@
 ﻿using UnityEngine;
 using Object = System.Object;
 
-public class Loader : Singleton<Loader> {
-    private readonly string CONFIGPATH = "";
-    private readonly string TXTPATH = "Configs/Txt/";
+public class Loader : Singleton<Loader>
+{
+    //基础配置
+    private static readonly string CONFIGPATH = "Configs/";
+    private static readonly string TXTPATH = "Configs/Txt/";
+
+    //其他配置
+    private static readonly string GAMESETTINGCONFIG = CONFIGPATH + "Global/";
+    private static readonly string ROLECONFIG = CONFIGPATH + "Role/";
+    private static readonly string WEAPONCONFIG = CONFIGPATH + "Weapon/";
+
     public Object Load(string path)
     {
         return Resources.Load(path);
     }
 
-    public T LoadConfig<T>(string configName) where T : ScriptableObject, new() {
-        return Resources.Load(CONFIGPATH) as T;
+    public T LoadGameSettingConfig<T>(string configName) where T : ScriptableObject, new()
+    {
+        return Resources.Load(GAMESETTINGCONFIG + configName) as T;
     }
 
-    public TextAsset LoadTxt(string txtName) {
+    public T LoadRoleConfig<T>(string configName) where T : ScriptableObject, new()
+    {
+        return Resources.Load(ROLECONFIG + configName) as T;
+    }
+
+    public T LoadWeaponConfig<T>(string configName) where T : ScriptableObject, new()
+    {
+        return Resources.Load(WEAPONCONFIG + configName) as T;
+    }
+
+    public TextAsset LoadTxt(string txtName)
+    {
         return Resources.Load(TXTPATH + txtName) as TextAsset;
     }
 }

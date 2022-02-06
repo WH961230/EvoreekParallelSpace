@@ -123,80 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &568676449 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 524626757757264186, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-  m_PrefabInstance: {fileID: 827080342}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &568676451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 568676449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5ab696353f99c242bfde42ea1f2b26b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1001 &827080342
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 524626757757264186, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_Name
-      value: GameEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 990.5991
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 605.9952
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 12.604929
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4866220354365112978, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 50c9f97514a22ce4db5e69432058bcd8, type: 3}
 --- !u!1 &1563367421
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,6 +134,7 @@ GameObject:
   - component: {fileID: 1563367424}
   - component: {fileID: 1563367423}
   - component: {fileID: 1563367422}
+  - component: {fileID: 1563367425}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -280,6 +207,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1563367425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1563367421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e020b19859204478478b2944982672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneName: Lobby
 --- !u!1 &2089003284
 GameObject:
   m_ObjectHideFlags: 0

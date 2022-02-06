@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-
-public class RoleData {
-    public RoleInfo roleInfo;
-}
-
-public struct RoleInfo {
+﻿public class RoleData
+{
+    public long roleId;
+    public RoleComponent roleComponent;
 }

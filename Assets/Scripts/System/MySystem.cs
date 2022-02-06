@@ -1,7 +1,7 @@
 ﻿using System;
 
 interface ISystemBase {
-    void OnInit(IWorld world);
+    void OnInit();
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
@@ -13,10 +13,8 @@ public class MySystem : ISystemBase {
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
 
-    public virtual void OnInit(IWorld world) {
+    public virtual void OnInit() {
         ControlManager.Instance.OnInit(this);
-        ControlManager.Instance.AddControl<RoleControl>();
-        ControlManager.Instance.AddControl<WeaponConatrol>();
     }
 
     public virtual void OnUpdate() {

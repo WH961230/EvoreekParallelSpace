@@ -1,4 +1,5 @@
-string	string
-id	configSign
-唯一标识    配置标识
-1	世界1
+string	string  string
+id	configSign  sceneSign
+唯一标识    配置标识    场景标识
+1	GameSetting_Battle	AAA
+2	GameSetting_Melee	AAA

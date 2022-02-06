@@ -1,8 +1,7 @@
 ﻿public class RoleSystem : MySystem {
-    public RoleData data = new RoleData();
-    public override void OnInit(IWorld worldMaster)
+    public override void OnInit()
     {
-        base.OnInit(worldMaster);
+        base.OnInit();
         ControlManager.Instance.AddControl<RoleControl>();
     }
 

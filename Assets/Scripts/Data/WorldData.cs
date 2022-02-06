@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
 
 public class WorldData {
-    //基础配置
-    public WorldInfo worldInfo;
-    //运行数据
-    public RunInfo worldRunInfo;
+    public WorldInfo worldInfo;//基础配置
+    public RunInfo worldRunInfo;//运行数据
     public WorldData(WorldInfo info) {
         worldInfo = info;
-        Debug.Log($"Init=>{worldInfo.ToString()}");
     }
 }
 
@@ -16,10 +13,38 @@ public struct RunInfo {
 }
 
 public struct WorldInfo {
-    public long worldId;
-    public string worldSign;
-    public string sceneSign;
+    public GameConfig gameConfig;//游戏配置
+    public SceneConfig sceneConfig;//场景配置
+
+    public string WorldSign
+    {
+        get
+        {
+            if (null == gameConfig)
+            {
+                return "";
+            }
+
+            return gameConfig.worldSign;
+        }
+    }
+
+    public long WorldId
+    {
+        get
+        {
+            if (null == gameConfig)
+            {
+                return -1;
+            }
+
+            return long.Parse(gameConfig.id);
+        }
+    }
+
     public override string ToString() {
-        return $"[worldId:{worldId}][worldSign:{worldSign}[sceneSign:{sceneSign}]]";
+        return $"[worldId:{gameConfig.id}]+" +
+               $"[worldSign:{gameConfig.worldSign}]+" +
+               $"[sceneSign:{sceneConfig.sceneSign}]+";
     }
 }

@@ -1,8 +1,13 @@
 ﻿using UnityEngine;
 
-public class WeaponComponent : MyComponent{
+public class WeaponComponent : MyComponent
+{
     public override void OnUpdate() {
         base.OnUpdate();
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Translate(Vector3.up);
+        }
     }
 
     public override void OnFixedUpdate() {

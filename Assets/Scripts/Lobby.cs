@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Lobby : MonoBehaviour
 {
     public void OnStartGame()
     {
-        SceneManager.LoadScene("Battle");
+        SceneManager.LoadSceneByMode("Battle", LoadSceneMode.Single);
     }
 }

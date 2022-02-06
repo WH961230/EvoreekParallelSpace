@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-public  class GameConfig : IConfig{
+public class ItemConfig : IConfig
+{
     public readonly string id;
-    public readonly string configSign;
-    public readonly string worldSign;
+    public readonly int type;
+    public readonly string path;
+    public readonly string prefab;
 
-    public GameConfig(string input) {
+    private ItemConfig(string input) {
         var tables = input.Split('\t');
         id = tables[0];
-        configSign = tables[1];
-        worldSign = tables[2];
+        type = int.Parse(tables[1]);
+        path = tables[2];
+        prefab = tables[3];
     }
 
     private static Dictionary<string, string> rawDatas;
-    private static Dictionary<string, GameConfig> configs;
+    private static Dictionary<string, ItemConfig> configs;
 
     //读取配置文件内容 存入 rawDatas 
     public static void OnInit()
@@ -35,7 +38,7 @@ public  class GameConfig : IConfig{
         }
     }
 
-    public static GameConfig Get(string id) {
+    public static ItemConfig Get(string id) {
         if (string.IsNullOrEmpty(id)) {
             return null;
         }
@@ -48,6 +51,22 @@ public  class GameConfig : IConfig{
             return null;
         }
 
-        return new GameConfig(rawDatas[id]);
+        return new ItemConfig(rawDatas[id]);
+    }
+
+    public static List<ItemConfig> GetAll()
+    {
+        if (rawDatas.Count == 0) {
+            return null;
+        }
+
+        List<ItemConfig> itemConfigs = new List<ItemConfig>();
+        for (var i = 1; i <= rawDatas.Count; i++)
+        {
+            var str = rawDatas[Convert.ToString(i)];
+            itemConfigs.Add(new ItemConfig(str));
+        }
+
+        return itemConfigs;
     }
 }

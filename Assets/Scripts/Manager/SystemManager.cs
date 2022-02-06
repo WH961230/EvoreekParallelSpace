@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class SystemManager : Singleton<SystemManager>
+public class SystemManager
 {
     private World world;
     private List<MySystem> system = new List<MySystem>();
@@ -10,9 +10,10 @@ public class SystemManager : Singleton<SystemManager>
     public void OnInit(World world)
     {
         this.world = world;
-        world.OnUpdateAction += OnUpdate;
-        world.OnFixedUpdateAction += OnFixedUpdate;
-        world.OnLateUpdateAction += OnLateUpdate;
+        world.AddUpdateAction(OnUpdate);
+        world.AddFixedUpdateAction(OnFixedUpdate);
+        world.AddLateUpdateAction(OnLateUpdate);
+        world.AddQuitAction(OnClear);
     }
 
     private void OnUpdate()
@@ -44,9 +45,10 @@ public class SystemManager : Singleton<SystemManager>
 
     public void OnClear()
     {
-        world.OnUpdateAction -= OnUpdate;
-        world.OnFixedUpdateAction -= OnFixedUpdate;
-        world.OnLateUpdateAction -= OnLateUpdate;
+        world.RemoveUpdateAction(OnUpdate);
+        world.RemoveFixedUpdateAction(OnFixedUpdate);
+        world.RemoveLateUpdateAction(OnLateUpdate);
+        world.RemoveQuitAction(OnClear);
     }
 
     public void AddSystem<T>() where T : MySystem, new()
@@ -56,11 +58,11 @@ public class SystemManager : Singleton<SystemManager>
             MySystem e = new T();
             system.Add(e);
             systemTypeDic.Add(typeof(T), e);
-            e.OnInit(world);
+            e.OnInit();
         }
     }
 
-    private T GetSystem<T>() where T : MySystem, new()
+    public T GetSystem<T>() where T : MySystem, new()
     {
         if (systemTypeDic.TryGetValue(typeof(T), out MySystem target))
         {

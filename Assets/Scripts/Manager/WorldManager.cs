@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 世界管理
+/// </summary>
 public class WorldManager : Singleton<WorldManager>
 {
-    private Engine engine;
+    private Engine engine;//引擎
     private List<IWorld> IWorlds = new List<IWorld>();
     private Dictionary<Type, IWorld> IWorldDic = new Dictionary<Type, IWorld>();
     private Dictionary<long, IWorld> worldDic = new Dictionary<long, IWorld>();
@@ -12,10 +15,10 @@ public class WorldManager : Singleton<WorldManager>
     public void OnInit(Engine engine)
     {
         this.engine = engine;
-        engine.OnUpdateAction += OnUpdate;
-        engine.OnFixedUpdateAction += OnFixedUpdate;
-        engine.OnLateUpdateAction += OnLateUpdate;
-        engine.OnQuitAction += OnClear;
+        engine.AddUpdateAction(OnUpdate);
+        engine.AddFixedUpdateAction(OnFixedUpdate);
+        engine.AddLateUpdateAction(OnLateUpdate);
+        engine.AddQuitAction(OnClear);
     }
 
     private void OnUpdate()
@@ -47,48 +50,34 @@ public class WorldManager : Singleton<WorldManager>
 
     private void OnClear()
     {
-        engine.OnUpdateAction -= OnUpdate;
-        engine.OnFixedUpdateAction -= OnFixedUpdate;
-        engine.OnLateUpdateAction -= OnLateUpdate;
-        engine.OnQuitAction -= OnClear;
+        engine.AddUpdateAction(OnUpdate);
+        engine.AddFixedUpdateAction(OnFixedUpdate);
+        engine.AddLateUpdateAction(OnLateUpdate);
+        engine.AddQuitAction(OnClear);
         engine.Quit();
         engine = null;
     }
 
-    // public void AddWorld<T>(WorldInfo info) where T : IWorld, new()
-    // {
-    //     if (null == GetWorld<T>())
-    //     {
-    //         IWorld e = new T();
-    //         IWorlds.Add(e);
-    //         IWorldDic.Add(typeof(T), e);
-    //         info.worldId = ++count;
-    //         e.OnInit(engine, info);
-    //     }
-    // }
-    
-    public void AddWorld<T>(WorldInfo info) where T : IWorld, new() {
-        var id = info.worldId;
-        if (worldDic.TryGetValue(id, out var target)) {
-            Debug.LogError($"重复创建世界[{info.ToString()}]");
+    public void AddWorld<T>(WorldInfo info) where T : IWorld, new()
+    {
+        var id = info.WorldId;
+        if (id == -1)
+        {
+            Debug.LogError($"世界管理器添加世界失败 原因：worldId 读取为 -1");
+            return;
+        }
+
+        if (worldDic.TryGetValue(id, out var target))
+        {
+            Debug.LogError($"重复创建世界[{info.WorldSign}]");
             return;
         }
 
         IWorld e = new T();
         IWorlds.Add(e);
         worldDic.Add(id, e);
-        e.OnInit(engine, info);
+        e.OnInit(info);
     }
-
-    // private T GetWorld<T>()
-    // {
-    //     if (IWorldDic.TryGetValue(typeof(T), out IWorld target))
-    //     {
-    //         return (T) target;
-    //     }
-    //
-    //     return default;
-    // }
 
     private T GetWorld<T>(long id)
     {
@@ -99,7 +88,7 @@ public class WorldManager : Singleton<WorldManager>
 
         return default;
     }
-    
+
     private void RemoveWorld<T>() where T : IWorld, new()
     {
         var index = FindWorldIndex<T>();

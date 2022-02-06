@@ -1,4 +1,0 @@
-string	string
-id	configSign
-唯一标识    配置标识
-1	世界1

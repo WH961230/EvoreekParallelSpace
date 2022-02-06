@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-public  class GameConfig : IConfig{
+public class SceneConfig : IConfig
+{
     public readonly string id;
-    public readonly string configSign;
-    public readonly string worldSign;
+    public readonly string worldId;
+    public readonly string sceneSign;
 
-    public GameConfig(string input) {
+    public SceneConfig(string input)
+    {
         var tables = input.Split('\t');
         id = tables[0];
-        configSign = tables[1];
-        worldSign = tables[2];
+        worldId = tables[1];
+        sceneSign = tables[2];
     }
-
+    
     private static Dictionary<string, string> rawDatas;
     private static Dictionary<string, GameConfig> configs;
-
+    
     //读取配置文件内容 存入 rawDatas 
     public static void OnInit()
     {
@@ -35,7 +37,7 @@ public  class GameConfig : IConfig{
         }
     }
 
-    public static GameConfig Get(string id) {
+    public static SceneConfig Get(string id) {
         if (string.IsNullOrEmpty(id)) {
             return null;
         }
@@ -48,6 +50,12 @@ public  class GameConfig : IConfig{
             return null;
         }
 
-        return new GameConfig(rawDatas[id]);
+        SceneConfig config = null;
+        if (rawDatas.ContainsKey(id))
+        {
+            config = new SceneConfig(rawDatas[id]);
+        }
+
+        return config;
     }
 }

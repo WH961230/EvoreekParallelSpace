@@ -13,7 +13,7 @@ public class MyControl : IControlBase {
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
     public virtual void OnInit(MySystem system) {
-        ComponentManagerLab.Instance.OnInit(this);
+        ComponentManager.Instance.OnInit(this);
     }
 
     public virtual void OnUpdate() {

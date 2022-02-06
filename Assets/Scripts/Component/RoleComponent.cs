@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class RoleComponent : MyComponent {
+public class RoleComponent : MyComponent
+{
     public override void OnUpdate() {
         base.OnUpdate();
         if (Input.GetKey(KeyCode.A))

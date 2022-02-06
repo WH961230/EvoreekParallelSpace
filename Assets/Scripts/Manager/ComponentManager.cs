@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine.UIElements;
 
+//组件管理：组件是独立于控制器存在的
 public class ComponentManager : Singleton<ComponentManager> {
     private MyControl control;
-    private List<MyComponent> components = new List<MyComponent>();
-    private Dictionary<Type, MyComponent> componentDic = new Dictionary<Type, MyComponent>();
+    private Dictionary<long, List<MyComponent>> componentDic = new Dictionary<long, List<MyComponent>>();
 
     public void OnInit(MyControl control) {
         this.control = control;
@@ -14,23 +14,35 @@ public class ComponentManager : Singleton<ComponentManager> {
     }
 
     private void OnUpdate() {
-        int count = components.Count;
-        for (int i = 0 ; i < count ; i++) {
-            components[i].OnUpdate();
+        var keys = componentDic.Keys;
+        foreach (var key in keys) {
+            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
+                foreach (var l in list) {
+                    l.OnUpdate();
+                }
+            }
         }
     }
 
     private void OnFixedUpdate() {
-        int count = components.Count;
-        for (int i = 0 ; i < count ; i++) {
-            components[i].OnFixedUpdate();
+        var keys = componentDic.Keys;
+        foreach (var key in keys) {
+            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
+                foreach (var l in list) {
+                    l.OnFixedUpdate();
+                }
+            }
         }
     }
 
     private void OnLateUpdate() {
-        int count = components.Count;
-        for (int i = 0 ; i < count ; i++) {
-            components[i].OnLateUpdate();
+        var keys = componentDic.Keys;
+        foreach (var key in keys) {
+            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
+                foreach (var l in list) {
+                    l.OnLateUpdate();
+                }
+            }
         }
     }
 
@@ -38,42 +50,49 @@ public class ComponentManager : Singleton<ComponentManager> {
         control.OnUpdateAction -= OnUpdate;
         control.OnFixedUpdateAction -= OnFixedUpdate;
         control.OnLateUpdateAction -= OnLateUpdate;
+        componentDic = null;
     }
 
-    public void AddComponent<T>(long id) where T : MyComponent, new() {
-        // if (null == GetComponent<T>()) {
-        //     MyComponent e = new T();
-        //     components.Add(e);
-        //     componentDic.Add(typeof(T), e);
-        //     e.OnInit<T>(control, id);
-        // }
-    }
-
-    private T GetComponent<T>() where T : MyComponent, new() {
-        if (componentDic.TryGetValue(typeof(T), out MyComponent target)) {
-            return (T)target;
+    public void AddComponent<T>(long id) where T : MyComponent, new()
+    {
+        if (!HasComponentValue<T>(id))
+        {
+            componentDic.Add(id, new List<MyComponent>());
+            return;
         }
 
-        return default;
-    }
-
-    public void RemoveComponent<T>() where T : MyComponent, new() {
-        var index = FindComponentIndex<T>();
-        if (index >= 0) {
-            MyComponent e = components[index];
-            components.RemoveAt(index);
-            componentDic.Remove(e.GetType());
-            e.OnClear();
+        if (componentDic.TryGetValue(id, out var comList))
+        {
+            
         }
     }
 
-    private int FindComponentIndex<T>() where T : MyComponent, new() {
-        for (var i = 0 ; i < componentDic.Count ; ++i) {
-            if (components[i].GetType() == typeof(T)) {
-                return i;
+    private bool HasComponentValue<T>(long id) {
+        if (componentDic.TryGetValue(id, out var tempTarget)) {
+            foreach (var t in tempTarget) {
+                if (t.GetType() == typeof(T)) {
+                    return true;
+                }
             }
         }
 
-        return -1;
+        return false;
+    }
+
+    public void RemoveComponent<T>(long id) where T : MyComponent, new() {
+        if (componentDic.TryGetValue(id, out List<MyComponent> tempList)) {
+            for (int j = 0 ; j < tempList.Count ; j++) {
+                if (tempList[j].GetType() == typeof(T)) {
+                    tempList[j].OnClear();
+                    tempList.RemoveAt(j);
+                }
+            }
+
+            if (tempList.Count == 0) {
+                componentDic.Remove(id);
+            } else {
+                componentDic[id] = tempList;    
+            }
+        }
     }
 }
