@@ -46,9 +46,10 @@ public class WeaponControl : MyControl
             return;
         }
 
-        var tempObj = Supplier.Instance.CreatGameObj(myType);
+        var supplier = mySystem.MyWorld.supplier;
+        var tempObj = supplier.CreatGameObj(myType);
         ++indexId;
-        var component = Supplier.Instance.AddComponent<WeaponComponent>(tempObj, indexId);
+        var component = supplier.BundleComponent<WeaponComponent>(this, tempObj, indexId);
         var tempData = new WeaponData()
         {
             weaponId = indexId,

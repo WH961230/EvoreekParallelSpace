@@ -9,7 +9,7 @@ public enum SUPPLIERTYPE {
     Engine = 2,
 }
 
-public class Supplier : Singleton<Supplier>
+public class Supplier
 {
     private readonly Dictionary<SUPPLIERTYPE, string> pathDic = new Dictionary<SUPPLIERTYPE, string>();
     private readonly Dictionary<SUPPLIERTYPE,Transform> layerDic = new Dictionary<SUPPLIERTYPE, Transform>() {
@@ -17,7 +17,7 @@ public class Supplier : Singleton<Supplier>
         {SUPPLIERTYPE.Weapon, new GameObject("WeaponLayer").transform},
     };
 
-    public void OnInit()
+    public Supplier(World world)
     {
         var items = ItemConfig.GetAll();
         for (int i = 0; i < items.Count; i++)
@@ -27,7 +27,6 @@ public class Supplier : Singleton<Supplier>
         }
     }
 
-    // 获取层级 Transform
     private Transform GetLayer(SUPPLIERTYPE type) {
         if (layerDic.TryGetValue(type, out var target)) {
             return target;
@@ -36,7 +35,6 @@ public class Supplier : Singleton<Supplier>
         return null;
     }
 
-    // 创建游戏物体
     public GameObject CreatGameObj(SUPPLIERTYPE type) {
         if (pathDic.TryGetValue(type, out string path)) {
             var parent = GetLayer(type);//层
@@ -48,14 +46,13 @@ public class Supplier : Singleton<Supplier>
         return null;
     }
 
-    // 添加组件
-    public T AddComponent<T>(GameObject go, long id) where T : MyComponent, new() {
+    public T BundleComponent<T>(MyControl control, GameObject go, long comId) where T : MyComponent, new() {
         if (null == go) {
             return null;
         }
 
         var component = go.AddComponent<T>();
-        component.OnInit<T>(id);
+        component.OnInit<T>(control, comId);
         return component;
     }
 }

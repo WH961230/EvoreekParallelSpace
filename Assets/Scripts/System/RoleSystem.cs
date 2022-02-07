@@ -2,7 +2,7 @@
     public override void OnInit()
     {
         base.OnInit();
-        ControlManager.Instance.AddControl<RoleControl>();
+        manager.AddControl<RoleControl>();
     }
 
     public override void OnUpdate()

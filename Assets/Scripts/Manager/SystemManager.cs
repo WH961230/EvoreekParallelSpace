@@ -7,7 +7,7 @@ public class SystemManager
     private List<MySystem> system = new List<MySystem>();
     private Dictionary<Type, MySystem> systemTypeDic = new Dictionary<Type, MySystem>();
 
-    public void OnInit(World world)
+    public SystemManager(World world)
     {
         this.world = world;
         world.AddUpdateAction(OnUpdate);
@@ -58,7 +58,7 @@ public class SystemManager
             MySystem e = new T();
             system.Add(e);
             systemTypeDic.Add(typeof(T), e);
-            e.OnInit();
+            e.OnInit(world);
         }
     }
 

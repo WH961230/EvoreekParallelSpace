@@ -1,7 +1,7 @@
 ﻿using System;
 
 interface ISystemBase {
-    void OnInit();
+    void OnInit(World world);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
@@ -12,9 +12,19 @@ public class MySystem : ISystemBase {
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
+    protected ControlManager manager;
 
-    public virtual void OnInit() {
-        ControlManager.Instance.OnInit(this);
+    private World myWorld;
+    public World MyWorld {
+        get {
+            return myWorld;
+        }
+    }
+
+    public virtual void OnInit(World world) {
+        this.myWorld = world;
+        manager = new ControlManager();
+        manager.OnInit(this);
     }
 
     public virtual void OnUpdate() {
@@ -30,6 +40,7 @@ public class MySystem : ISystemBase {
     }
 
     public virtual void OnClear() {
-        ControlManager.Instance.OnClear();
+        manager.OnClear();
+        manager = null;
     }
 }

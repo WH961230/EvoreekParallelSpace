@@ -2,7 +2,7 @@
     private WeaponControl control;
     public override void OnInit() {
         base.OnInit();
-        ControlManager.Instance.AddControl<WeaponControl>();
+        manager.AddControl<WeaponControl>();
     }
 
     public override void OnUpdate() {

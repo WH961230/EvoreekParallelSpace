@@ -2,20 +2,20 @@
 using UnityEngine.Serialization;
 
 interface IComponentBase {
-    void OnInit<T>(long id) where T : MyComponent, new();
+    void OnInit<T>(MyControl control, long comId) where T : MyComponent, new();
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public class MyComponent : MonoBehaviour, IComponentBase
-{
+public class MyComponent : MonoBehaviour, IComponentBase {
+    private MyControl myControl;
     [SerializeField] public long ComponentId;
-    public void OnInit<T>(long id) where T : MyComponent, new()
-    {
-        ComponentId = id;
-        ComponentManager.Instance.AddComponent<T>(id);
+    public void OnInit<T>(MyControl control, long comId) where T : MyComponent, new() {
+        myControl = control;
+        ComponentId = comId;
+        myControl.manager.AddComponent<T>(comId, this);
     }
 
     public virtual void OnUpdate() {

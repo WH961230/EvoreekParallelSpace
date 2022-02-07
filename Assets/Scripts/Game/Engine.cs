@@ -9,7 +9,6 @@ public class Engine : MonoBehaviour
     private Action OnQuitAction;
 
     [SerializeField] private string InitId = "";
-    [SerializeField] private bool TestMode = false;
 
     public void AddUpdateAction(Action action) { OnUpdateAction += action; }
     public void AddFixedUpdateAction(Action action) { OnFixedUpdateAction += action; }
@@ -23,14 +22,8 @@ public class Engine : MonoBehaviour
 
     void Start()
     {
-        if (TestMode)
-        {
-            TestAction();
-            return;
-        }
         //初始化管理器
         ConfigManager.Instance.OnInit();
-        Supplier.Instance.OnInit();
         WorldManager.Instance.OnInit(this);
         //获取配置
         var id = InitId;
@@ -55,36 +48,18 @@ public class Engine : MonoBehaviour
         WorldManager.Instance.AddWorld<World>(worldInfo);
     }
 
-    void TestAction()
-    {
-        var tempGameObj = Supplier.Instance.CreatGameObj(SUPPLIERTYPE.Role);
-        Supplier.Instance.AddComponent<RoleComponent>(tempGameObj, 1);
-    }
-
     void Update()
     {
-        if (TestMode)
-        {
-            return;
-        }
         OnUpdateAction?.Invoke();
     }
 
     private void FixedUpdate()
     {
-        if (TestMode)
-        {
-            return;
-        }
         OnFixedUpdateAction?.Invoke();
     }
 
     private void LateUpdate()
     {
-        if (TestMode)
-        {
-            return;
-        }
         OnLateUpdateAction?.Invoke();
     }
 
