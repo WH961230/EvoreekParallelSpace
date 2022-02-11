@@ -5,7 +5,7 @@ public class RoleControl : MyControl {
     private SUPPLIERTYPE myType;
     public RoleData myDatas;
     private RoleCombiner myCombiner;
-    public override void OnInit(MySystem system)
+    public override void OnInit(AbsSystem system)
     {
         base.OnInit(system);
         mySystem = (RoleSystem)system;

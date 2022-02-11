@@ -34,3 +34,25 @@ GameEngine => System => Data => Manager / ScriptableObject / Controllers => [nam
 规范：
 
 消息类方法：Mgr[name]
+
+易
+
+表象世界是确定的唯一的（通过视觉构造这个确定的）
+虚象世界是不确定的但是有唯一的道（元抽象类）
+可以控制和改变自己
+
+道法术器势
+
+IWay 道
+ILogic 法
+IMethod 术
+ITool 器
+
+势（不可具象）
+
+IYing IYang
+
+
+文字合并游戏
+
+开始是简单的阴阳元素 不停合并

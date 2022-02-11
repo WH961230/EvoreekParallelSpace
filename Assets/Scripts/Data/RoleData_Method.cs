@@ -10,7 +10,7 @@
     public bool TryGetRoleInfo(long roleId, out RoleInfo roleInfo) {
         for (var i = 0; i < AllRoleInfos.Count; i++) {
             var info = AllRoleInfos[i];
-            if (roleId == info.roleId) {
+            if (roleId == info.RoleId) {
                 roleInfo = info;
                 return true;
             }

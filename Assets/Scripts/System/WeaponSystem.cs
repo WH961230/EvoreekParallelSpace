@@ -1,7 +1,7 @@
-﻿public class WeaponSystem : MySystem {
+﻿public class WeaponSystem : AbsSystem {
     private WeaponControl control;
-    public override void OnInit() {
-        base.OnInit();
+    public override void OnInit(AbsWorld absWorld) {
+        base.OnInit(absWorld);
         manager.AddControl<WeaponControl>();
     }
 

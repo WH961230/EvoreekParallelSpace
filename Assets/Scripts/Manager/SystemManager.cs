@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class SystemManager
+public class SystemManager : Singleton<SystemManager>
 {
-    private World world;
-    private List<MySystem> system = new List<MySystem>();
-    private Dictionary<Type, MySystem> systemTypeDic = new Dictionary<Type, MySystem>();
+    private AbsWorld absWorld;
+    private List<AbsSystem> system = new List<AbsSystem>();
+    private Dictionary<Type, AbsSystem> systemTypeDic = new Dictionary<Type, AbsSystem>();
 
-    public SystemManager(World world)
+    public void OnInit(AbsWorld absWorld)
     {
-        this.world = world;
-        world.AddUpdateAction(OnUpdate);
-        world.AddFixedUpdateAction(OnFixedUpdate);
-        world.AddLateUpdateAction(OnLateUpdate);
-        world.AddQuitAction(OnClear);
+        this.absWorld = absWorld;
+        absWorld.AddUpdateAction(OnUpdate);
+        absWorld.AddFixedUpdateAction(OnFixedUpdate);
+        absWorld.AddLateUpdateAction(OnLateUpdate);
+        absWorld.AddQuitAction(OnClear);
     }
 
     private void OnUpdate()
@@ -45,26 +45,26 @@ public class SystemManager
 
     public void OnClear()
     {
-        world.RemoveUpdateAction(OnUpdate);
-        world.RemoveFixedUpdateAction(OnFixedUpdate);
-        world.RemoveLateUpdateAction(OnLateUpdate);
-        world.RemoveQuitAction(OnClear);
+        absWorld.RemoveUpdateAction(OnUpdate);
+        absWorld.RemoveFixedUpdateAction(OnFixedUpdate);
+        absWorld.RemoveLateUpdateAction(OnLateUpdate);
+        absWorld.RemoveQuitAction(OnClear);
     }
 
-    public void AddSystem<T>() where T : MySystem, new()
+    public void AddSystem<T>() where T : AbsSystem, new()
     {
         if (null == GetSystem<T>())
         {
-            MySystem e = new T();
+            AbsSystem e = new T();
             system.Add(e);
             systemTypeDic.Add(typeof(T), e);
-            e.OnInit(world);
+            e.OnInit(absWorld);
         }
     }
 
-    public T GetSystem<T>() where T : MySystem, new()
+    public T GetSystem<T>() where T : AbsSystem, new()
     {
-        if (systemTypeDic.TryGetValue(typeof(T), out MySystem target))
+        if (systemTypeDic.TryGetValue(typeof(T), out AbsSystem target))
         {
             return (T) target;
         }
@@ -72,19 +72,19 @@ public class SystemManager
         return default;
     }
 
-    public void RemoveSystem<T>() where T : MySystem, new()
+    public void RemoveSystem<T>() where T : AbsSystem, new()
     {
         var index = FindSystemIndex<T>();
         if (index >= 0)
         {
-            MySystem e = system[index];
+            AbsSystem e = system[index];
             system.RemoveAt(index);
             systemTypeDic.Remove(e.GetType());
             e.OnClear();
         }
     }
 
-    private int FindSystemIndex<T>() where T : MySystem, new()
+    private int FindSystemIndex<T>() where T : AbsSystem, new()
     {
         for (var i = 0; i < systemTypeDic.Count; ++i)
         {

@@ -7,7 +7,7 @@ public class WeaponControl : MyControl
     private List<WeaponData> myDatas = new List<WeaponData>();
     private SUPPLIERTYPE myType;
     private long indexId = -1;
-    public override void OnInit(MySystem system) {
+    public override void OnInit(AbsSystem system) {
         base.OnInit(system);
         mySystem = (WeaponSystem)system;
         myType = SUPPLIERTYPE.Weapon;
@@ -46,7 +46,7 @@ public class WeaponControl : MyControl
             return;
         }
 
-        var supplier = mySystem.MyWorld.supplier;
+        var supplier = mySystem.MyAbsWorld.supplier;
         var tempObj = supplier.CreatGameObj(myType);
         ++indexId;
         var component = supplier.BundleComponent<WeaponComponent>(this, tempObj, indexId);

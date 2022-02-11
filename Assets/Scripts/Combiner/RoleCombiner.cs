@@ -13,7 +13,7 @@ public class RoleCombiner {
             return false;
         } else {
             //get creator
-            var supplier = myControl.World.supplier;
+            var supplier = myControl.AbsWorld.supplier;
             //create obj by type
             var obj = supplier.CreatGameObj(SUPPLIERTYPE.Role);
             //info prepare

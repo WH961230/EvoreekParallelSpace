@@ -1,28 +1,28 @@
 ﻿using System;
 
 interface ISystemBase {
-    void OnInit(World world);
+    void OnInit(AbsWorld absWorld);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
     void OnClear();
 }
 
-public class MySystem : ISystemBase {
+public abstract class AbsSystem : ISystemBase {
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
     protected ControlManager manager;
 
-    private World myWorld;
-    public World MyWorld {
+    private AbsWorld myAbsWorld;
+    public AbsWorld MyAbsWorld {
         get {
-            return myWorld;
+            return myAbsWorld;
         }
     }
 
-    public virtual void OnInit(World world) {
-        this.myWorld = world;
+    public virtual void OnInit(AbsWorld absWorld) {
+        this.myAbsWorld = absWorld;
         manager = new ControlManager();
         manager.OnInit(this);
     }

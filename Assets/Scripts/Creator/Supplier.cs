@@ -17,7 +17,7 @@ public class Supplier
         {SUPPLIERTYPE.Weapon, new GameObject("WeaponLayer").transform},
     };
 
-    public Supplier(World world)
+    public Supplier(AbsWorld absWorld)
     {
         var items = ItemConfig.GetAll();
         for (int i = 0; i < items.Count; i++)

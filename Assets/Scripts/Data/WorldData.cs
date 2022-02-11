@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
 public class WorldData {
-    public WorldInfo worldInfo;//基础配置
-    public RunInfo worldRunInfo;//运行数据
+    public WorldInfo worldInfo; //基础配置
+    public RunInfo worldRunInfo; //运行数据
+
     public WorldData(WorldInfo info) {
         worldInfo = info;
     }
@@ -13,15 +14,12 @@ public struct RunInfo {
 }
 
 public struct WorldInfo {
-    public GameConfig gameConfig;//游戏配置
-    public SceneConfig sceneConfig;//场景配置
+    public GameConfig gameConfig; //游戏配置
+    public SceneConfig sceneConfig; //场景配置
 
-    public string WorldSign
-    {
-        get
-        {
-            if (null == gameConfig)
-            {
+    public string WorldSign {
+        get {
+            if (null == gameConfig) {
                 return "";
             }
 
@@ -29,12 +27,9 @@ public struct WorldInfo {
         }
     }
 
-    public long WorldId
-    {
-        get
-        {
-            if (null == gameConfig)
-            {
+    public long WorldId {
+        get {
+            if (null == gameConfig) {
                 return -1;
             }
 

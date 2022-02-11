@@ -1,7 +1,7 @@
-﻿public class RoleSystem : MySystem {
-    public override void OnInit()
+﻿public class RoleSystem : AbsSystem {
+    public override void OnInit(AbsWorld absWorld)
     {
-        base.OnInit();
+        base.OnInit(absWorld);
         manager.AddControl<RoleControl>();
     }
 

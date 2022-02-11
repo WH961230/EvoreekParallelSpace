@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 
 public class ControlManager {
-    private World myWorld;
-    private MySystem system;
+    private AbsWorld myAbsWorld;
+    private AbsSystem system;
     private List<IControlBase> controls = new List<IControlBase>();
     private Dictionary<Type, IControlBase> controlDic = new Dictionary<Type, IControlBase>();
 
-    public void OnInit(MySystem system) {
+    public void OnInit(AbsSystem system) {
         this.system = system;
-        this.myWorld = system.MyWorld;
+        this.myAbsWorld = system.MyAbsWorld;
         system.OnUpdateAction += OnUpdate;
         system.OnFixedUpdateAction += OnFixedUpdate;
         system.OnLateUpdateAction += OnLateUpdate;

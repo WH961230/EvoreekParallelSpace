@@ -2,7 +2,7 @@
 using UnityEngine;
 
 public interface IControlBase {
-    void OnInit(MySystem system);
+    void OnInit(AbsSystem system);
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
@@ -15,13 +15,13 @@ public class MyControl : IControlBase {
     public Action OnLateUpdateAction;
     public ComponentManager manager;
 
-    private World world;
-    public World World {
-        get { return world; }
+    private AbsWorld absWorld;
+    public AbsWorld AbsWorld {
+        get { return absWorld; }
     }
 
-    public virtual void OnInit(MySystem system) {
-        this.world = system.MyWorld;
+    public virtual void OnInit(AbsSystem system) {
+        this.absWorld = system.MyAbsWorld;
         manager = new ComponentManager();
         manager.OnInit(this);
     }
