@@ -6,8 +6,6 @@ public partial class RoleData {
     public List<RoleInfo> AllRoleInfos {
         get { return allRoleInfos; }
     }
-    
-    private long pushId = -1;
 }
 
 public class RoleInfo {
@@ -16,12 +14,12 @@ public class RoleInfo {
         get => roleId;
     }
 
-    private long componentId;
-    public long ComponentId {
+    private int componentId;
+    public int ComponentId {
         get => componentId;
     }
 
-    public RoleInfo(long roleId, long componentId) {
+    public RoleInfo(long roleId, int componentId) {
         this.roleId = roleId;
         this.componentId = componentId;
     }

@@ -9,7 +9,7 @@ public interface IControlBase {
     void OnClear();
 }
 
-public class MyControl : IControlBase {
+public abstract class AbsControl : IControlBase {
     public Action OnUpdateAction; 
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;

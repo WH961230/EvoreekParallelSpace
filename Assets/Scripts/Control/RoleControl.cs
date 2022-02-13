@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RoleControl : MyControl {
+public class RoleControl : AbsControl {
     private RoleSystem mySystem;
     private SUPPLIERTYPE myType;
     public RoleData myDatas;
@@ -19,7 +19,10 @@ public class RoleControl : MyControl {
         base.OnUpdate();
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            myCombiner.CombineRole();
+            if (myCombiner.CombineRole(out long id))
+            {
+                Debug.LogError(manager.GetComponent<RoleComponent>(id).ComponentId);
+            }
         }
     }
 

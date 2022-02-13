@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
-using UnityEngine.UIElements;
 
 //组件管理：组件是独立于控制器存在的
 public class ComponentManager {
-    private MyControl control;
+    private AbsControl control;
     //主体id 和组件集合
-    private Dictionary<long, List<MyComponent>> componentDic = new Dictionary<long, List<MyComponent>>();
+    private Dictionary<long, List<AbsComponent>> componentDic = new Dictionary<long, List<AbsComponent>>();
 
-    public void OnInit(MyControl control) {
+    public void OnInit(AbsControl control) {
         this.control = control;
         control.OnUpdateAction += OnUpdate;
         control.OnFixedUpdateAction += OnFixedUpdate;
@@ -17,9 +16,12 @@ public class ComponentManager {
     private void OnUpdate() {
         var keys = componentDic.Keys;
         foreach (var key in keys) {
-            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
+            if (componentDic.TryGetValue(key, out List<AbsComponent> list)) {
                 foreach (var l in list) {
-                    l.OnUpdate();
+                    if (l.IsActive)
+                    {
+                        l.OnUpdate();
+                    }
                 }
             }
         }
@@ -28,9 +30,12 @@ public class ComponentManager {
     private void OnFixedUpdate() {
         var keys = componentDic.Keys;
         foreach (var key in keys) {
-            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
+            if (componentDic.TryGetValue(key, out List<AbsComponent> list)) {
                 foreach (var l in list) {
-                    l.OnFixedUpdate();
+                    if (l.IsActive)
+                    {
+                        l.OnFixedUpdate();
+                    }
                 }
             }
         }
@@ -39,9 +44,12 @@ public class ComponentManager {
     private void OnLateUpdate() {
         var keys = componentDic.Keys;
         foreach (var key in keys) {
-            if (componentDic.TryGetValue(key, out List<MyComponent> list)) {
+            if (componentDic.TryGetValue(key, out List<AbsComponent> list)) {
                 foreach (var l in list) {
-                    l.OnLateUpdate();
+                    if (l.IsActive)
+                    {
+                        l.OnLateUpdate();
+                    }
                 }
             }
         }
@@ -55,14 +63,12 @@ public class ComponentManager {
     }
 
     //添加组件 必要参数：组件（内含组件id） 主体id
-    public void AddComponent<T>(long id, MyComponent component) where T : MyComponent, new() {
-        var comList = new List<MyComponent>();
+    public void AddComponent<T>(long id, AbsComponent component) where T : AbsComponent, new() {
+        var comList = new List<AbsComponent>();
         comList.Add(component);
-        //没有主体id
         if (!HasKey(id)) {
             componentDic.Add(id, comList);
         }
-        //有主体id 没有对应id的组件
         if (!HasComponent(id, component.ComponentId)) {
             componentDic.TryGetValue(id, out var list);
             if (null != list && list.Count > 0) {
@@ -72,6 +78,23 @@ public class ComponentManager {
                 componentDic.Add(id, comList);
             }
         }
+    }
+
+    public T GetComponent<T>(long id) where T : AbsComponent, new()
+    {
+        if (componentDic.TryGetValue(id, out var outList))
+        {
+            for (int i = 0; i < outList.Count; i++)
+            {
+                var temp = outList[i];
+                if (temp is T)
+                {
+                    return (T)temp;
+                }
+            }
+        }
+
+        return null;
     }
 
     private bool HasKey(long id) {
@@ -96,8 +119,8 @@ public class ComponentManager {
         return false;
     }
 
-    public void RemoveComponent<T>(long id) where T : MyComponent, new() {
-        if (componentDic.TryGetValue(id, out List<MyComponent> tempList)) {
+    public void RemoveComponent<T>(long id) where T : AbsComponent, new() {
+        if (componentDic.TryGetValue(id, out List<AbsComponent> tempList)) {
             for (int j = 0 ; j < tempList.Count ; j++) {
                 if (tempList[j].GetType() == typeof(T)) {
                     tempList[j].OnClear();

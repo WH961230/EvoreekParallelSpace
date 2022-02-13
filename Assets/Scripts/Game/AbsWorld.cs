@@ -23,14 +23,14 @@ public abstract class AbsWorld : IWorld {
 
     //全局创建器
     public Supplier supplier;
-
+    public SystemManager systemManager;
     public virtual void OnInit(WorldInfo info) {
         //创建器
         supplier = new Supplier(this);
 
         //世界系统管理器 - 通过SO配置决定添加哪些系统;
-        SystemManager.Instance.AddSystem<RoleSystem>();
-        SystemManager.Instance.AddSystem<WeaponSystem>();
+        systemManager = new SystemManager();
+        systemManager.OnInit(this);
 
         //游戏配置
         gameConfig = info.gameConfig;

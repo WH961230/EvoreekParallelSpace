@@ -1,8 +1,4 @@
 ﻿public partial class RoleData {
-    public long PushId() {
-        return ++pushId;
-    }
-
     public void AddRoleInfo(RoleInfo info) {
         AllRoleInfos?.Add(info);
     }

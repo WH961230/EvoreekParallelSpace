@@ -46,13 +46,13 @@ public class Supplier
         return null;
     }
 
-    public T BundleComponent<T>(MyControl control, GameObject go, long comId) where T : MyComponent, new() {
+    public T BundleComponent<T>(AbsControl control, GameObject go, long mainId) where T : AbsComponent, new() {//mainId 主体id
         if (null == go) {
             return null;
         }
 
         var component = go.AddComponent<T>();
-        component.OnInit<T>(control, comId);
+        component.OnInit<T>(control, mainId);
         return component;
     }
 }

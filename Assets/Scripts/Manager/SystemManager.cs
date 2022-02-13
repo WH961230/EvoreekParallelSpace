@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class SystemManager : Singleton<SystemManager>
+public class SystemManager
 {
     private AbsWorld absWorld;
     private List<AbsSystem> system = new List<AbsSystem>();

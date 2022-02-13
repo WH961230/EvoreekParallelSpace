@@ -1,28 +1,27 @@
 ﻿using UnityEngine;
 
+//角色绑定
 public class RoleCombiner {
     private RoleControl myControl;
-    private long pushId = -1;
+    private int pushId = -1;
     public RoleCombiner(RoleControl control) {
         myControl = control;
     }
 
-    public bool CombineRole() {
+    public bool CombineRole(out long outRoleId) {
         if (myControl.myDatas.TryGetRoleInfo(pushId + 1, out var roleInfo)) {
             Debug.LogError($"角色存在 重复创建 [Id：{roleInfo.RoleId}]");
+            outRoleId = 0;
             return false;
         } else {
-            //get creator
             var supplier = myControl.AbsWorld.supplier;
-            //create obj by type
             var obj = supplier.CreatGameObj(SUPPLIERTYPE.Role);
-            //info prepare
-            ++pushId;
-            var comId = supplier.BundleComponent<RoleComponent>(myControl, obj, pushId).ComponentId;
-            var tempRoleInfo = new RoleInfo(pushId, comId);
-            //add to datas
+            var roleId = ++pushId;
+            var comId = supplier.BundleComponent<RoleComponent>(myControl, obj, roleId).ComponentId;
+            var tempRoleInfo = new RoleInfo(roleId, comId);
             myControl.myDatas.AddRoleInfo(tempRoleInfo);
             PrintLog();
+            outRoleId = roleId;
             return true;
         }
     }
