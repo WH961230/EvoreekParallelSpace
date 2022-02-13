@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class RoleControl : AbsControl {
-    private RoleSystem mySystem;
+    public RoleSystem mySystem;
     private SUPPLIERTYPE myType;
     public RoleData myDatas;
     private RoleCombiner myCombiner;
@@ -19,9 +19,13 @@ public class RoleControl : AbsControl {
         base.OnUpdate();
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (myCombiner.CombineRole(out long id))
+            if (myCombiner.CombineRole(out long roleId))
             {
-                Debug.LogError(manager.GetComponent<RoleComponent>(id).ComponentId);
+                Debug.LogError(manager.GetComponent<RoleComponent>(roleId).ComponentId);
+                if (myCombiner.CombineWeapon(roleId, out long weaponId))
+                {
+                    
+                }
             }
         }
     }

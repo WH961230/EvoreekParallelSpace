@@ -12,7 +12,7 @@ public abstract class AbsSystem : ISystemBase {
     public Action OnUpdateAction;
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
-    protected ControlManager manager;
+    public ControlManager manager;
 
     private AbsWorld myAbsWorld;
     public AbsWorld MyAbsWorld {

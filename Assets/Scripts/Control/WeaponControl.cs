@@ -4,13 +4,21 @@ using UnityEngine;
 public class WeaponControl : AbsControl
 {
     private WeaponSystem mySystem;
-    private List<WeaponData> myDatas = new List<WeaponData>();
+    public WeaponData myDatas;
     private SUPPLIERTYPE myType;
+    public WeaponCombiner myCombiner;
     private long indexId = -1;
+
+    public long IndexId
+    {
+        get { return indexId; }
+    }
     public override void OnInit(AbsSystem system) {
         base.OnInit(system);
         mySystem = (WeaponSystem)system;
         myType = SUPPLIERTYPE.Weapon;
+        myDatas = new WeaponData();
+        myCombiner = new WeaponCombiner(this);
     }
 
     public override void OnUpdate()
@@ -18,7 +26,10 @@ public class WeaponControl : AbsControl
         base.OnUpdate();
         if (Input.GetKeyDown(KeyCode.W))
         {
-            CreateWeapon();
+            if (myCombiner.CombineWeapon(out long weaponId))
+            {
+                Debug.LogError($"创建武器 [id:{weaponId}]");
+            }
         }
     }
 
@@ -35,48 +46,5 @@ public class WeaponControl : AbsControl
     public override void OnClear()
     {
         base.OnClear();
-    }
-
-    private void CreateWeapon()
-    {
-        var data = GetWeaponDataById(indexId + 1);
-        if (null != data) {
-            Debug.LogError($"武器存在 重复创建 [Id：{data.weaponId}]");
-            return;
-        }
-
-        var supplier = mySystem.MyAbsWorld.supplier;
-        var tempObj = supplier.CreatGameObj(myType);
-        ++indexId;
-        var wId = indexId;
-        var component = supplier.BundleComponent<WeaponComponent>(this, tempObj, wId);
-        var tempData = new WeaponData() {
-            weaponId = wId,
-            WeaponComponent = component,
-        };
-
-        myDatas.Add(tempData);
-        var str = "";
-        foreach (var d in myDatas) {
-            str += $"当前角色 => weaponId:{d.weaponId} weaponComponent:{d.WeaponComponent.ComponentId} \n";
-        }
-        Debug.LogError(str);
-    }
-
-    private WeaponData GetWeaponDataById(long weaponId)
-    {
-        if (null != myDatas)
-        {
-            for (int i = 0; i < myDatas.Count; i++)
-            {
-                var data = myDatas[i];
-                if (weaponId == data.weaponId)
-                {
-                    return data;
-                }
-            }
-        }
-
-        return null;
     }
 }

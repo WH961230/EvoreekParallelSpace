@@ -51,7 +51,7 @@ public class ControlManager {
         }
     }
 
-    private T GetControl<T>() {
+    public T GetControl<T>() {
         if (controlDic.TryGetValue(typeof(T), out IControlBase target)) {
             return (T)target;
         }
