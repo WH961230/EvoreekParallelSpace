@@ -38,7 +38,7 @@ public class RoleCombiner {
         //找到角色id 绑定新武器
         if(myControl.myDatas.TryGetRoleInfo(roleId, out RoleInfo roleInfo))
         {
-            var weaponControl = myControl.mySystem.manager.GetControl<WeaponControl>();
+            var weaponControl = myControl.mySystem.MyAbsWorld.systemManager.GetSystem<WeaponSystem>().manager.GetControl<WeaponControl>();
             //绑定新武器 - 单纯绑定
             // if (weaponControl.myCombiner.CombineWeapon(out long tempWId))
             // {
