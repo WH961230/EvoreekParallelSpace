@@ -14,14 +14,14 @@ public abstract class AbsControl : IControlBase {
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
     public ComponentManager manager;
-
-    private AbsWorld absWorld;
-    public AbsWorld AbsWorld {
-        get { return absWorld; }
-    }
+    protected AbsWorld myWorld;
+    protected AbsSystem mySystem;
+    protected AbsData myDatas;
+    public SUPPLIERTYPE myType;
 
     public virtual void OnInit(AbsSystem system) {
-        this.absWorld = system.MyAbsWorld;
+        myWorld = system.MyAbsWorld;
+        mySystem = system;
         manager = new ComponentManager();
         manager.OnInit(this);
     }

@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 interface IComponentBase {
-    void OnInit<T>(AbsControl control, long id) where T : AbsComponent, new();
+    void OnInit<T>(AbsControl control, int id) where T : AbsComponent, new();
     void OnUpdate();
     void OnFixedUpdate();
     void OnLateUpdate();
@@ -11,12 +10,12 @@ interface IComponentBase {
 
 public abstract class AbsComponent : MonoBehaviour, IComponentBase {
     private AbsControl absControl;
-    [SerializeField] public int ComponentId;
+    [SerializeField] public int InstanceId;
     [SerializeField] public bool IsActive;
-    //组件的绑定需要参数 相邻高级 组件id可以获取instance 主体id
-    public virtual void OnInit<T>(AbsControl control, long id) where T : AbsComponent, new() {
+    //组件的绑定需要参数 相邻高级 组件id可以获取instance 主体idork
+    public virtual void OnInit<T>(AbsControl control, int id) where T : AbsComponent, new() {
         absControl = control;
-        ComponentId = GetInstanceID();
+        InstanceId = id;
         IsActive = true;
         absControl.manager.AddComponent<T>(id, this);
     }

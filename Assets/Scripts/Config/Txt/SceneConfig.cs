@@ -7,6 +7,7 @@ public class SceneConfig : IConfig
     public readonly string id;
     public readonly string worldId;
     public readonly string sceneSign;
+    public readonly int loadType;
 
     public SceneConfig(string input)
     {
@@ -14,6 +15,7 @@ public class SceneConfig : IConfig
         id = tables[0];
         worldId = tables[1];
         sceneSign = tables[2];
+        loadType = int.Parse(tables[3]);
     }
     
     private static Dictionary<string, string> rawDatas;

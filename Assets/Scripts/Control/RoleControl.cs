@@ -1,42 +1,25 @@
 using UnityEngine;
 
 public class RoleControl : AbsControl {
-    public RoleSystem mySystem;
-    private SUPPLIERTYPE myType;
-    public RoleData myDatas;
-    private RoleCombiner myCombiner;
-    public override void OnInit(AbsSystem system)
-    {
-        base.OnInit(system);
-        mySystem = (RoleSystem)system;
-        myType = SUPPLIERTYPE.Role;
+    public override void OnInit(AbsSystem system) {
+        base.OnInit((RoleSystem)system);
         myDatas = new RoleData();
-        myCombiner = new RoleCombiner(this);
+        myDatas.OnInit(this);
+        myType = SUPPLIERTYPE.Role;
     }
 
-    public override void OnUpdate()
-    {
+    public override void OnUpdate() {
         base.OnUpdate();
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (myCombiner.CombineRole(out long roleId))
-            {
-                Debug.LogError(manager.GetComponent<RoleComponent>(roleId).ComponentId);
-                if (myCombiner.CombineWeapon(roleId, out long weaponId))
-                {
-                    
-                }
-            }
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            myDatas.Create("SM_Chr_Bombsuit_Male_01");;
         }
     }
 
-    public override void OnFixedUpdate()
-    {
+    public override void OnFixedUpdate() {
         base.OnFixedUpdate();
     }
 
-    public override void OnLateUpdate()
-    {
+    public override void OnLateUpdate() {
         base.OnLateUpdate();
     }
 

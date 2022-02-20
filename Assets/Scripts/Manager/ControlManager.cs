@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class ControlManager {
     private AbsWorld myAbsWorld;
-    private AbsSystem system;
+    private AbsSystem mySystem;
     private List<IControlBase> controls = new List<IControlBase>();
     private Dictionary<Type, IControlBase> controlDic = new Dictionary<Type, IControlBase>();
 
     public void OnInit(AbsSystem system) {
-        this.system = system;
+        this.mySystem = system;
         this.myAbsWorld = system.MyAbsWorld;
         system.OnUpdateAction += OnUpdate;
         system.OnFixedUpdateAction += OnFixedUpdate;
@@ -37,9 +37,9 @@ public class ControlManager {
     }
 
     public void OnClear() {
-        system.OnUpdateAction -= OnUpdate;
-        system.OnFixedUpdateAction -= OnFixedUpdate;
-        system.OnLateUpdateAction -= OnLateUpdate;
+        mySystem.OnUpdateAction -= OnUpdate;
+        mySystem.OnFixedUpdateAction -= OnFixedUpdate;
+        mySystem.OnLateUpdateAction -= OnLateUpdate;
     }
 
     public void AddControl<T>() where T : IControlBase, new() {
@@ -47,7 +47,7 @@ public class ControlManager {
             IControlBase e = new T();
             controls.Add(e);
             controlDic.Add(typeof(T), e);
-            e.OnInit(system);
+            e.OnInit(mySystem);
         }
     }
 

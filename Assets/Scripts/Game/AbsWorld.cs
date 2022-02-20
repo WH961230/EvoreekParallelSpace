@@ -25,23 +25,11 @@ public abstract class AbsWorld : IWorld {
     public Supplier supplier;
     public SystemManager systemManager;
     public virtual void OnInit(WorldInfo info) {
-        //创建器
-        supplier = new Supplier(this);
-
-        //世界系统管理器 - 通过SO配置决定添加哪些系统;
         systemManager = new SystemManager();
         systemManager.OnInit(this);
-
-        //游戏配置
         gameConfig = info.gameConfig;
-
-        //场景配置
         sceneConfig = info.sceneConfig;
-
-        //加载世界队对应场景
         //SceneManager.LoadSceneByMode(sceneConfig.sceneSign, LoadSceneMode.Single);
-
-        //获取游戏配置
         Loader.Instance.LoadGameSettingConfig<SOGameSetting>(gameConfig.configSign);
     }
 

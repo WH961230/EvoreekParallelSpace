@@ -1,19 +1,15 @@
-﻿public partial class WeaponData
-{
-    public void AddWeaponInfo(WeaponInfo info) {
-        allWeaponInfos?.Add(info);
-    }
-    
-    public bool TryGetWeaponInfo(long weaponId, out WeaponInfo weaponInfo) {
-        for (var i = 0; i < allWeaponInfos.Count; i++) {
-            var info = allWeaponInfos[i];
-            if (weaponId == info.WeaponId) {
-                weaponInfo = info;
-                return true;
-            }
-        }
+﻿using System;
 
-        weaponInfo = null;
-        return false;
+public partial class WeaponData {
+    public override void OnInit(AbsControl control) {
+        base.OnInit((WeaponControl)control);
+    }
+
+    public override void Create(String prefabName) {
+        Supplier.Instance.CreatInstance<WeaponComponent>(myControl, prefabName, out int comInstanceId);
+        AddInfo(new WeaponInfo() {
+            Id = ++myCode,
+            ComInstanceId = comInstanceId,
+        });
     }
 }

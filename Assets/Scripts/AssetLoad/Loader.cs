@@ -4,7 +4,7 @@ using Object = System.Object;
 public class Loader : Singleton<Loader>
 {
     //基础配置
-    private static readonly string CONFIGPATH = "Configs/";
+    private static readonly string CONFIGPATH = "Configs/SO/";
     private static readonly string TXTPATH = "Configs/Txt/";
 
     //其他配置

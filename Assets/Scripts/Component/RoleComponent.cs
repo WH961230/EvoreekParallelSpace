@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
 
-public class RoleComponent : AbsComponent
-{
-    public override void OnInit<T>(AbsControl control, long roleId) {
-        base.OnInit<T>(control, roleId);
+public class RoleComponent : AbsComponent {
+    public override void OnInit<T>(AbsControl control, int roleId) {
+        base.OnInit<T>((RoleControl)control, roleId);
     }
 
     public override void OnUpdate() {
-        if (Input.GetKey(KeyCode.A))
-        {
+        if (Input.GetKey(KeyCode.A)) {
             transform.Translate(Vector3.up);
         }
     }

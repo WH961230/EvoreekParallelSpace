@@ -63,13 +63,13 @@ public class ComponentManager {
     }
 
     //添加组件 必要参数：组件（内含组件id） 主体id
-    public void AddComponent<T>(long id, AbsComponent component) where T : AbsComponent, new() {
+    public void  AddComponent<T>(long id, AbsComponent component) where T : AbsComponent, new() {
         var comList = new List<AbsComponent>();
         comList.Add(component);
         if (!HasKey(id)) {
             componentDic.Add(id, comList);
         }
-        if (!HasComponent(id, component.ComponentId)) {
+        if (!HasComponent(id, component.InstanceId)) {
             componentDic.TryGetValue(id, out var list);
             if (null != list && list.Count > 0) {
                 list.Add(component);
@@ -110,7 +110,7 @@ public class ComponentManager {
     private bool HasComponent(long id, long comId) {
         if (componentDic.TryGetValue(id, out var tempTarget)) {
             foreach (var t in tempTarget) {
-                if (t.ComponentId == comId) {
+                if (t.InstanceId == comId) {
                     return true;
                 }
             }

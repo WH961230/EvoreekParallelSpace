@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 
-public class WeaponComponent : AbsComponent
-{
-    public override void OnInit<T>(AbsControl control, long id)
-    {
-        base.OnInit<T>(control, id);
+public class WeaponComponent : AbsComponent {
+    public override void OnInit<T>(AbsControl control, int id) {
+        base.OnInit<T>((WeaponControl)control, id);
     }
 
     public override void OnUpdate() {
-        if (Input.GetKey(KeyCode.A))
-        {
+        if (Input.GetKey(KeyCode.A)) {
             transform.Translate(Vector3.left);
         }
     }

@@ -1,18 +1,15 @@
-﻿public partial class RoleData {
-    public void AddRoleInfo(RoleInfo info) {
-        AllRoleInfos?.Add(info);
+﻿using System;
+
+public partial class RoleData {
+    public override void OnInit(AbsControl control) {
+        base.OnInit((RoleControl)control);
     }
 
-    public bool TryGetRoleInfo(long roleId, out RoleInfo roleInfo) {
-        for (var i = 0; i < AllRoleInfos.Count; i++) {
-            var info = AllRoleInfos[i];
-            if (roleId == info.RoleId) {
-                roleInfo = info;
-                return true;
-            }
-        }
-
-        roleInfo = null;
-        return false;
+    public override void Create(String prefabName) {
+        Supplier.Instance.CreatInstance<RoleComponent>(myControl, prefabName, out int comInstanceId);
+        AddInfo(new RoleInfo() {
+            Id = ++myCode,
+            ComInstanceId = comInstanceId,
+        });
     }
 }

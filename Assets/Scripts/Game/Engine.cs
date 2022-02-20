@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class Engine : MonoBehaviour {
     private WorldManager worldManager;
-
+    public MessageCenter MyMessageCenter;
+    
     private Action OnUpdateAction;
     private Action OnFixedUpdateAction;
     private Action OnLateUpdateAction;
@@ -50,7 +51,7 @@ public class Engine : MonoBehaviour {
     }
 
     private void InitConfig() {
-        ItemConfig.OnInit();
+        PrefabConfig.OnInit();
         GameConfig.OnInit();
         RoleConfig.OnInit();
         SceneConfig.OnInit();
@@ -59,6 +60,8 @@ public class Engine : MonoBehaviour {
     private void InitManager() {
         worldManager = new WorldManager();
         worldManager.OnInit(this);
+        
+        MyMessageCenter = new MessageCenter();
     }
 
     private void InitWorld() {
