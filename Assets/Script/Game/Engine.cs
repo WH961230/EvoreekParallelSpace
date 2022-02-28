@@ -4,12 +4,11 @@ using UnityEngine;
 public class Engine : MonoBehaviour {
     private WorldManager worldManager;
     public MessageCenter MyMessageCenter;
-    
+    public InputManager MyInputManager;
     private Action OnUpdateAction;
     private Action OnFixedUpdateAction;
     private Action OnLateUpdateAction;
     private Action OnQuitAction;
-
     [SerializeField] private string InitId = "";
 
     public void AddUpdateAction(Action action) {
@@ -60,8 +59,10 @@ public class Engine : MonoBehaviour {
     private void InitManager() {
         worldManager = new WorldManager();
         worldManager.OnInit(this);
-        
         MyMessageCenter = new MessageCenter();
+        MyMessageCenter.OnInit(this);
+        MyInputManager = new InputManager();
+        MyInputManager.OnInit(this);
     }
 
     private void InitWorld() {
@@ -79,8 +80,7 @@ public class Engine : MonoBehaviour {
         }
 
         var worldInfo = new WorldInfo() {
-            gameConfig = gameConfig,
-            sceneConfig = sceneConfig,
+            gameConfig = gameConfig, sceneConfig = sceneConfig,
         };
         worldManager.AddWorld<World>(worldInfo);
     }
@@ -107,5 +107,8 @@ public class Engine : MonoBehaviour {
         OnFixedUpdateAction = null;
         OnLateUpdateAction = null;
         OnQuitAction = null;
+        worldManager = null;
+        MyMessageCenter = null;
+        MyInputManager = null;
     }
 }
