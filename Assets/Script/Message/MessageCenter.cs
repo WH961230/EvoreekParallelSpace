@@ -1,67 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine.AI;
 
-public class MessageCenter {
-    private Engine myEngine;
-    private MessageRegister myRegister;
-
-    public void OnInit(Engine engine) {
-        myEngine = engine;
-        myRegister = new MessageRegister();
+public static class MessageCenter {
+    public static void RegisterMessage(int id, Action action) {
+        MessageRegister.Register(id, action);
     }
 
-    public void OnClear() {
-        myEngine = null;
-        myEngine = null;
+    public static void RegisterMessage<T>(int id, Action<T> action) {
+        MessageRegister.Register(id, action);
     }
 
-    public void Register(int id, Action action) {
-        myRegister.Register(id, action);
+    public static void UnRegisterMessage(int id) {
+        MessageRegister.UnRegister(id);
     }
 
-    public void RegisterMessage<T>(int id, Action<T> action) {
-        myRegister.Register(id, action);
+    public static void DispatcherMessage(int id) {
+        MessageRegister.Dispatcher(id);
     }
 
-    public void UnRegisterMessage(int id) {
-        myRegister.UnRegister(id);
-    }
-
-    public void DispatcherMessage(int id) {
-        myRegister.Dispatcher(id);
-    }
-
-    public void DispatcherMessage<T>(int id, T t) {
-        myRegister.Dispatcher<T>(id, t);
+    public static void DispatcherMessage<T>(int id, T t) {
+        MessageRegister.Dispatcher(id, t);
     }
 }
 
 /// <summary>
 /// 注册机
 /// </summary>
-public class MessageRegister {
-    private Dictionary<int, Act> dic = new Dictionary<int, Act>();
+public static class MessageRegister {
+    private static Dictionary<int, Act> dic = new Dictionary<int, Act>();
 
-    public void Register(int id, Delegate e) {
+    public static void Register(int id, Delegate e) {
         if (!dic.TryGetValue(id, out var temp)) {
             dic.Add(id, new Act(e));
         }
     }
 
-    public void UnRegister(int id) {
+    public static void UnRegister(int id) {
         if (dic.TryGetValue(id, out var temp)) {
             dic.Remove(id);
         }
     }
 
-    public void Dispatcher(int id) {
+    public static void Dispatcher(int id) {
         if (dic.TryGetValue(id, out var temp)) {
             temp.Invoke();
         }
     }
 
-    public void Dispatcher<T>(int id, T t) {
+    public static void Dispatcher<T>(int id, T t) {
         if (dic.TryGetValue(id, out var temp)) {
             temp.Invoke(t);
         }
@@ -79,10 +65,10 @@ public class Act {
     }
 
     public void Invoke() {
-        ((Action) deletage).Invoke();
+        ((Action) deletage)?.Invoke();
     }
 
     public void Invoke<T>(T t) {
-        ((Action<T>) deletage).Invoke(t);
+        ((Action<T>) deletage)?.Invoke(t);
     }
 }

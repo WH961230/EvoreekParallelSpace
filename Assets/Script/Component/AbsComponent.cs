@@ -10,6 +10,7 @@ interface IComponentBase {
 
 public abstract class AbsComponent : MonoBehaviour, IComponentBase {
     private AbsControl absControl;
+    protected AbsSO absSO;
     [SerializeField] public int InstanceId;
     [SerializeField] public bool IsActive;
     //组件的绑定需要参数 相邻高级 组件id可以获取instance 主体idork

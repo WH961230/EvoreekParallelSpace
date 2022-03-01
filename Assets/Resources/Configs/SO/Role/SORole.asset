@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a368653b07244d648bda097260ddb5cb, type: 3}
   m_Name: SORole
   m_EditorClassIdentifier: 
+  MoveSpeed_Forward: 0.02
+  MoveSpeed_Back: 0.05
+  MoveSpeed_Left: 0.05
+  MoveSpeed_Right: 0.05
+  MoveSpeed_Up: 0.05
+  MoveSpeed_Down: 0.05
