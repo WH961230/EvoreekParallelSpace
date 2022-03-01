@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MeshTool {
     /// <summary>
-    /// 使用方法：将被合并的所有 Mesh 放到父物体(没有 MeshFilter 组件)下，选择父物体，点击该方法，生成 mesh 于 Art 仓。ps:非运行时使用报错不影响
+    /// 使用方法：将被合并的所有 Mesh 放到父物体(没有 MeshFilter 组件)下，选择父物体，点击该方法，生成 mesh 于 Art 仓
     /// </summary>
     [MenuItem("资源工具/模型/合并模型")]
     public static void GenerateParse() {
