@@ -11,6 +11,7 @@ public class Loader : Singleton<Loader>
     private static readonly string GAMESETTINGCONFIG = CONFIGPATH + "Global/";
     private static readonly string ROLECONFIG = CONFIGPATH + "Role/";
     private static readonly string WEAPONCONFIG = CONFIGPATH + "Weapon/";
+    private static readonly string CAMERACONFIG = CONFIGPATH + "Camera/";
 
     public Object Load(string path)
     {
@@ -25,6 +26,10 @@ public class Loader : Singleton<Loader>
     public T LoadRoleConfig<T>(string configName) where T : ScriptableObject, new()
     {
         return Resources.Load(ROLECONFIG + configName) as T;
+    }
+
+    public T LoadCameraConfig<T>(string configName) where T : ScriptableObject, new() {
+        return Resources.Load(CAMERACONFIG + configName) as T;
     }
 
     public T LoadWeaponConfig<T>(string configName) where T : ScriptableObject, new()

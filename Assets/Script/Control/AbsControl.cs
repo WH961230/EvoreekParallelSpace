@@ -14,9 +14,9 @@ public abstract class AbsControl : IControlBase {
     public Action OnFixedUpdateAction;
     public Action OnLateUpdateAction;
     public ComponentManager manager;
-    protected AbsWorld myWorld;
-    protected AbsSystem mySystem;
-    protected AbsData myDatas;
+    public AbsWorld myWorld;
+    public AbsSystem mySystem;
+    public AbsData myDatas;
     public SUPPLIERTYPE myType;
 
     public virtual void OnInit(AbsSystem system) {

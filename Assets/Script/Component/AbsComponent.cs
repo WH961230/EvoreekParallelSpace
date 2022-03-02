@@ -9,7 +9,7 @@ interface IComponentBase {
 }
 
 public abstract class AbsComponent : MonoBehaviour, IComponentBase {
-    private AbsControl absControl;
+    protected AbsControl absControl;
     protected AbsSO absSO;
     [SerializeField] public int InstanceId;
     [SerializeField] public bool IsActive;

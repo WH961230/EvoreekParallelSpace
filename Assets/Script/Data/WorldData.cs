@@ -3,6 +3,7 @@
 public class WorldData {
     public WorldInfo worldInfo; //基础配置
     public RunInfo worldRunInfo; //运行数据
+    public Role role;
 
     public WorldData(WorldInfo info) {
         worldInfo = info;
