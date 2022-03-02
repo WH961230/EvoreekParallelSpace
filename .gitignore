@@ -8,3 +8,5 @@ UserSettings
 Assembly-CSharp.csproj
 obj
 Assembly-CSharp-Editor.csproj
+UMotionSourceApplication.csproj
+UMotionSourceEditor.csproj

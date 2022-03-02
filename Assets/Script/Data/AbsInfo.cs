@@ -3,7 +3,7 @@
 
 public abstract class AbsInfo : IInfo {
     public int Id;
-    public int ComInstanceId;
+    public int ComponentId;
 }
 
 public class RoleInfo : AbsInfo{

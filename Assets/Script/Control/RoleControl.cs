@@ -6,13 +6,12 @@ public class RoleControl : AbsControl {
         myDatas = new RoleData();
         myDatas.OnInit(this);
         myType = SUPPLIERTYPE.Role;
+        
+        myDatas.Create("SM_Chr_Bombsuit_Male_01");
     }
 
     public override void OnUpdate() {
         base.OnUpdate();
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            myDatas.Create("SM_Chr_Bombsuit_Male_01");;
-        }
     }
 
     public override void OnFixedUpdate() {

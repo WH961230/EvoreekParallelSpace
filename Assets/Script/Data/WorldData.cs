@@ -1,17 +1,8 @@
 ﻿using UnityEngine;
 
-public class WorldData {
-    public WorldInfo worldInfo; //基础配置
-    public RunInfo worldRunInfo; //运行数据
-    public Role role;
-
-    public WorldData(WorldInfo info) {
-        worldInfo = info;
-    }
-}
-
-public struct RunInfo {
-    public bool isSceneActive;
+public static class WorldData {
+    public static WorldInfo worldInfo; //基础配置
+    public static Role role;
 }
 
 public struct WorldInfo {

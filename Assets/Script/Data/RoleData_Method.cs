@@ -7,10 +7,15 @@ public partial class RoleData {
 
     public override void Create(String prefabName) {
         if (Supplier.Instance.CreatInstance<RoleComponent>(myControl, prefabName, out int comInstanceId)) {
+            var tempId = ++myCode;
             AddInfo(new RoleInfo() {
-                Id = ++myCode,
-                ComInstanceId = comInstanceId,
+                Id = tempId, ComponentId = comInstanceId,
             });
+            if (null == WorldData.role) {
+                WorldData.role = new Role() {
+                    Id = tempId, ComponentId = comInstanceId,
+                };
+            }
         }
     }
 }

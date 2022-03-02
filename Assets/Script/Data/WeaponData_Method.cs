@@ -9,7 +9,7 @@ public partial class WeaponData {
         Supplier.Instance.CreatInstance<WeaponComponent>(myControl, prefabName, out int comInstanceId);
         AddInfo(new WeaponInfo() {
             Id = ++myCode,
-            ComInstanceId = comInstanceId,
+            ComponentId = comInstanceId,
         });
     }
 }
