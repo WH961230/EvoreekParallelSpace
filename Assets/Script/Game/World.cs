@@ -4,7 +4,7 @@ public class World : AbsWorld {
     public override void OnInit(WorldInfo info) {
         base.OnInit(info);
         if (info.sceneConfig.loadType == 1) {
-            SceneManager.LoadSceneByMode(info.sceneConfig.sceneSign, LoadSceneMode.Additive);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(info.sceneConfig.sceneSign, LoadSceneMode.Additive);
         }
 
         WorldData.worldInfo = info;

@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Scene
+  - Item
+  - AirSpawner
   layers:
   - Default
   - TransparentFX
@@ -13,6 +17,8 @@ TagManager:
   - UI
   - 
   - 
+  - HitBox
+  - PlayerObject
   - 
   - 
   - 
@@ -27,16 +33,14 @@ TagManager:
   - 
   - 
   - 
-  - AI
-  - InteractItem
-  - Item
-  - Player
-  - Enemy
-  - MovingPlatform
-  - VisualEffect
-  - Overlay
-  - SubCharacter
-  - Character
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0

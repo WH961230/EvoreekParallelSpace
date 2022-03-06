@@ -5,6 +5,6 @@ public class Lobby : MonoBehaviour
 {
     public void OnStartGame()
     {
-        SceneManager.LoadSceneByMode("Battle", LoadSceneMode.Single);
+        SceneManager.LoadScene("Battle", LoadSceneMode.Single);
     }
 }
